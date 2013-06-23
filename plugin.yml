@@ -1,0 +1,24 @@
+name: iReport
+version: 1.2
+main: iReport.iReport
+commands:
+  greport:
+    description: Report a griefer
+    usage: /greport <player>
+    permission: ireport.greport
+    permission-message: You don't have permission!
+  hreport:
+    description: Report a hacker
+    usage: /hreport <player>
+    permission: ireport.hreport
+    permission-message: You don't have permission!
+  sreport:
+    description: Report a swearing player
+    usage: /sreport <player>
+    permission: ireport.sreport
+    permission-message: You don't have permission!
+  ireport:
+    description: Get plugin help
+    usage: /ireport
+    permission: ireport.ireport
+    permission-message: You don't have permission!
