@@ -20,14 +20,15 @@ public class iReport extends JavaPlugin
     {
     }
     
-    public boolean onCommand(CommandSender sender, Command cmd, String label, String args[])
+    @SuppressWarnings("unused")
+	public boolean onCommand(CommandSender sender, Command cmd, String label, String args[])
     {
         if(cmd.getName().equalsIgnoreCase("greport") && args.length == 1)
         {
             String player = sender.getName();
             String target = args[0];
             Location loc = null;
-            String already = (String)getConfig().get((new StringBuilder("reports.griefing.")).append(player).toString());
+			String already = (String)getConfig().get((new StringBuilder("reports.griefing.")).append(player).toString());
             sender.sendMessage((new StringBuilder()).append(ChatColor.BLUE).append("You successfully reported ").append(ChatColor.RED).append(target).toString());
             getConfig().set((new StringBuilder("reports.griefing.")).append(player).toString(), (new StringBuilder(Rlocation.getxyz(this, args[0]))).append("; ").append(target).toString());
            
