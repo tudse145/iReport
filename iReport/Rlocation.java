@@ -11,8 +11,7 @@ public class Rlocation {
         String s;
         try {
             loc = i.getServer().getPlayer(p).getLocation();
-            s = String.valueOf("x " + loc.getBlockX() + " y " + loc.getBlockY()
-                    + " z " + loc.getBlockZ());
+            s = String.valueOf("x " + loc.getBlockX() + " y " + loc.getBlockY() + " z " + loc.getBlockZ());
             return s;
         } catch (Exception e) {
             i.getLogger().log(Level.SEVERE, p + " is not online");
