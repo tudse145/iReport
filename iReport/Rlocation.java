@@ -1,5 +1,7 @@
 package iReport;
 
+import java.util.logging.Level;
+
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class Rlocation {
@@ -12,7 +14,7 @@ public class Rlocation {
 			s = String.valueOf("x " + loc.getBlockX() + " y " + loc.getBlockY() + " z " + loc.getBlockZ());
 			return s;
 		} catch (Exception e) {
-			// TODO: handle exception
+			i.getLogger().log(Level.SEVERE, p+"is not online");
 		}
 		
 		
