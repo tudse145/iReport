@@ -33,11 +33,11 @@ public class iReport extends JavaPlugin {
 
             return true;
         }
-        if (cmd.getName().equalsIgnoreCase("hreport") && args.length == 1) {
+        if (cmd.getName().equalsIgnoreCase("hreport") && args.length == 2) {
             String player = sender.getName();
             String target = args[0];
             String already = (String) getConfig().get(new StringBuilder("reports.hacking.").append(player).toString());
-            getConfig().set(new StringBuilder("reports.hacking.").append(player).toString(), new StringBuilder(String.valueOf(already)).append("; ").append(target).toString());
+            getConfig().set(new StringBuilder("reports.hacking.").append(player).toString(), new StringBuilder("type: " + args[1]).append("; ").append(target).toString());
             sender.sendMessage(new StringBuilder().append(ChatColor.BLUE).append("You successfully reported ").append(ChatColor.RED).append(target).toString());
             saveConfig();
 
@@ -47,7 +47,7 @@ public class iReport extends JavaPlugin {
             String player = sender.getName();
             String target = args[0];
             String already = (String) getConfig().get(new StringBuilder("reports.swearing.").append(player).toString());
-            getConfig().set(new StringBuilder("reports.swearing.").append(player).toString(), new StringBuilder(String.valueOf(already)).append("; ").append(target).toString());
+            getConfig().set(new StringBuilder("reports.swearing.").append(player).toString(), new StringBuilder().append("; ").append(target).toString());
             sender.sendMessage(new StringBuilder().append(ChatColor.BLUE).append("You successfully reported ").append(ChatColor.RED).append(target).toString());
             saveConfig();
 
