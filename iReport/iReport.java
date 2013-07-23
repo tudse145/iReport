@@ -1,7 +1,6 @@
 package iReport;
 
 import org.bukkit.ChatColor;
-import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -13,22 +12,17 @@ public class iReport extends JavaPlugin {
 
     @Override
     @SuppressWarnings("unused")
-    public boolean onCommand(CommandSender sender, Command cmd, String label,
-            String args[]) {
+    public boolean onCommand(CommandSender sender, Command cmd, String label, String args[]) {
+        String player = sender.getName();
+        String target = args[0];
         if ((cmd.getName().equalsIgnoreCase("greport")) && (args.length == 1)) {
             if (!sender.hasPermission("ireport.greport")) {
                 sender.sendMessage(ChatColor.RED + "You don't have permission");
                 return true;
             }
-            String player = sender.getName();
-            String target = args[0];
-            Location loc = null;
-            String already = (String) getConfig().get(
-                    "reports.griefing." + player);
-            sender.sendMessage(ChatColor.BLUE + "You successfully reported "
-                    + ChatColor.RED + target);
-            getConfig().set("reports.griefing." + player,
-                    Rlocation.getxyz(this, args[0]) + "; " + target);
+            String already = (String) getConfig().get("reports.griefing." + player);
+            sender.sendMessage(ChatColor.BLUE + "You successfully reported " + ChatColor.RED + target);
+            getConfig().set("reports.griefing." + player, Rlocation.getxyz(this, args[0]) + "; " + target);
 
             saveConfig();
 
@@ -39,16 +33,9 @@ public class iReport extends JavaPlugin {
                 sender.sendMessage(ChatColor.RED + "You don't have permission");
                 return true;
             }
-            String player = sender.getName();
-            String target = args[0];
-            String already = (String) getConfig().get(
-                    "reports.hacking." + player);
-            getConfig().set(
-                    "reports.hacking." + player,
-                    new StringBuilder("type: ").append(args[1]).toString()
-                            + "; " + target);
-            sender.sendMessage(ChatColor.BLUE + "You successfully reported "
-                    + ChatColor.RED + target);
+            String already = (String) getConfig().get("reports.hacking." + player);
+            getConfig().set("reports.hacking." + player, new StringBuilder("type: ").append(args[1]).toString() + "; " + target);
+            sender.sendMessage(ChatColor.BLUE + "You successfully reported " + ChatColor.RED + target);
             saveConfig();
 
             return true;
@@ -58,29 +45,26 @@ public class iReport extends JavaPlugin {
                 sender.sendMessage(ChatColor.RED + "You don't have permission");
                 return true;
             }
-            String player = sender.getName();
-            String target = args[0];
-            String already = (String) getConfig().get(
-                    "reports.swearing." + player);
+            String already = (String) getConfig().get("reports.swearing." + player);
             getConfig().set("reports.swearing." + player, "; " + target);
-            sender.sendMessage(ChatColor.BLUE + "You successfully reported "
-                    + ChatColor.RED + target);
+            sender.sendMessage(ChatColor.BLUE + "You successfully reported " + ChatColor.RED + target);
             saveConfig();
 
             return true;
         }
 
         if (cmd.getName().equalsIgnoreCase("ireport")) {
-        }
-        sender.sendMessage(ChatColor.YELLOW + "==============================");
-        sender.sendMessage(ChatColor.BLUE + "/greport - Report a griefer");
-        sender.sendMessage(ChatColor.BLUE + "/hreport - Report a hacker");
-        sender.sendMessage(ChatColor.BLUE + "/sreport - Report a swearer");
-        sender.sendMessage(ChatColor.BLUE + "/ireport - Show this help menu");
-        sender.sendMessage(ChatColor.YELLOW + "==============================");
-        sender.sendMessage(ChatColor.GREEN + "Created by tudse145");
-
-        return true;
+            sender.sendMessage(ChatColor.YELLOW + "==============================");
+            sender.sendMessage(ChatColor.BLUE + "/greport - Report a griefer");
+            sender.sendMessage(ChatColor.BLUE + "/hreport - Report a hacker");
+            sender.sendMessage(ChatColor.BLUE + "/sreport - Report a swearer");
+            sender.sendMessage(ChatColor.BLUE + "/ireport - Show this help menu");
+            sender.sendMessage(ChatColor.YELLOW + "==============================");
+            sender.sendMessage(ChatColor.GREEN + "Created by tudse145");
+    
+            return true;
+        }else
+            return false;
     }
 
     @Override
