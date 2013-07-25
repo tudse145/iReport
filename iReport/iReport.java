@@ -1,5 +1,8 @@
 package iReport;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -65,6 +68,21 @@ public class iReport extends JavaPlugin {
             return true;
         }else
             return false;
+    }
+    @Override
+    public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
+        List<String> l = new ArrayList<String>();
+        if (sender.hasPermission("ireport.hreport")) {
+            l.add("hreport");
+        }
+        if (sender.hasPermission("ireport.greport")) {
+            l.add("greport");
+        }
+        if (sender.hasPermission("ireport.sreport")) {
+            l.add("sreport");
+        }
+        l.add("ireport");
+        return l;
     }
 
     @Override
