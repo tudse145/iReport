@@ -6,6 +6,7 @@ import java.util.List;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class iReport extends JavaPlugin {
@@ -28,10 +29,10 @@ public class iReport extends JavaPlugin {
             getConfig().set("reports.griefing." + player, Rlocation.getxyz(this, args[0]) + "; " + target);
 
             saveConfig();
-            for (int i = 0; i < sender.getServer().getOnlinePlayers().length; i++) {
-                if (sender.getServer().getOnlinePlayers()[i].isOp()) {
-                    sender.getServer().getOnlinePlayers()[i].sendMessage(ChatColor.RED+target+" has ben reported for grifing");
-                }
+            for (Player p : sender.getServer().getOnlinePlayers()) {
+                if (p.isOp()) {
+            	    p.sendMessage(ChatColor.RED+target+" has ben reported for grifing");
+            	}
             }
 
             return true;
@@ -46,10 +47,10 @@ public class iReport extends JavaPlugin {
             sender.sendMessage(ChatColor.BLUE + "You successfully reported " + ChatColor.RED + target);
             saveConfig();
 
-            for (int i = 0; i < sender.getServer().getOnlinePlayers().length; i++) {
-                if (sender.getServer().getOnlinePlayers()[i].isOp()) {
-                    sender.getServer().getOnlinePlayers()[i].sendMessage(ChatColor.RED+target+" has ben reported for hacking "+args[1]);
-	        }
+            for (Player p : sender.getServer().getOnlinePlayers()) {
+                if (p.isOp()) {
+            	    p.sendMessage(ChatColor.RED+target+" has ben reported for hacking "+args[1]);
+            	}
             }
             return true;
         }
@@ -63,11 +64,11 @@ public class iReport extends JavaPlugin {
             sender.sendMessage(ChatColor.BLUE + "You successfully reported " + ChatColor.RED + target);
             saveConfig();
 
-            for (int i = 0; i < sender.getServer().getOnlinePlayers().length; i++) {
-                if (sender.getServer().getOnlinePlayers()[i].isOp()) {
-                    sender.getServer().getOnlinePlayers()[i].sendMessage(ChatColor.RED+target+" has ben reported for swearing");
+            for (Player l : sender.getServer().getOnlinePlayers()) {
+                if (l.isOp()) {
+                    l.sendMessage(ChatColor.RED+target+" has ben reported for grifing");
                 }
-	    }
+            }
             return true;
         }
 
