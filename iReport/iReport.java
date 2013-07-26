@@ -29,10 +29,10 @@ public class iReport extends JavaPlugin {
 
             saveConfig();
             for (int i = 0; i < sender.getServer().getOnlinePlayers().length; i++) {
-            	if (sender.getServer().getOnlinePlayers()[i].isOp()) {
-					sender.getServer().getOnlinePlayers()[i].sendMessage(ChatColor.RED+target+" has ben reported for grifing");
-				}
-			}
+                if (sender.getServer().getOnlinePlayers()[i].isOp()) {
+                    sender.getServer().getOnlinePlayers()[i].sendMessage(ChatColor.RED+target+" has ben reported for grifing");
+                }
+            }
 
             return true;
         }
@@ -47,10 +47,10 @@ public class iReport extends JavaPlugin {
             saveConfig();
 
             for (int i = 0; i < sender.getServer().getOnlinePlayers().length; i++) {
-            	if (sender.getServer().getOnlinePlayers()[i].isOp()) {
-					sender.getServer().getOnlinePlayers()[i].sendMessage(ChatColor.RED+target+" has ben reported for hacking "+args[1]);
-				}
-			}
+                if (sender.getServer().getOnlinePlayers()[i].isOp()) {
+                    sender.getServer().getOnlinePlayers()[i].sendMessage(ChatColor.RED+target+" has ben reported for hacking "+args[1]);
+	        }
+            }
             return true;
         }
         if ((cmd.getName().equalsIgnoreCase("sreport")) && (args.length == 1)) {
@@ -64,10 +64,10 @@ public class iReport extends JavaPlugin {
             saveConfig();
 
             for (int i = 0; i < sender.getServer().getOnlinePlayers().length; i++) {
-            	if (sender.getServer().getOnlinePlayers()[i].isOp()) {
-					sender.getServer().getOnlinePlayers()[i].sendMessage(ChatColor.RED+target+" has ben reported for swearing");
-				}
-			}
+                if (sender.getServer().getOnlinePlayers()[i].isOp()) {
+                    sender.getServer().getOnlinePlayers()[i].sendMessage(ChatColor.RED+target+" has ben reported for swearing");
+                }
+	    }
             return true;
         }
 
@@ -92,7 +92,7 @@ public class iReport extends JavaPlugin {
             l.add("hreport");
             l.add("greport");
             l.add("sreport");
-		}
+        }
         if (sender.hasPermission("ireport.hreport")) {
             l.add("hreport");
         }
