@@ -11,6 +11,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public class iReport extends JavaPlugin {
 
+    MYSQL sql;
     public iReport() {
     }
 
@@ -64,9 +65,9 @@ public class iReport extends JavaPlugin {
             sender.sendMessage(ChatColor.BLUE + "You successfully reported " + ChatColor.RED + target);
             saveConfig();
 
-            for (Player l : sender.getServer().getOnlinePlayers()) {
-                if (l.isOp()) {
-                    l.sendMessage(ChatColor.RED+target+" has ben reported for grifing");
+            for (Player p : sender.getServer().getOnlinePlayers()) {
+                if (p.isOp()) {
+                    p.sendMessage(ChatColor.RED+target+" has ben reported for grifing");
                 }
             }
             return true;
@@ -84,6 +85,17 @@ public class iReport extends JavaPlugin {
             return true;
         }else
             return false;
+    }
+    
+    public MYSQL getMYSQL() {
+        if (sql == null) {
+            try {
+                sql = new MYSQL();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return this.sql;
     }
     
     @Override
@@ -111,6 +123,8 @@ public class iReport extends JavaPlugin {
     public void onEnable() {
         saveConfig();
         getConfig().options().copyDefaults(true);
+        getMYSQL();
+        
 
     }
 }
