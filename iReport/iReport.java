@@ -87,17 +87,6 @@ public class iReport extends JavaPlugin {
             return false;
     }
     
-    public MYSQL getMYSQL() {
-        if (sql == null) {
-            try {
-                sql = new MYSQL();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        return this.sql;
-    }
-    
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
         List<String> l = new ArrayList<String>();
@@ -123,8 +112,6 @@ public class iReport extends JavaPlugin {
     public void onEnable() {
         saveConfig();
         getConfig().options().copyDefaults(true);
-        getMYSQL();
-        
-
+        MYSQL.getMYSQL();
     }
 }
