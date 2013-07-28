@@ -63,7 +63,7 @@ public class MYSQL {
    }
 
    public Connection oppenConnection() throws Exception {
-      Class.forName("com.mqsql.jdbc.Driver");
+      Class.forName("com.mysql.jdbc.Driver");
         Connection conn = DriverManager.getConnection("jdbc:mysql://" + this.host + ":" + this.port + "/" + this.database, this.user, this.password);
         this.conn = conn;
         return conn;

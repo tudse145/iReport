@@ -7,6 +7,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class iReport extends JavaPlugin {
@@ -87,6 +88,24 @@ public class iReport extends JavaPlugin {
             return false;
     }
     
+<<<<<<< HEAD
+=======
+    public MYSQL getMYSQL() {
+        PluginManager pm = this.getServer().getPluginManager();
+        if (sql == null) {
+            try {
+                sql = new MYSQL();
+                Reports Reports = new Reports(this);
+                pm.registerEvents(Reports, this);
+                this.getCommand("greport").setExecutor(Reports);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return this.sql;
+    }
+    
+>>>>>>> 655b592... Still working on MySQL
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
         List<String> l = new ArrayList<String>();
