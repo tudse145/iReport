@@ -113,5 +113,6 @@ public class iReport extends JavaPlugin {
         saveConfig();
         getConfig().options().copyDefaults(true);
         MYSQL.getMYSQL();
+        
     }
 }
