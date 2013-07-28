@@ -22,6 +22,7 @@ public class MYSQL {
     private String database;
     
     private Connection conn;
+	private static MYSQL sql;
     
     
    public MYSQL() throws Exception {
@@ -50,6 +51,17 @@ public class MYSQL {
        this.oppenConnection();
    }
    
+   public static MYSQL getMYSQL() {
+       if (sql == null) {
+           try {
+               sql = new MYSQL();
+           } catch (Exception e) {
+        	   System.err.println("fail to cornedt to MYSQL");
+           }
+       }
+       return sql;
+   }
+
    public Connection oppenConnection() throws Exception {
       Class.forName("com.mqsql.jdbc.Driver");
         Connection conn = DriverManager.getConnection("jdbc:mysql://" + this.host + ":" + this.port + "/" + this.database, this.user, this.password);
