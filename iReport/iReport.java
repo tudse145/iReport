@@ -20,7 +20,11 @@ public class iReport extends JavaPlugin {
     @SuppressWarnings("unused")
     public boolean onCommand(CommandSender sender, Command cmd, String label, String args[]) {
         String player = sender.getName();
-        String target = args[0];
+        String target = null;
+        try {
+            target = args[0];
+        } catch (Exception e) {
+        }
         if ((cmd.getName().equalsIgnoreCase("greport")) && (args.length == 1)) {
             if (!sender.hasPermission("ireport.greport")) {
                 sender.sendMessage(ChatColor.RED + "You don't have permission");
@@ -88,8 +92,7 @@ public class iReport extends JavaPlugin {
             return false;
     }
     
-<<<<<<< HEAD
-=======
+
     public MYSQL getMYSQL() {
         PluginManager pm = this.getServer().getPluginManager();
         if (sql == null) {
@@ -105,7 +108,7 @@ public class iReport extends JavaPlugin {
         return this.sql;
     }
     
->>>>>>> 655b592... Still working on MySQL
+
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
         List<String> l = new ArrayList<String>();
@@ -131,6 +134,6 @@ public class iReport extends JavaPlugin {
     public void onEnable() {
         saveConfig();
         getConfig().options().copyDefaults(true);
-        MYSQL.getMYSQL();
+        //getMYSQL();
     }
 }
