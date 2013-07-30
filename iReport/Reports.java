@@ -14,6 +14,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 
+@SuppressWarnings("unused")
 public class Reports implements CommandExecutor, Listener {
 
     private iReport plugin;
@@ -29,6 +30,7 @@ public class Reports implements CommandExecutor, Listener {
     @Override
     public boolean onCommand(CommandSender cs, Command cmd, String label, String[] args) {
         if (label.equalsIgnoreCase("greport")) {
+            
             if (args.length > 0) {
                 String Reason = this.Reported(args[0]);
                 if (Reason == null) {
@@ -44,7 +46,7 @@ public class Reports implements CommandExecutor, Listener {
         }
         if (args.length > 0) {
             String player = args[0];
-            String Reason = Rlocation.getxyz(plugin, args[0]);
+            String Reason = null;
             if (args.length > 1) {
                 Reason = args[1];
                 for (int i = 2; i < args.length; i++) {
@@ -52,7 +54,7 @@ public class Reports implements CommandExecutor, Listener {
                     
                 }
                 
-                Reason = ChatColor.translateAlternateColorCodes('&', Reason);
+//                Reason = ChatColor.translateAlternateColorCodes('&', Reason);
                 
             }
             player = this.setReported(player, Reason);
@@ -71,7 +73,6 @@ public class Reports implements CommandExecutor, Listener {
     
     
     public String Reported(String player) {
-//        return Rlocation.getxyz(plugin, player);
         MYSQL sql = this.plugin.getMYSQL();
         Connection conn = sql.getConnection();
         ResultSet rs = null;
@@ -79,7 +80,7 @@ public class Reports implements CommandExecutor, Listener {
         String Reason = null;
         try {
             st = conn.prepareStatement("SELECT * FROM Reports WHERE name=?");
-            st.setString(1, Rlocation.getxyz(plugin, player));
+            st.setString(1, player);
             rs = st.executeQuery();
             rs.last();
             if (rs.getRow() != 0) {
@@ -103,9 +104,10 @@ public class Reports implements CommandExecutor, Listener {
             
         }
         if (this.Reported(player) != null) {
-            sql.queryUpdate("UPDATE Reports SET Reason= '" + Reason + "' WHERE name='"+player + "'");
+            sql.queryUpdate("UPDATE Reports SET Reason= '" + Reason + "' WHERE name='"+ player + "'");
         }else {
-            sql.queryUpdate("INSERT INTO Reports (name, Reason) VALUES ('" + player + ", " + Reason + "')");
+            sql.queryUpdate("INSERT INTO Reports name" + player );
+            sql.queryUpdate("INSERT INTO Reports Reason" + Reason);
            
         }
         return player;
