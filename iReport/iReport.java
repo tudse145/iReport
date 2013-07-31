@@ -20,13 +20,13 @@ public class iReport extends JavaPlugin {
     @SuppressWarnings("unused")
     public boolean onCommand(CommandSender sender, Command cmd, String label, String args[]) {
         String player = sender.getName();
-        String target = null;
+        String target = "";
         try {
             target = args[0];
         } catch (Exception e) {
         }
         if ((cmd.getName().equalsIgnoreCase("greport")) && (args.length == 1)) {
-            if (!sender.hasPermission("ireport.greport")) {
+            if (!sender.hasPermission("ireport.greport") && !sender.isOp()) {
                 sender.sendMessage(ChatColor.RED + "You don't have permission");
                 return true;
             }
@@ -37,7 +37,7 @@ public class iReport extends JavaPlugin {
             saveConfig();
             for (Player p : sender.getServer().getOnlinePlayers()) {
                 if (p.isOp() || p.hasPermission("iReport.seereport")) {
-            	    p.sendMessage(ChatColor.RED+player+" has reported "+target+" for grifing");
+            	    p.sendMessage(ChatColor.RED+player+" has reported "+target+" for griefing");
             	}
             }
 
@@ -72,7 +72,7 @@ public class iReport extends JavaPlugin {
 
             for (Player p : sender.getServer().getOnlinePlayers()) {
                 if (p.isOp() || p.hasPermission("iReport.seereport")) {
-                    p.sendMessage(ChatColor.RED+player+" has reported "+target+" for grifing");
+                    p.sendMessage(ChatColor.RED+player+" has reported "+target+" for swearing");
                 }
             }
             return true;
