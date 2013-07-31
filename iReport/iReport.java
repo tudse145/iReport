@@ -36,8 +36,8 @@ public class iReport extends JavaPlugin {
 
             saveConfig();
             for (Player p : sender.getServer().getOnlinePlayers()) {
-                if (p.isOp()) {
-            	    p.sendMessage(ChatColor.RED+target+" has ben reported for grifing");
+                if (p.isOp() || p.hasPermission("iReport.seereport")) {
+            	    p.sendMessage(ChatColor.RED+player+" has reported "+target+" for grifing");
             	}
             }
 
@@ -54,8 +54,8 @@ public class iReport extends JavaPlugin {
             saveConfig();
 
             for (Player p : sender.getServer().getOnlinePlayers()) {
-                if (p.isOp()) {
-            	    p.sendMessage(ChatColor.RED+target+" has ben reported for hacking "+args[1]);
+                if (p.isOp() || p.hasPermission("iReport.seereport")) {
+            	    p.sendMessage(ChatColor.RED+player+" has reported "+target+" for hacking "+args[1]);
             	}
             }
             return true;
@@ -71,8 +71,8 @@ public class iReport extends JavaPlugin {
             saveConfig();
 
             for (Player p : sender.getServer().getOnlinePlayers()) {
-                if (p.isOp()) {
-                    p.sendMessage(ChatColor.RED+target+" has ben reported for grifing");
+                if (p.isOp() || p.hasPermission("iReport.seereport")) {
+                    p.sendMessage(ChatColor.RED+player+" has reported "+target+" for grifing");
                 }
             }
             return true;
