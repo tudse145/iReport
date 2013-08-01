@@ -1,9 +1,9 @@
 name: iReport
-version: 1.2
+version: 1.5
 main: iReport.iReport
 commands:
   greport:
-    description: Report a griefer
+    description: Report a griefer logs position of the reported
     usage: /greport <player>
     permission: ireport.greport
     permission-message: You don't have permission!
