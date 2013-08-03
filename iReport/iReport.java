@@ -1,7 +1,10 @@
 package iReport;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -12,7 +15,9 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public class iReport extends JavaPlugin {
 
+    public static final List<String> REPORTLIST = new ArrayList<String>();
     MYSQL sql;
+
     public iReport() {
     }
 
@@ -23,7 +28,7 @@ public class iReport extends JavaPlugin {
         String target = "";
         try {
             target = args[0];
-        } catch (Exception e) {
+        } catch (ArrayIndexOutOfBoundsException e) {
         }
         if ((cmd.getName().equalsIgnoreCase("greport")) && (args.length == 1)) {
             if (!sender.hasPermission("ireport.greport") && !sender.isOp()) {
@@ -37,9 +42,10 @@ public class iReport extends JavaPlugin {
             saveConfig();
             for (Player p : sender.getServer().getOnlinePlayers()) {
                 if (p.isOp() || p.hasPermission("iReport.seereport")) {
-            	    p.sendMessage(ChatColor.RED+player+" has reported "+target+" for griefing");
-            	}
+                    p.sendMessage(ChatColor.RED + player + " has reported " + target + " for griefing");
+                }
             }
+            REPORTLIST.add(player + " has reported " + target + " for griefing");
 
             return true;
         }
@@ -55,9 +61,10 @@ public class iReport extends JavaPlugin {
 
             for (Player p : sender.getServer().getOnlinePlayers()) {
                 if (p.isOp() || p.hasPermission("iReport.seereport")) {
-            	    p.sendMessage(ChatColor.RED+player+" has reported "+target+" for hacking "+args[1]);
-            	}
+                    p.sendMessage(ChatColor.RED + player + " has reported " + target + " for hacking " + args[1]);
+                }
             }
+            REPORTLIST.add(player + " has reported " + target + " for hacking " + args[1]);
             return true;
         }
         if ((cmd.getName().equalsIgnoreCase("sreport")) && (args.length == 1)) {
@@ -72,9 +79,10 @@ public class iReport extends JavaPlugin {
 
             for (Player p : sender.getServer().getOnlinePlayers()) {
                 if (p.isOp() || p.hasPermission("iReport.seereport")) {
-                    p.sendMessage(ChatColor.RED+player+" has reported "+target+" for swearing");
+                    p.sendMessage(ChatColor.RED + player + " has reported " + target + " for swearing");
                 }
             }
+            REPORTLIST.add(player + " has reported " + target + " for swearing");
             return true;
         }
 
@@ -86,12 +94,36 @@ public class iReport extends JavaPlugin {
             sender.sendMessage(ChatColor.BLUE + "/ireport - Show this help menu");
             sender.sendMessage(ChatColor.YELLOW + "==============================");
             sender.sendMessage(ChatColor.GREEN + "Created by tudse145");
-    
+
             return true;
-        }else
-            return false;
+        }
+        if (cmd.getName().equalsIgnoreCase("reports")) {
+            try {
+                Scanner sc = new Scanner(new File("plugins/iReport/", "config.yml"));
+            } catch (FileNotFoundException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+
+            for (String string : REPORTLIST) {
+                sender.sendMessage(string);
+            }
+            return true;
+        }
+        if (cmd.getName().equalsIgnoreCase("reports")) {
+            while (REPORTLIST.isEmpty()) {
+                REPORTLIST.remove(0);
+            }
+            return true;
+        }
+        return false;
     }
-    
+
+    public List<String> name() {
+        List<String> l = new ArrayList<String>();
+        return l;
+
+    }
 
     public MYSQL getMYSQL() {
         PluginManager pm = this.getServer().getPluginManager();
@@ -107,7 +139,6 @@ public class iReport extends JavaPlugin {
         }
         return this.sql;
     }
-    
 
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
@@ -134,6 +165,6 @@ public class iReport extends JavaPlugin {
     public void onEnable() {
         saveConfig();
         getConfig().options().copyDefaults(true);
-        //getMYSQL();
+        // getMYSQL();
     }
 }
