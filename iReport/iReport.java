@@ -45,7 +45,6 @@ public class iReport extends JavaPlugin {
                     p.sendMessage(ChatColor.RED + player + " has reported " + target + " for griefing");
                 }
             }
-            REPORTLIST.add(player + " has reported " + target + " for griefing");
 
             return true;
         }
@@ -64,7 +63,6 @@ public class iReport extends JavaPlugin {
                     p.sendMessage(ChatColor.RED + player + " has reported " + target + " for hacking " + args[1]);
                 }
             }
-            REPORTLIST.add(player + " has reported " + target + " for hacking " + args[1]);
             return true;
         }
         if ((cmd.getName().equalsIgnoreCase("sreport")) && (args.length == 1)) {
@@ -82,7 +80,6 @@ public class iReport extends JavaPlugin {
                     p.sendMessage(ChatColor.RED + player + " has reported " + target + " for swearing");
                 }
             }
-            REPORTLIST.add(player + " has reported " + target + " for swearing");
             return true;
         }
 
@@ -100,20 +97,18 @@ public class iReport extends JavaPlugin {
         if (cmd.getName().equalsIgnoreCase("reports")) {
             try {
                 Scanner sc = new Scanner(new File("plugins/iReport/", "config.yml"));
+                while (sc.hasNext()) {
+                    sender.sendMessage(sc.nextLine());
+                }
+                sc.close();
             } catch (FileNotFoundException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+                
             }
 
-            for (String string : REPORTLIST) {
-                sender.sendMessage(string);
-            }
+           
             return true;
         }
         if (cmd.getName().equalsIgnoreCase("reports")) {
-            while (REPORTLIST.isEmpty()) {
-                REPORTLIST.remove(0);
-            }
             return true;
         }
         return false;
