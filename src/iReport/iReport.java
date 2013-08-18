@@ -142,6 +142,7 @@ public class iReport extends JavaPlugin {
             l.add("hreport");
             l.add("greport");
             l.add("sreport");
+            return l;
         }
         if (sender.hasPermission("ireport.hreport")) {
             l.add("hreport");
