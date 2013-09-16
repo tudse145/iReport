@@ -50,7 +50,7 @@ public class iReport extends JavaPlugin {
         }
         if ((cmd.getName().equalsIgnoreCase("hreport")) && (args.length == 2)) {
             if (!sender.hasPermission("ireport.hreport")) {
-                sender.sendMessage(ChatColor.RED + "You don't have permission");
+                sender.sendMessage(ChatColor.RED + "You don't have permission to perform this command");
                 return true;
             }
             String already = (String) getConfig().get("reports.hacking." + player);
@@ -67,12 +67,12 @@ public class iReport extends JavaPlugin {
         }
         if ((cmd.getName().equalsIgnoreCase("sreport")) && (args.length == 1)) {
             if (!sender.hasPermission("ireport.sreport")) {
-                sender.sendMessage(ChatColor.RED + "You don't have permission");
+                sender.sendMessage(ChatColor.RED + "You don't have permission to perform this command");
                 return true;
             }
             String already = (String) getConfig().get("reports.swearing." + player);
             getConfig().set("reports.swearing." + player, "; " + target);
-            sender.sendMessage(ChatColor.BLUE + "You successfully reported " + ChatColor.RED + target);
+            sender.sendMessage(ChatColor.BLUE + "You don't have permission to perform this command" + ChatColor.RED + target);
             saveConfig();
 
             for (Player p : sender.getServer().getOnlinePlayers()) {
@@ -85,12 +85,12 @@ public class iReport extends JavaPlugin {
 
         if (cmd.getName().equalsIgnoreCase("ireport")) {
             sender.sendMessage(ChatColor.YELLOW + "==============================");
-            sender.sendMessage(ChatColor.BLUE + "/greport - Report a griefer");
-            sender.sendMessage(ChatColor.BLUE + "/hreport - Report a hacker");
-            sender.sendMessage(ChatColor.BLUE + "/sreport - Report a swearer");
-            sender.sendMessage(ChatColor.BLUE + "/ireport - Show this help menu");
+            sender.sendMessage(ChatColor.GREEN + "/greport - Report a griefer");
+            sender.sendMessage(ChatColor.GREEN + "/hreport - Report a hacker");
+            sender.sendMessage(ChatColor.GREEN + "/sreport - Report a swearer");
+            sender.sendMessage(ChatColor.GREEN + "/ireport - Show this help menu");
             sender.sendMessage(ChatColor.YELLOW + "==============================");
-            sender.sendMessage(ChatColor.GREEN + "Created by tudse145");
+            sender.sendMessage(ChatColor.MAGIC + "Created by tudse145 & heni123321");
 
             return true;
         }
