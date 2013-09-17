@@ -72,7 +72,7 @@ public class iReport extends JavaPlugin {
             }
             String already = (String) getConfig().get("reports.swearing." + player);
             getConfig().set("reports.swearing." + player, "; " + target);
-            sender.sendMessage(ChatColor.BLUE + "You don't have permission to perform this command" + ChatColor.RED + target);
+            sender.sendMessage(ChatColor.BLUE + "You successfully reported" + ChatColor.RED + target);
             saveConfig();
 
             for (Player p : sender.getServer().getOnlinePlayers()) {
