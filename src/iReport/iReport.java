@@ -32,7 +32,7 @@ public class iReport extends JavaPlugin {
         }
         if ((cmd.getName().equalsIgnoreCase("greport")) && (args.length == 1)) {
             if (!sender.hasPermission("ireport.greport") && !sender.isOp()) {
-                sender.sendMessage(ChatColor.RED + "You don't have permission");
+                sender.sendMessage(ChatColor.RED + "You don't have permission to perform this command");
                 return true;
             }
             String already = (String) getConfig().get("reports.griefing." + player);
