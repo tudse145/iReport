@@ -36,7 +36,9 @@ public class iReport extends JavaPlugin
       String already = (String)getConfig().get("reports.griefing." + player);
       sender.sendMessage(ChatColor.BLUE + "You successfully reported " + ChatColor.RED + target);
       getConfig().set("reports.griefing." + player, Rlocation.getxyz(this, args[0]) + "; " + target);
-      getMYSQL().queryUpdate("INSERT INTO reports (`name`,`Reason`) values ('" + target + "','" + Rlocation.getxyz(this, args[0]) + "')");
+        if (MYSQL.isenable) {
+            getMYSQL().queryUpdate("INSERT INTO reports (`name`,`Reason`) values ('" + target + "','" + Rlocation.getxyz(this, args[0]) + "')");
+        }
       saveConfig();
       for (Player p : sender.getServer().getOnlinePlayers()) {
         if ((p.isOp()) || (p.hasPermission("iReport.seereport"))) {
@@ -55,8 +57,10 @@ public class iReport extends JavaPlugin
       getConfig().set("reports.hacking." + player, new StringBuilder("type: ").append(args[1]).toString() + "; " + target);
       sender.sendMessage(ChatColor.BLUE + "You successfully reported " + ChatColor.RED + target);
       saveConfig();
-      getMYSQL().queryUpdate("INSERT INTO reports (`name`,`Reason`) values ('" + target + "','" + args[1] + "')");
-
+        if (MYSQL.isenable) {
+           getMYSQL().queryUpdate("INSERT INTO reports (`name`,`Reason`) values ('" + target + "','" + args[1] + "')"); 
+        }
+      
       for (Player p : sender.getServer().getOnlinePlayers()) {
         if ((p.isOp()) || (p.hasPermission("iReport.seereport"))) {
           p.sendMessage(ChatColor.RED + player + " has reported " + target + " for hacking " + args[1]);
@@ -73,7 +77,9 @@ public class iReport extends JavaPlugin
       getConfig().set("reports.swearing." + player, "; " + target);
       sender.sendMessage(ChatColor.BLUE + "You don't have permission to perform this command" + ChatColor.RED + target);
       saveConfig();
-      getMYSQL().queryUpdate("INSERT INTO reports (`name`,`Reason`) values ('" + target + "',' Swearing ')");
+        if (MYSQL.isenable) {
+         getMYSQL().queryUpdate("INSERT INTO reports (`name`,`Reason`) values ('" + target + "',' Swearing ')");   
+        }
       for (Player p : sender.getServer().getOnlinePlayers()) {
         if ((p.isOp()) || (p.hasPermission("iReport.seereport"))) {
           p.sendMessage(ChatColor.RED + player + " has reported " + target + " for swearing");
@@ -124,7 +130,9 @@ public class iReport extends JavaPlugin
     if (this.sql == null) {
       try {
         this.sql = new MYSQL();
-        this.sql.queryUpdate("CREATE TABLE IF NOT EXISTS Reports (id INT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(16), Reason VARCHAR (100))");
+          if (MYSQL.isenable) {
+             this.sql.queryUpdate("CREATE TABLE IF NOT EXISTS Reports (id INT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(16), Reason VARCHAR (100))"); 
+          }
       } catch (Exception e) {
         e.printStackTrace();
       }

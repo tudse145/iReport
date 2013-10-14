@@ -1,5 +1,5 @@
 name: iReport
-version: 1.5
+version: 1.6
 main: iReport.iReport
 commands:
   greport:
@@ -8,8 +8,8 @@ commands:
     permission: ireport.greport
     permission-message: You don't have permission!
   hreport:
-    description: Report a hacker
-    usage: /hreport <player>
+    description: Report a hacker + what type of hack used
+    usage: /hreport <player> <type of hack>
     permission: ireport.hreport
     permission-message: You don't have permission!
   sreport:

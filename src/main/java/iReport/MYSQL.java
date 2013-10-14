@@ -15,6 +15,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 public class MYSQL {
     
+    public static boolean isenable;
     private String host;
     private int port;
     private String user;
@@ -30,6 +31,7 @@ public class MYSQL {
        FileConfiguration cfg = YamlConfiguration.loadConfiguration(file);
        
        String db = "database.";
+       cfg.addDefault(db + "enable", false);
        cfg.addDefault(db + "host", "localhost");
        cfg.addDefault(db + "port", 3306);
        cfg.addDefault(db + "user", "user");
@@ -41,14 +43,15 @@ public class MYSQL {
     } catch (IOException e) {
         e.printStackTrace();
     }
-       
+       this.isenable = cfg.getBoolean(db + "enable");
        this.host = cfg.getString(db + "host");
        this.port = cfg.getInt(db + "port");
        this.user = cfg.getString(db + "user");
        this.password = cfg.getString(db + "passsword");
        this.database = cfg.getString(db + "database");
-       
-       this.oppenConnection();
+       if (isenable) {
+          this.oppenConnection();
+       }
    }
    
    public static MYSQL getMYSQL() {
