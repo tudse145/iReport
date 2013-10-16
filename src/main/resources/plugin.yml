@@ -20,3 +20,6 @@ commands:
   ireport:
     description: Get plugin help
     usage: /ireport
+  reports:
+    description: get reports list
+    usage: /reports
