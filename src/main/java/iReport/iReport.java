@@ -17,7 +17,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public class iReport extends JavaPlugin
 {
-  public static final List<String> REPORTLIST = new ArrayList();
   MYSQL sql;
 
   public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args)
@@ -113,15 +112,7 @@ public class iReport extends JavaPlugin
 
       return true;
     }
-    if (cmd.getName().equalsIgnoreCase("reports")) {
-      return true;
-    }
     return false;
-  }
-
-  public List<String> name() {
-    List l = new ArrayList();
-    return l;
   }
 
   public MYSQL getMYSQL()
