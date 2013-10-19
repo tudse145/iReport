@@ -16,6 +16,6 @@ public class Regcommands extends SimpleCommandMap {
         fallbackCommands.add(new greport(plugin));
         fallbackCommands.add(new sreport(plugin));
         fallbackCommands.add(new ireportc());
-        fallbackCommands.add(new reports(plugin));
+        fallbackCommands.add(new Reports(plugin));
     }
 }
