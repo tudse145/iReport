@@ -9,7 +9,7 @@ import org.bukkit.command.defaults.VanillaCommand;
 public class Reports extends VanillaCommand{
     
      private iReport plugin;
-     protected reports(iReport plugin) {
+     protected Reports(iReport plugin) {
         super("Reports");
         this.plugin = plugin;
         this.description = "get report list";
