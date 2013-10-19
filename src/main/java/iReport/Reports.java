@@ -6,7 +6,7 @@ import java.util.Scanner;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.defaults.VanillaCommand;
 
-public class reports extends VanillaCommand{
+public class Reports extends VanillaCommand{
     
      private iReport plugin;
      protected reports(iReport plugin) {
