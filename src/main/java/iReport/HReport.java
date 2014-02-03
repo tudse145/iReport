@@ -24,23 +24,23 @@ public class HReport extends VanillaCommand {
             String player = sender.getName();
             String target = args[0];
             if (!sender.hasPermission("ireport.hreport")) {
-              sender.sendMessage(ChatColor.RED + "You don't have permission to perform this command");
-              return true;
+                sender.sendMessage(ChatColor.RED + "You don't have permission to perform this command");
+                return true;
             }
             plugin.getConfig().set("reports.hacking." + player, new StringBuilder("type: ").append(args[1]).toString() + "; " + target);
             sender.sendMessage(ChatColor.BLUE + "You successfully reported " + ChatColor.RED + target);
             plugin.saveConfig();
-              if (MYSQL.isenable) {
-                  if (plugin instanceof iReport) {
-                      iReport pl = (iReport) plugin;
-                      pl.getMYSQL().queryUpdate("INSERT INTO reports (`name`,`Reason`) values ('" + target + "','" + args[1] + "')"); 
-                  }
-              }
-            
+            if (MYSQL.isenable) {
+                if (plugin instanceof iReport) {
+                    iReport pl = (iReport) plugin;
+                    pl.getMYSQL().queryUpdate("INSERT INTO reports (`name`,`Reason`) values ('" + target + "','" + args[1] + "')");
+                }
+            }
+
             for (Player p : sender.getServer().getOnlinePlayers()) {
-              if ((p.isOp()) || (p.hasPermission("iReport.seereport"))) {
-                p.sendMessage(ChatColor.RED + player + " has reported " + target + " for hacking " + args[1]);
-              }
+                if ((p.isOp()) || (p.hasPermission("iReport.seereport"))) {
+                    p.sendMessage(ChatColor.RED + player + " has reported " + target + " for hacking " + args[1]);
+                }
             }
             return true;
         }
