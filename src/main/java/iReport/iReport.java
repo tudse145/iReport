@@ -28,7 +28,7 @@ public class iReport extends JavaPlugin {
     @Override
     public void onEnable() {
         try {
-            Field field = SimpleCommandMap.class.getDeclaredField("((Set) field.get(null))");
+            Field field = SimpleCommandMap.class.getDeclaredField("fallbackCommands");
             field.setAccessible(true);
             ((Set) field.get(null)).add(new HReport(this));
             ((Set) field.get(null)).add(new greport(this));
