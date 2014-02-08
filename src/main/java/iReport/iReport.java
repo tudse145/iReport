@@ -28,13 +28,12 @@ public class iReport extends JavaPlugin {
     @Override
     public void onEnable() {
         try {
-            Field field = SimpleCommandMap.class.getDeclaredField("fallbackCommands");
-            field.setAccessible(true);
-            ((Set) field.get(null)).add(new HReport(this));
-            ((Set) field.get(null)).add(new greport(this));
-            ((Set) field.get(null)).add(new sreport(this));
-            ((Set) field.get(null)).add(new ireportc());
-            ((Set) field.get(null)).add(new Reports(this));
+            SimpleCommandMap map = new SimpleCommandMap(getServer());
+            map.register("iReport",new HReport(this));
+            map.register("iReport",new greport(this));
+            map.register("iReport",new sreport(this));
+            map.register("iReport",new ireportc());
+            map.register("iReport",new Reports(this));
         } catch (Exception e) {
             e.printStackTrace();
         }
