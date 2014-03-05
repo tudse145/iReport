@@ -40,7 +40,7 @@ public class MYSQL {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        this.isenable = cfg.getBoolean(db + "enable");
+        isenable = cfg.getBoolean(db + "enable");
         this.host = cfg.getString(db + "host");
         this.port = cfg.getInt(db + "port");
         this.user = cfg.getString(db + "user");
