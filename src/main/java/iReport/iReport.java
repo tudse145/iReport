@@ -20,7 +20,7 @@ public class iReport extends JavaPlugin {
         this.reportsfile = new File(getDataFolder(), "reports.yml");
     }
 
-    public MYSQL getMYSQL() {
+    public MYSQL getMYSQL() { 
         if (this.sql == null) {
             try {
                 this.sql = new MYSQL();
