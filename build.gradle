@@ -1,0 +1,19 @@
+apply plugin: 'java'
+apply plugin: 'eclipse'
+
+repositories {
+    mavenCentral()
+	maven {
+        name = "bukkit"
+        url = "http://repo.bukkit.org/content/groups/public"
+    }
+}
+archivesBaseName = 'iReport'
+version = '1.7.1-SNAPSHOT'
+archivesBaseName = 'iReport'
+targetCompatibility = '1.6'
+sourceCompatibility = '1.6'
+
+dependencies {
+	compile 'org.bukkit:bukkit:1.7.9-R0.1-SNAPSHOT'
+}
