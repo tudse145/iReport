@@ -2,6 +2,7 @@ package iReport.commands;
 
 import iReport.iReport;
 import iReport.mysql.MYSQL;
+import iReport.util.Utils;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -37,6 +38,7 @@ public class sreport implements CommandExecutor {
                     p.sendMessage(ChatColor.RED + player + " has reported " + target + " for swearing");
                 }
             }
+            Utils.reportplayer(target, "sReport ");
             return true;
         }
         return false;

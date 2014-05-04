@@ -1,5 +1,6 @@
 package iReport;
 
+import iReport.commands.Dreport;
 import iReport.commands.HReport;
 import iReport.commands.Reports;
 import iReport.commands.greport;
@@ -7,7 +8,7 @@ import iReport.commands.ireportc;
 import iReport.commands.sreport;
 import iReport.mysql.MYSQL;
 import iReport.util.Data;
-import iReport.util.Rlocation;
+import iReport.util.Utils;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -17,10 +18,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -50,6 +55,15 @@ public class iReport extends JavaPlugin {
     }
 
     @Override
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        if (label.equals("dreport")) {
+            return new Dreport(this).onCommand(sender, command, label, args);
+        }
+
+        return super.onCommand(sender, command, label, args);
+    }
+
+    @Override
     public void onEnable() {
         try {
             File f = new File("plugins/iReport/", "config.yml");
@@ -76,11 +90,11 @@ public class iReport extends JavaPlugin {
         getCommand("hreport").setExecutor(new HReport(this));
         getCommand("sreport").setExecutor(new sreport(this));
         getCommand("ireport").setExecutor(new ireportc());
-        getCommand("reports").setExecutor(new Reports());
-        getServer().getPluginManager().registerEvents(new Rlocation(), this);
+        getCommand("reports").setExecutor(new Reports(this));
+        getServer().getPluginManager().registerEvents(new Utils(), this);
 
+        getConfig().addDefault("reports.reportnewusername", false);
         saveConfig();
-        getConfig().options().copyDefaults(true);
         getMYSQL();
         try {
             ObjectInputStream o = new ObjectInputStream(new FileInputStream(new File(getDataFolder(), "data.bin")));
@@ -127,5 +141,22 @@ public class iReport extends JavaPlugin {
         } catch (IOException ex) {
             logger.log(Level.SEVERE, "Could not save config to " + reportsfile, ex);
         }
+    }
+
+    @Override
+    public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
+        if (sender.hasPermission("iReport.dreport")) {
+            List<String> list = new ArrayList<String>();
+            for (String string : Data.init().playerlist) {
+                if (string.contains(args[0])) {
+                    list.add(string);
+                }
+                if (args.length != 1) {
+                    list.add(string);
+                }
+            }
+            return list;
+        }
+        return super.onTabComplete(sender, command, alias, args);
     }
 }

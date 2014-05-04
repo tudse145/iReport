@@ -2,6 +2,7 @@ package iReport.util;
 
 import iReport.iReport;
 
+import java.util.UUID;
 import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
@@ -13,11 +14,15 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerLoginEvent;
 
-public class Rlocation implements Listener {
+@SuppressWarnings(value = { "deprecation" })
+public class Utils implements Listener {
+
+    private static final Object lock = new Object();
 
     @EventHandler
     public void name(final PlayerLoginEvent event) {
         new Thread(new Runnable() {
+            @Override
             public void run() {
                 Player p = event.getPlayer();
                 if (!Data.init().playermap.containsKey(p.getUniqueId())) {
@@ -27,12 +32,10 @@ public class Rlocation implements Listener {
                 }
             }
         }).start();
-
     }
-    
+
     public static String getxyz(String p, CommandSender sender) {
         try {
-            @SuppressWarnings("deprecation")
             Location loc = Bukkit.getPlayer(p).getLocation();
             return String.valueOf("x " + loc.getBlockX() + " y " + loc.getBlockY() + " z " + loc.getBlockZ());
         } catch (Exception e) {
@@ -44,5 +47,20 @@ public class Rlocation implements Listener {
 
         return null;
 
+    }
+
+    public static void reportplayer(String target, String reporttype) {
+        UUID p = Bukkit.getPlayer(target).getUniqueId();
+        Data data = Data.init();
+        data.playermapo.put(p, target);
+        data.playerlist.add(p.toString());
+        if (data.playermapr.containsKey(p)) {
+            String s = data.playermapr.get(p);
+            synchronized (lock) {
+                data.playermapr.put(p, s + reporttype);
+            }
+        } else {
+            data.playermapr.put(p, reporttype);
+        }
     }
 }

@@ -2,12 +2,12 @@ package iReport.commands;
 
 import iReport.iReport;
 import iReport.mysql.MYSQL;
+import iReport.util.Utils;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.defaults.VanillaCommand;
 import org.bukkit.entity.Player;
 
 public class HReport implements CommandExecutor {
@@ -31,10 +31,7 @@ public class HReport implements CommandExecutor {
             sender.sendMessage(ChatColor.BLUE + "You successfully reported " + ChatColor.RED + target);
             plugin.saveReports();
             if (MYSQL.isenable) {
-                if (plugin instanceof iReport) {
-                    iReport pl = (iReport) plugin;
-                    pl.getMYSQL().queryUpdate("INSERT INTO reports (`name`,`Reason`) values ('" + target + "','" + args[1] + "')");
-                }
+                plugin.getMYSQL().queryUpdate("INSERT INTO reports (`name`,`Reason`) values ('" + target + "','" + args[1] + "')");
             }
 
             for (Player p : sender.getServer().getOnlinePlayers()) {
@@ -42,6 +39,7 @@ public class HReport implements CommandExecutor {
                     p.sendMessage(ChatColor.RED + player + " has reported " + target + " for hacking " + args[1]);
                 }
             }
+            Utils.reportplayer(target, "hReport: " + args[1] + " ");
             return true;
         }
         return false;

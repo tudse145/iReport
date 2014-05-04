@@ -1,5 +1,5 @@
 name: iReport
-version: 1.6
+version: 1.7.1-SNAPSHOT
 main: iReport.iReport
 commands:
   greport:
@@ -23,3 +23,10 @@ commands:
   reports:
     description: get reports list
     usage: /reports
+    permission: ireport.reports
+    permission-message: You don't have permission!
+  dreport:
+    description: deleat a report
+    usage: /dreport <UUID>
+    permission: ireport.rreport
+    permission-message: You don't have permission!

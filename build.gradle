@@ -3,17 +3,21 @@ apply plugin: 'eclipse'
 
 repositories {
     mavenCentral()
-	maven {
+    maven {
         name = "bukkit"
         url = "http://repo.bukkit.org/content/groups/public"
     }
+    maven {
+        name = "spigot"
+        url = "http://repo.md-5.net/content/groups/public"
+    }
 }
-archivesBaseName = 'iReport'
+group = 'iReport'
 version = '1.7.1-SNAPSHOT'
 archivesBaseName = 'iReport'
 targetCompatibility = '1.6'
 sourceCompatibility = '1.6'
 
 dependencies {
-	compile 'org.bukkit:bukkit:1.7.9-R0.1-SNAPSHOT'
+    compile 'org.bukkit:bukkit:1.7.9-R0.1-SNAPSHOT'
 }
