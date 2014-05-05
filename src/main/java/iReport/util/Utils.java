@@ -53,14 +53,15 @@ public class Utils implements Listener {
         UUID p = Bukkit.getPlayer(target).getUniqueId();
         Data data = Data.init();
         data.playermapo.put(p, target);
-        data.playerlist.add(p.toString());
-        if (data.playermapr.containsKey(p)) {
-            String s = data.playermapr.get(p);
-            synchronized (lock) {
+        data.playerlistu.add(p.toString());
+        data.playerlistn.add(target);
+        synchronized (lock) {
+            if (data.playermapr.containsKey(p)) {
+                String s = data.playermapr.get(p);
                 data.playermapr.put(p, s + reporttype);
+            } else {
+                data.playermapr.put(p, reporttype);
             }
-        } else {
-            data.playermapr.put(p, reporttype);
         }
     }
 }

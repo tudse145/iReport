@@ -22,7 +22,7 @@ public class Dreport implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         Data data = Data.init();
         try {
-            data.playerlist.remove(args[0]);
+            data.playerlistu.remove(args[0]);
             UUID.randomUUID();
             data.playermapo.remove(UUID.fromString(args[0]));
             data.playermapr.remove(UUID.fromString(args[0]));

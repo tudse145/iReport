@@ -23,13 +23,22 @@ public class Reports implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String lable, String[] args) {
-        Map<UUID, String> iterator1 = init().playermap;
-        Map<UUID, String> iterator2 = init().playermapo;
-        Iterator<Entry<UUID, String>> iterator3 = init().playermapr.entrySet().iterator();
+        Map<UUID, String> map1 = init().playermap;
+        Map<UUID, String> map2 = init().playermapo;
+        Map<UUID, String> map3 = init().playermapr;
+        if (args.length == 1) {
+            String[] s = args[0].split(":");
+            if (s[0].equalsIgnoreCase("uuid")) {
+                UUID u = UUID.fromString(s[1]);
+                sender.sendMessage("UUID: " + u + " currentname: " + map1.get(u) + " " +map3.get(u) + " username: " + map2.get(u));
+            }
+        }
+        
+        Iterator<Entry<UUID, String>> iterator3 = map3.entrySet().iterator();
         while (iterator3.hasNext()) {
             Entry<UUID, String> e = iterator3.next();
             UUID u = e.getKey();
-            sender.sendMessage("UUID: " + u + " currentname: " + iterator1.get(u) + " " + e.getValue() + " username: " + iterator2.get(u));
+            sender.sendMessage("UUID: " + u + " currentname: " + map1.get(u) + " " + e.getValue() + " username: " + map2.get(u));
         }
         return true;
     }

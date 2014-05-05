@@ -12,13 +12,15 @@ public class Data implements Serializable {
     public HashMap<UUID, String> playermapo;
     public HashMap<UUID, String> playermapr;
     public static Data instens;
-    public List<String> playerlist;
+    public List<String> playerlistu;
+    public List<String> playerlistn;
 
     public Data() {
         playermap = new HashMap<UUID, String>();
         playermapo = new HashMap<UUID, String>();
         playermapr = new HashMap<UUID, String>();
-        playerlist = new ArrayList<String>();
+        playerlistu = new ArrayList<String>();
+        playerlistn = new ArrayList<String>();
     }
 
     public static Data init() {
