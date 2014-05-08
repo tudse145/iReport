@@ -22,11 +22,11 @@ commands:
     usage: /ireport
   reports:
     description: get reports list
-    usage: /reports
+    usage: /reports [type] [value]
     permission: ireport.reports
     permission-message: You don't have permission!
   dreport:
     description: deleat a report
     usage: /dreport <UUID>
-    permission: ireport.rreport
+    permission: ireport.dreport
     permission-message: You don't have permission!

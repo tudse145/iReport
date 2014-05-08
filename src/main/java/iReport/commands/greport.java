@@ -38,7 +38,7 @@ public class greport implements CommandExecutor {
                     p.sendMessage(ChatColor.RED + player + " has reported " + target + " for griefing");
                 }
             }
-            Utils.reportplayer(target, "gReport: " + Utils.getxyz(args[0], null) + " ");
+            Utils.reportplayer(target, "gReport: " + Utils.getxyz(args[0], null) + " ", sender);
             return true;
         }
         return false;

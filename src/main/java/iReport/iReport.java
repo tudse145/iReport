@@ -21,6 +21,8 @@ import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.Set;
+import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -56,10 +58,10 @@ public class iReport extends JavaPlugin {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (label.equalsIgnoreCase("dreport")) {
-            return new Dreport(this).onCommand(sender, command, label, args);
+        if (label.equalsIgnoreCase("dreport") && args.length == 1) {
+            return new Dreport().onCommand(sender, command, label, args);
         }
-        if (label.equalsIgnoreCase("reporta")) {
+        if (label.equalsIgnoreCase("reports")) {
             return new Reports(this).onCommand(sender, command, label, args);
         }
 
@@ -95,8 +97,6 @@ public class iReport extends JavaPlugin {
         getCommand("ireport").setExecutor(new ireportc());
         getServer().getPluginManager().registerEvents(new Utils(), this);
 
-        getConfig().addDefault("reports.reportnewusername", false);
-        saveConfig();
         getMYSQL();
         try {
             ObjectInputStream o = new ObjectInputStream(new FileInputStream(new File(getDataFolder(), "data.bin")));
@@ -147,43 +147,50 @@ public class iReport extends JavaPlugin {
 
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
+        Set<UUID> set = Data.init().playermapo.keySet();
+        List<String> list2 = new ArrayList<String>();
+        for (UUID uuid : set) {
+            list2.add(uuid.toString());
+        }
+        List<String> list = new ArrayList<String>();
         if (sender.hasPermission("iReport.dreport") && alias.equalsIgnoreCase("dreport")) {
-            List<String> list = new ArrayList<String>();
-            for (String string : Data.init().playerlistu) {
-                if (string.contains(args[0])) {
-                    list.add(string);
-                }
-                if (args.length != 1) {
+            for (String string : list2) {
+                if (string.startsWith(args[0])) {
                     list.add(string);
                 }
             }
             return list;
         }
-        if (sender.hasPermission("iReport.reports") && alias.equalsIgnoreCase("reports") && args.length == 1) {
-            List<String> list = new ArrayList<String>();
-            if (args[0].toLowerCase().startsWith("uuid:")) {
-                for (String string : Data.init().playerlistu) {
-                    String[] s = args[0].split(":");
+        if (sender.hasPermission("iReport.reports") && alias.equalsIgnoreCase("reports")) {
+            if (args.length < 2) {
+                List<String> l = new ArrayList<String>();
+                if ("uuid".startsWith(args[0].toLowerCase())) {
+                    l.add("uuid");
+                }
+                if ("usernameo".startsWith(args[0].toLowerCase())) {
+                    l.add("usernameo");
+                }
+                return l;
+            }
+            if (args[0].toLowerCase().equals("uuid")) {
+                for (String string : list2) {
                     try {
-                        if (string.contains(s[1]) && args[0].length() < 41) { 
-                            list.add(args[0]+string.substring(s[1].length()));
-                            continue;
+                        if (string.toLowerCase().startsWith(args[1].toLowerCase())) { 
+                            list.add(string);
                         }
                     } catch (ArrayIndexOutOfBoundsException e) {
-                        // TODO: handle exception
-                    }
-                    if (args.length == 1 && args[0].length() < 41 && args[0].equalsIgnoreCase("uuid:")) {
-                        list.add(args[0]+string);
+                        // Ignore
                     }
                 }
             }
-            if (args[0].toLowerCase().startsWith("usernameo:")) {
-                for (String string : Data.init().playerlistn) {
-                    if (string.contains(args[0])) {
-                        list.add(args[0]+string);
-                    }
-                    if (args.length == 1 && args[0].length() < 41) {
-                        list.add(args[0]+string);
+            if (args[0].toLowerCase().equals("usernameo")) {
+                for (String string : Data.init().playermapo.values()) {
+                    try {
+                        if (string.toLowerCase().startsWith(args[1].toLowerCase())) { 
+                            list.add(string);
+                        }
+                    } catch (ArrayIndexOutOfBoundsException e) {
+                        // Ignore
                     }
                 }
             }

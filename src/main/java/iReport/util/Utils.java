@@ -20,7 +20,7 @@ public class Utils implements Listener {
     private static final Object lock = new Object();
 
     @EventHandler
-    public void name(final PlayerLoginEvent event) {
+    public void login(final PlayerLoginEvent event) {
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -49,12 +49,13 @@ public class Utils implements Listener {
 
     }
 
-    public static void reportplayer(String target, String reporttype) {
+    public static void reportplayer(String target, String reporttype, CommandSender sender) {
         UUID p = Bukkit.getPlayer(target).getUniqueId();
         Data data = Data.init();
         data.playermapo.put(p, target);
-        data.playerlistu.add(p.toString());
-        data.playerlistn.add(target);
+//        Object o = data.playermapor.get(target);
+//        if (!data.playermapor.containsKey(target) && o == null ? true : o.equals(p))
+        data.playermapor.put(target, p);
         synchronized (lock) {
             if (data.playermapr.containsKey(p)) {
                 String s = data.playermapr.get(p);

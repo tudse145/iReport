@@ -39,7 +39,7 @@ public class HReport implements CommandExecutor {
                     p.sendMessage(ChatColor.RED + player + " has reported " + target + " for hacking " + args[1]);
                 }
             }
-            Utils.reportplayer(target, "hReport: " + args[1] + " ");
+            Utils.reportplayer(target, "hReport: " + args[1] + " ", sender);
             return true;
         }
         return false;

@@ -38,7 +38,7 @@ public class sreport implements CommandExecutor {
                     p.sendMessage(ChatColor.RED + player + " has reported " + target + " for swearing");
                 }
             }
-            Utils.reportplayer(target, "sReport ");
+            Utils.reportplayer(target, "sReport ", sender);
             return true;
         }
         return false;
