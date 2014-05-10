@@ -13,7 +13,7 @@ repositories {
     }
 }
 group = 'iReport'
-version = '1.7.1-SNAPSHOT'
+version = '2.0-SNAPSHOT'
 archivesBaseName = 'iReport'
 targetCompatibility = '1.6'
 sourceCompatibility = '1.6'

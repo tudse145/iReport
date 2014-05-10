@@ -20,7 +20,7 @@ public class Dreport implements CommandExecutor {
             data.playermapo.clear();
             data.playermapor.clear();
             data.playermapr.clear();
-            sender.sendMessage(ChatColor.GREEN+"Successfully clear reports");
+            sender.sendMessage(ChatColor.GREEN+"Successfully cleared reports");
             return true;
         }
         try {
@@ -28,7 +28,7 @@ public class Dreport implements CommandExecutor {
             data.playermapo.remove(UUID.fromString(args[0]));
             data.playermapr.remove(UUID.fromString(args[0]));
             data.playermapor.remove(s);
-            sender.sendMessage(ChatColor.GREEN+"Successfully deleated"+s);
+            sender.sendMessage(ChatColor.GREEN+"Successfully deleated "+s);
         } catch (IllegalArgumentException e) {
             sender.sendMessage(ChatColor.RED+"invalid UUID");
         }
