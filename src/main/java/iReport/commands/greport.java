@@ -20,14 +20,14 @@ public class greport implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (args.length == 1) {
+        if (args.length > 0) {
             String player = sender.getName();
             String target = args[0];
             if ((!sender.hasPermission("ireport.greport")) && (!sender.isOp())) {
                 sender.sendMessage(ChatColor.RED + "You don't have permission");
                 return true;
             }
-            plugin.grtReports().set("reports.griefing." + player, Utils.getxyz(args[0], sender) + "; " + target);
+            plugin.getReports().set("reports.griefing." + player, Utils.getxyz(args[0], sender) + "; " + target);
             sender.sendMessage(ChatColor.BLUE + "You successfully reported " + ChatColor.RED + target);
             if (MYSQL.isenable) {
                 plugin.getMYSQL().queryUpdate("INSERT INTO reports (`name`,`Reason`) values ('" + target + "','" + Utils.getxyz(args[0], null) + "')");
@@ -38,7 +38,7 @@ public class greport implements CommandExecutor {
                     p.sendMessage(ChatColor.RED + player + " has reported " + target + " for griefing");
                 }
             }
-            Utils.reportplayer(target, "gReport: " + Utils.getxyz(args[0], null) + " ", sender);
+            Utils.reportplayer(target, "gReport: " + Utils.getxyz(args[0], null) + " ", sender, args.length > 1 ? Boolean.valueOf(args[1]) : false);
             return true;
         }
         return false;

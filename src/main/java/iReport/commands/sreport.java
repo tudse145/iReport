@@ -20,14 +20,14 @@ public class sreport implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String arg1, String[] args) {
-        if (args.length == 1) {
+        if (args.length > 0) {
             String player = sender.getName();
             String target = args[0];
             if ((!sender.hasPermission("ireport.sreport")) && (!sender.isOp())) {
                 sender.sendMessage(ChatColor.RED + "You don't have permission");
                 return true;
             }
-            plugin.grtReports().set("reports.swearing." + player, "; " + target);
+            plugin.getReports().set("reports.swearing." + player, "; " + target);
             sender.sendMessage(ChatColor.BLUE + "You successfully reported " + ChatColor.RED + target);
             if (MYSQL.isenable) {
                 plugin.getMYSQL().queryUpdate("INSERT INTO reports (`name`,`Reason`) values ('" + target + "',' Swearing ')");
@@ -38,7 +38,7 @@ public class sreport implements CommandExecutor {
                     p.sendMessage(ChatColor.RED + player + " has reported " + target + " for swearing");
                 }
             }
-            Utils.reportplayer(target, "sReport ", sender);
+            Utils.reportplayer(target, "sReport ", sender, args.length > 1 ? Boolean.valueOf(args[1]) : false);
             return true;
         }
         return false;

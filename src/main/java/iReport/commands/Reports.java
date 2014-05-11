@@ -31,11 +31,11 @@ public class Reports implements CommandExecutor {
             try {
                 if (args[0].equalsIgnoreCase("uuid")) {
                     UUID u = UUID.fromString(args[1]);
-                    sender.sendMessage("UUID: " + u + " currentname: " + map1.get(u) + " " +map3.get(u) + " username: " + map2.get(u));
+                    sender.sendMessage("UUID: " + u + " currentname: " + map1.get(u) + " " +map3.get(u) + "username: " + map2.get(u));
                 }
                 if (args[0].equalsIgnoreCase("usernameo")) {
                     UUID u = init().playermapor.get(args[1]);
-                    sender.sendMessage("UUID: " + u + " currentname: " + map1.get(u) + " " +map3.get(u) + " username: " + map2.get(u));
+                    sender.sendMessage("UUID: " + u + " currentname: " + map1.get(u) + " " +map3.get(u) + "username: " + map2.get(u));
                 }
                 return true;
             } catch (Exception e) {
@@ -46,7 +46,7 @@ public class Reports implements CommandExecutor {
             while (iterator3.hasNext()) {
                 Entry<UUID, String> e = iterator3.next();
                 UUID u = e.getKey();
-                sender.sendMessage("UUID: " + u + " currentname: " + map1.get(u) + " " + e.getValue() + " username: " + map2.get(u));
+                sender.sendMessage("UUID: " + u + " currentname: " + map1.get(u) + " " + e.getValue() + "username: " + map2.get(u));
             }
             return true;
         }

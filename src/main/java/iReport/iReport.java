@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.ForkJoinPool;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -123,7 +124,7 @@ public class iReport extends JavaPlugin {
         }
     }
 
-    public FileConfiguration grtReports() {
+    public FileConfiguration getReports() {
         if (newConfig == null) {
             newConfig = YamlConfiguration.loadConfiguration(reportsfile);
 
@@ -139,7 +140,7 @@ public class iReport extends JavaPlugin {
 
     public void saveReports() {
         try {
-            grtReports().save(reportsfile);
+            getReports().save(reportsfile);
         } catch (IOException ex) {
             logger.log(Level.SEVERE, "Could not save config to " + reportsfile, ex);
         }
