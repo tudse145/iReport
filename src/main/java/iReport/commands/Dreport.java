@@ -14,14 +14,20 @@ public class Dreport implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         Data data = Data.init();
-        if (args[0].equals("*") && sender.hasPermission("ireport.dreport.all"))
+        if (args[0].equals("*"))
         {
-            data.playermap.clear();
-            data.playermapo.clear();
-            data.playermapor.clear();
-            data.playermapr.clear();
-            sender.sendMessage(ChatColor.GREEN+"Successfully cleared reports");
-            return true;
+            if (sender.hasPermission("ireport.dreport.all")) {
+                data.playermap.clear();
+                data.playermapo.clear();
+                data.playermapor.clear();
+                data.playermapr.clear();
+                sender.sendMessage(ChatColor.GREEN+"Successfully cleared reports");
+                return true;
+            } else {
+                sender.sendMessage(ChatColor.RED + "You don't have permission");
+                return true;
+            }
+            
         }
         try {
             String s = data.playermapo.get(UUID.fromString(args[0]));
