@@ -50,14 +50,19 @@ public class Utils implements Listener {
     }
 
     public static void reportplayer(String target, String reporttype, CommandSender sender, boolean b) {
-        UUID p = Bukkit.getPlayer(target).getUniqueId();
+        UUID p = null;
+        try {
+            p = Bukkit.getPlayer(target).getUniqueId();
+        } catch (NullPointerException e) {
+            return;
+        }
         Data data = Data.init();
         data.playermapo.put(p, target);
         Object o = data.playermapor.get(target);
         if (!data.playermapor.containsKey(target) && o == null ? true : o.equals(p) || b)
-        	data.playermapor.put(target, p);
+            data.playermapor.put(target, p);
         else
-        	sender.sendMessage("player "+ target + " is alredy reported with another UUID please look at the reports or add true");
+            sender.sendMessage("player " + target + " is alredy reported with another UUID please look at the reports or add true");
         synchronized (lock) {
             if (data.playermapr.containsKey(p)) {
                 String s = data.playermapr.get(p);

@@ -175,7 +175,7 @@ public class iReport extends JavaPlugin {
             if (args[0].toLowerCase().equals("uuid")) {
                 for (String string : list2) {
                     try {
-                        if (string.toLowerCase().startsWith(args[1].toLowerCase())) { 
+                        if (string.toLowerCase().startsWith(args[1].toLowerCase())) {
                             list.add(string);
                         }
                     } catch (ArrayIndexOutOfBoundsException e) {
@@ -186,7 +186,7 @@ public class iReport extends JavaPlugin {
             if (args[0].toLowerCase().equals("usernameo")) {
                 for (String string : Data.init().playermapo.values()) {
                     try {
-                        if (string.toLowerCase().startsWith(args[1].toLowerCase())) { 
+                        if (string.toLowerCase().startsWith(args[1].toLowerCase())) {
                             list.add(string);
                         }
                     } catch (ArrayIndexOutOfBoundsException e) {

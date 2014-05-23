@@ -14,29 +14,28 @@ public class Dreport implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         Data data = Data.init();
-        if (args[0].equals("*"))
-        {
+        if (args[0].equals("*")) {
             if (sender.hasPermission("ireport.dreport.all")) {
                 data.playermap.clear();
                 data.playermapo.clear();
                 data.playermapor.clear();
                 data.playermapr.clear();
-                sender.sendMessage(ChatColor.GREEN+"Successfully cleared reports");
+                sender.sendMessage(ChatColor.GREEN + "Successfully cleared reports");
                 return true;
             } else {
                 sender.sendMessage(ChatColor.RED + "You don't have permission");
                 return true;
             }
-            
+
         }
         try {
             String s = data.playermapo.get(UUID.fromString(args[0]));
             data.playermapo.remove(UUID.fromString(args[0]));
             data.playermapr.remove(UUID.fromString(args[0]));
             data.playermapor.remove(s);
-            sender.sendMessage(ChatColor.GREEN+"Successfully deleted "+s);
+            sender.sendMessage(ChatColor.GREEN + "Successfully deleted " + s);
         } catch (IllegalArgumentException e) {
-            sender.sendMessage(ChatColor.RED+"invalid UUID");
+            sender.sendMessage(ChatColor.RED + "invalid UUID");
         }
         return true;
     }

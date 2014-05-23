@@ -31,15 +31,15 @@ public class Reports implements CommandExecutor {
             try {
                 if (args[0].equalsIgnoreCase("uuid")) {
                     UUID u = UUID.fromString(args[1]);
-                    sender.sendMessage("UUID: " + u + " currentname: " + map1.get(u) + " " +map3.get(u) + "username: " + map2.get(u));
+                    sender.sendMessage("UUID: " + u + " currentname: " + map1.get(u) + " " + map3.get(u) + "username: " + map2.get(u));
                 }
                 if (args[0].equalsIgnoreCase("usernameo")) {
                     UUID u = init().playermapor.get(args[1]);
-                    sender.sendMessage("UUID: " + u + " currentname: " + map1.get(u) + " " +map3.get(u) + "username: " + map2.get(u));
+                    sender.sendMessage("UUID: " + u + " currentname: " + map1.get(u) + " " + map3.get(u) + "username: " + map2.get(u));
                 }
                 return true;
             } catch (Exception e) {
-                sender.sendMessage(ChatColor.RED+"invalid UUID");
+                sender.sendMessage(ChatColor.RED + "invalid UUID");
             }
         } else if (args.length == 0) {
             Iterator<Entry<UUID, String>> iterator3 = map3.entrySet().iterator();
@@ -50,7 +50,7 @@ public class Reports implements CommandExecutor {
             }
             return true;
         }
-        
+
         return false;
     }
 }
