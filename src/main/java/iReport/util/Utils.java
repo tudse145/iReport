@@ -17,8 +17,6 @@ import org.bukkit.event.player.PlayerLoginEvent;
 @SuppressWarnings(value = { "deprecation" })
 public class Utils implements Listener {
 
-    private static final Object lock = new Object();
-
     @EventHandler
     public void login(final PlayerLoginEvent event) {
         new Thread(new Runnable() {
@@ -54,6 +52,7 @@ public class Utils implements Listener {
         try {
             p = Bukkit.getPlayer(target).getUniqueId();
         } catch (NullPointerException e) {
+            sender.sendMessage(ChatColor.RED + target + " is not online");
             return;
         }
         Data data = Data.init();
@@ -63,7 +62,7 @@ public class Utils implements Listener {
             data.playermapor.put(target, p);
         else
             sender.sendMessage("player " + target + " is alredy reported with another UUID please look at the reports or add true");
-        synchronized (lock) {
+        synchronized (data.playermap.get(p)) {
             if (data.playermapr.containsKey(p)) {
                 String s = data.playermapr.get(p);
                 data.playermapr.put(p, s + reporttype);
