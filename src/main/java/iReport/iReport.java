@@ -34,7 +34,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public class iReport extends JavaPlugin {
     public static final Logger logger = Logger.getLogger("iReport");
-    public MYSQL sql;
+    public static MYSQL sql;
     private File reportsfile;
     private YamlConfiguration newConfig;
 
@@ -42,18 +42,18 @@ public class iReport extends JavaPlugin {
         this.reportsfile = new File(getDataFolder(), "reports.yml");
     }
 
-    public MYSQL getMYSQL() {
-        if (this.sql == null) {
+    public static MYSQL getMYSQL() {
+        if (sql == null) {
             try {
-                this.sql = new MYSQL();
+                sql = new MYSQL();
                 if (MYSQL.isenable) {
-                    this.sql.queryUpdate("CREATE TABLE IF NOT EXISTS Reports (id INT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(16), Reason VARCHAR (100))");
+                    sql.queryUpdate("CREATE TABLE IF NOT EXISTS Reports (id INT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(16), Reason VARCHAR (100))");
                 }
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
-        return this.sql;
+        return sql;
     }
 
     @Override

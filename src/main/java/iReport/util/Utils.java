@@ -1,7 +1,10 @@
 package iReport.util;
 
+import static iReport.util.Data.init;
 import iReport.iReport;
 
+import java.io.File;
+import java.util.Map;
 import java.util.UUID;
 import java.util.logging.Level;
 
@@ -27,9 +30,16 @@ public class Utils implements Listener {
                     Data.init().playermap.put(p.getUniqueId(), p.getName());
                 } else if (Data.init().playermap.get(p.getUniqueId()) != p.getName()) {
                     Data.init().playermap.put(p.getUniqueId(), p.getName());
+                    if (Utils.isReported(p.getUniqueId())) {
+                        Utils.updateusernameMYSQL(p.getUniqueId(), p.getName());
+                    }
                 }
             }
         }).start();
+    }
+
+    public static boolean isReported(UUID uniqueId) {
+        return Data.init().playermapr.get(uniqueId) != null;
     }
 
     public static String getxyz(String p, CommandSender sender) {
@@ -70,5 +80,30 @@ public class Utils implements Listener {
                 data.playermapr.put(p, reporttype);
             }
         }
+        updateMYSQL(Bukkit.getPlayer(target));
+    }
+    
+    public static void updateMYSQL(Player player) {
+        if (true) {
+            return;
+        }
+        UUID uuid = player.getUniqueId();
+        Map<UUID, String> map1 = init().playermap;
+        Map<UUID, String> map2 = init().playermapo;
+        Map<UUID, String> map3 = init().playermapr;
+        if (!isReported(uuid)) {
+            iReport.getMYSQL().queryUpdate(null);
+		} else {
+            iReport.getMYSQL().queryUpdate(null);
+		}
+        iReport.getMYSQL().queryUpdate("UUID: " + uuid + " currentname: " + map1.get(uuid) + " " + map3.get(uuid) + "username: " + map2.get(uuid));
+
+    }
+
+    public static void updateusernameMYSQL(UUID uniqueId, String name) {
+        if (true) {
+            return;
+        }
+    	iReport.getMYSQL().queryUpdate(null);
     }
 }

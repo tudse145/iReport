@@ -87,6 +87,7 @@ public class MYSQL {
             st = conn.prepareStatement(query);
             st.executeUpdate();
         } catch (SQLException e) {
+        	e.printStackTrace();
             System.err.println("Failed to send update '" + query + "'.");
         } finally {
             this.closeRessources(null, st);
