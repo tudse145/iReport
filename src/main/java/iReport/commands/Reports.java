@@ -64,7 +64,7 @@ public class Reports implements CommandExecutor {
             } catch (Exception e) {
                 sender.sendMessage(ChatColor.RED + "invalid UUID");
             }
-        } else if (args.length == 0) {
+        } else {
             Iterator<Entry<UUID, String>> iterator3 = map3.entrySet().iterator();
             while (iterator3.hasNext()) {
                 Entry<UUID, String> e = iterator3.next();

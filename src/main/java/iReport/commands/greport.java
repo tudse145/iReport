@@ -2,6 +2,7 @@ package iReport.commands;
 
 import iReport.iReport;
 import iReport.mysql.MYSQL;
+import iReport.util.Java8;
 import iReport.util.Utils;
 
 import org.bukkit.ChatColor;
@@ -30,14 +31,18 @@ public class greport implements CommandExecutor {
             plugin.getReports().set("reports.griefing." + player, Utils.getxyz(args[0], sender) + "; " + target);
             sender.sendMessage(ChatColor.BLUE + "You successfully reported " + ChatColor.RED + target);
             if (MYSQL.isenable) {
-                plugin.getMYSQL().queryUpdate("INSERT INTO reports (`name`,`Reason`) values ('" + target + "','" + Utils.getxyz(args[0], null) + "')");
+                iReport.getMYSQL().queryUpdate("INSERT INTO reports (`name`,`Reason`) values ('" + target + "','" + Utils.getxyz(args[0], null) + "')");
             }
             plugin.saveReports();
-            for (Player p : sender.getServer().getOnlinePlayers()) {
-                if ((p.isOp()) || (p.hasPermission("iReport.seereport"))) {
-                    p.sendMessage(ChatColor.RED + player + " has reported " + target + " for griefing");
-                }
-            }
+            if (plugin.JAVA8) {
+				Java8.notyfyplayers(ChatColor.RED + player + " has reported " + target + " for griefing");
+			} else {
+	            for (Player p : sender.getServer().getOnlinePlayers()) {
+	                if ((p.isOp()) || (p.hasPermission("iReport.seereport"))) {
+	                    p.sendMessage(ChatColor.RED + player + " has reported " + target + " for griefing");
+	                }
+	            }
+			}
             Utils.reportplayer(target, "gReport: " + Utils.getxyz(args[0], null) + " ", sender, args.length > 1 ? Boolean.valueOf(args[1]) : false);
             return true;
         }

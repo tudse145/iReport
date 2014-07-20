@@ -8,6 +8,7 @@ import iReport.commands.ireportc;
 import iReport.commands.sreport;
 import iReport.mysql.MYSQL;
 import iReport.util.Data;
+import iReport.util.Java8;
 import iReport.util.Utils;
 
 import java.io.File;
@@ -33,6 +34,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class iReport extends JavaPlugin {
+    public final boolean JAVA8;
     public static final Logger logger = Logger.getLogger("iReport");
     public static MYSQL sql;
     private File reportsfile;
@@ -40,6 +42,16 @@ public class iReport extends JavaPlugin {
 
     public iReport() {
         this.reportsfile = new File(getDataFolder(), "reports.yml");
+        JAVA8 = check();
+    }
+
+    private boolean check() {
+        try {
+            Java8.check();
+            return true;
+        } catch (UnsupportedClassVersionError e) {
+            return false;
+        }
     }
 
     public static MYSQL getMYSQL() {
@@ -147,6 +159,9 @@ public class iReport extends JavaPlugin {
 
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
+        if (JAVA8) {
+            return Java8.onTabComplete(sender, command, alias, args);
+        }
         Set<UUID> set = Data.init().playermapo.keySet();
         List<String> list2 = new ArrayList<String>();
         for (UUID uuid : set) {
@@ -174,23 +189,15 @@ public class iReport extends JavaPlugin {
             }
             if (args[0].toLowerCase().equals("uuid")) {
                 for (String string : list2) {
-                    try {
-                        if (string.toLowerCase().startsWith(args[1].toLowerCase())) {
-                            list.add(string);
-                        }
-                    } catch (ArrayIndexOutOfBoundsException e) {
-                        // Ignore
+                    if (string.toLowerCase().startsWith(args[1].toLowerCase())) {
+                        list.add(string);
                     }
                 }
             }
             if (args[0].toLowerCase().equals("usernameo")) {
                 for (String string : Data.init().playermapo.values()) {
-                    try {
-                        if (string.toLowerCase().startsWith(args[1].toLowerCase())) {
-                            list.add(string);
-                        }
-                    } catch (ArrayIndexOutOfBoundsException e) {
-                        // Ignore
+                    if (string.toLowerCase().startsWith(args[1].toLowerCase())) {
+                        list.add(string);
                     }
                 }
             }

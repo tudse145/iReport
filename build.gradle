@@ -15,8 +15,8 @@ repositories {
 group = 'iReport'
 version = '2.0-SNAPSHOT'
 archivesBaseName = 'iReport'
-targetCompatibility = '1.6'
-sourceCompatibility = '1.6'
+targetCompatibility = '1.8'
+sourceCompatibility = '1.8'
 
 dependencies {
     compile 'org.bukkit:bukkit:1.7.10-R0.1-SNAPSHOT'
@@ -31,10 +31,9 @@ processResources
 	from(sourceSets.main.resources.srcDirs) {
 		include 'plugin.yml'
 
-		filter{
-                String line -> line.replaceAll("version:",
-                                               "version: " + project.version)
-            }
+		filter{line ->
+		    line.replaceAll("version:", "version: " + project.version)
+        }
 	}
 
 	// copy everything else, thats not the mcmod.info
