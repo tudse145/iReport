@@ -1,7 +1,7 @@
 package iReport.util;
 
 import static iReport.util.Data.init;
-import iReport.iReport;
+import iReport.IReport;
 
 import java.io.File;
 import java.util.Map;
@@ -48,7 +48,7 @@ public class Utils implements Listener {
             return String.valueOf("x " + loc.getBlockX() + " y " + loc.getBlockY() + " z " + loc.getBlockZ());
         } catch (Exception e) {
             if (sender != null) {
-                iReport.logger.log(Level.WARNING, p + " is not online");
+                IReport.logger.log(Level.WARNING, p + " is not online");
                 sender.sendMessage(ChatColor.RED + p + " is not online");
             }
         }
@@ -92,11 +92,11 @@ public class Utils implements Listener {
         Map<UUID, String> map2 = init().playermapo;
         Map<UUID, String> map3 = init().playermapr;
         if (!isReported(uuid)) {
-            iReport.getMYSQL().queryUpdate(null);
+            IReport.getMYSQL().queryUpdate(null);
 		} else {
-            iReport.getMYSQL().queryUpdate(null);
+            IReport.getMYSQL().queryUpdate(null);
 		}
-        iReport.getMYSQL().queryUpdate("UUID: " + uuid + " currentname: " + map1.get(uuid) + " " + map3.get(uuid) + "username: " + map2.get(uuid));
+        IReport.getMYSQL().queryUpdate("UUID: " + uuid + " currentname: " + map1.get(uuid) + " " + map3.get(uuid) + "username: " + map2.get(uuid));
 
     }
 
@@ -104,6 +104,6 @@ public class Utils implements Listener {
         if (true) {
             return;
         }
-    	iReport.getMYSQL().queryUpdate(null);
+    	IReport.getMYSQL().queryUpdate(null);
     }
 }

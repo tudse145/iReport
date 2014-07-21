@@ -1,8 +1,7 @@
 package iReport.commands;
 
-import iReport.iReport;
+import iReport.IReport;
 import iReport.mysql.MYSQL;
-import iReport.util.Java8;
 import iReport.util.Utils;
 
 import org.bukkit.ChatColor;
@@ -13,9 +12,9 @@ import org.bukkit.entity.Player;
 
 public class HReport implements CommandExecutor {
 
-    private iReport plugin;
+    private IReport plugin;
 
-    public HReport(iReport plugin) {
+    public HReport(IReport plugin) {
         this.plugin = plugin;
     }
 
@@ -32,18 +31,13 @@ public class HReport implements CommandExecutor {
             sender.sendMessage(ChatColor.BLUE + "You successfully reported " + ChatColor.RED + target);
             plugin.saveReports();
             if (MYSQL.isenable) {
-                iReport.getMYSQL().queryUpdate("INSERT INTO reports (`name`,`Reason`) values ('" + target + "','" + args[1] + "')");
+                IReport.getMYSQL().queryUpdate("INSERT INTO reports (`name`,`Reason`) values ('" + target + "','" + args[1] + "')");
             }
-            if (plugin.JAVA8) {
-                Java8.notyfyplayers(ChatColor.RED + player + " has reported " + target + " for hacking " + args[1]);
-            } else {
-                for (Player p : sender.getServer().getOnlinePlayers()) {
-                    if ((p.isOp()) || (p.hasPermission("iReport.seereport"))) {
-                        p.sendMessage(ChatColor.RED + player + " has reported " + target + " for hacking " + args[1]);
-                    }
+            for (Player p : sender.getServer().getOnlinePlayers()) {
+                if ((p.isOp()) || (p.hasPermission("iReport.seereport"))) {
+                    p.sendMessage(ChatColor.RED + player + " has reported " + target + " for hacking " + args[1]);
                 }
             }
-            //
             Utils.reportplayer(target, "hReport: " + args[1] + " ", sender, args.length > 2 ? Boolean.valueOf(args[1]) : false);
             return true;
         }
