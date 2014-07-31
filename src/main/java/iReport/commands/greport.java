@@ -28,7 +28,6 @@ public class greport implements CommandExecutor {
             }
             plugin.getReports().set("reports.griefing." + player, Utils.getxyz(args[0], sender) + "; " + target);
             sender.sendMessage(ChatColor.BLUE + "You successfully reported " + ChatColor.RED + target);
-            IReport.getMYSQL().queryUpdate("INSERT INTO reports (`name`,`Reason`) values ('" + target + "','" + Utils.getxyz(args[0], null) + "')");
             plugin.saveReports();
             for (Player p : sender.getServer().getOnlinePlayers()) {
                 if ((p.isOp()) || (p.hasPermission("iReport.seereport"))) {

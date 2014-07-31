@@ -17,12 +17,16 @@ public class Dreport implements CommandExecutor {
         Data data = Data.init();
         if (args[0].equals("*")) {
             if (sender.hasPermission("ireport.dreport.all")) {
+            	
+            	for (UUID uuid : data.playermapo.keySet()) {
+                    IReport.getMYSQL().queryUpdate("DELETE FROM reports WHERE uuid = '" + uuid.toString() + "'");
+				}
+            	
                 data.playermap.clear();
                 data.playermapo.clear();
                 data.playermapor.clear();
                 data.playermapr.clear();
                 sender.sendMessage(ChatColor.GREEN + "Successfully cleared reports");
-                IReport.getMYSQL().queryUpdate(label);
                 return true;
             } else {
                 sender.sendMessage(ChatColor.RED + "You don't have permission");
@@ -36,7 +40,7 @@ public class Dreport implements CommandExecutor {
             data.playermapr.remove(UUID.fromString(args[0]));
             data.playermapor.remove(s);
             sender.sendMessage(ChatColor.GREEN + "Successfully deleted " + s);
-            IReport.getMYSQL().queryUpdate(label);
+            IReport.getMYSQL().queryUpdate("DELETE FROM reports WHERE uuid = '" + UUID.fromString(args[0]) + "'");
         } catch (IllegalArgumentException e) {
             sender.sendMessage(ChatColor.RED + "invalid UUID");
         }

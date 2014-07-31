@@ -29,7 +29,6 @@ public class HReport implements CommandExecutor {
             plugin.getReports().set("reports.hacking." + player, new StringBuilder("type: ").append(args[1]).toString() + "; " + target);
             sender.sendMessage(ChatColor.BLUE + "You successfully reported " + ChatColor.RED + target);
             plugin.saveReports();
-            IReport.getMYSQL().queryUpdate("INSERT INTO reports (`name`,`Reason`) values ('" + target + "','" + args[1] + "')");
             for (Player p : sender.getServer().getOnlinePlayers()) {
                 if ((p.isOp()) || (p.hasPermission("iReport.seereport"))) {
                     p.sendMessage(ChatColor.RED + player + " has reported " + target + " for hacking " + args[1]);

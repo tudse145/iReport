@@ -7,6 +7,8 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.logging.Level;
 
+import javax.swing.text.StyledEditorKit.BoldAction;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -52,6 +54,8 @@ public class Utils implements Listener {
     }
 
     public static void reportplayer(String target, String reporttype, CommandSender sender, boolean b) {
+        
+        boolean isreported = false;
         UUID p = null;
         try {
             p = Bukkit.getPlayer(target).getUniqueId();
@@ -68,36 +72,31 @@ public class Utils implements Listener {
             sender.sendMessage("player " + target + " is alredy reported with another UUID please look at the reports or add true");
         synchronized (data.playermap.get(p)) {
             if (data.playermapr.containsKey(p)) {
+            	isreported = true;
                 String s = data.playermapr.get(p);
                 data.playermapr.put(p, s + reporttype + "reporter: " + sender.getName() + " ");
             } else {
                 data.playermapr.put(p, reporttype + "reporter: " + sender.getName() + " ");
             }
         }
-        updateMYSQL(Bukkit.getPlayer(target));
+        updateMYSQL(Bukkit.getPlayer(target), isreported);
     }
     
-    public static void updateMYSQL(Player player) {
-        if (true) {
-            return;
-        }
+    public static void updateMYSQL(Player player, boolean isReported) {
         UUID uuid = player.getUniqueId();
         Map<UUID, String> map1 = init().playermap;
         Map<UUID, String> map2 = init().playermapo;
         Map<UUID, String> map3 = init().playermapr;
-        if (!isReported(uuid)) {
-            IReport.getMYSQL().queryUpdate(null);
+        if (isReported) {
+            IReport.getMYSQL().queryUpdate("INSERT INTO reports (`uuid`, `currentname`, `Report`, `username`) values ('" + uuid + "','" + map1.get(uuid)+ "','" + map3.get(uuid) + "','" + map2.get(uuid) + "')");
 		} else {
-            IReport.getMYSQL().queryUpdate(null);
+            IReport.getMYSQL().queryUpdate("UPDATE Reports SET Report = '" + map3.get(uuid) + "' WHERE uuid = '" + uuid + "'");
+
 		}
-        IReport.getMYSQL().queryUpdate("UUID: " + uuid + " currentname: " + map1.get(uuid) + " " + map3.get(uuid) + "username: " + map2.get(uuid));
 
     }
 
     public static void updateusernameMYSQL(UUID uniqueId, String name) {
-        if (true) {
-            return;
-        }
-    	IReport.getMYSQL().queryUpdate(null);
+    	IReport.getMYSQL().queryUpdate("UPDATE Reports SET currentname = '" + name + "' WHERE uuid = '" + uniqueId + "'");
     }
 }

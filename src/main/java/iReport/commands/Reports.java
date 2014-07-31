@@ -36,7 +36,7 @@ public class Reports implements CommandExecutor {
         Map<UUID, String> map2 = init().playermapo;
         Map<UUID, String> map3 = init().playermapr;
         Inventory inv = calculate(Data.init().playermapo.size()); 
-        if (sender instanceof HumanEntity &&  args.length == 1) { 
+        if (sender instanceof HumanEntity &&  args.length == 1 && args[0].equalsIgnoreCase("gui")) { 
             for (UUID uuid : map2.keySet()) { 
                 ItemStack i	 = new ItemStack(Material.SKULL_ITEM, 1); 
                 i.setDurability((short) 3); 

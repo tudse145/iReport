@@ -46,7 +46,7 @@ public class IReport extends JavaPlugin {
         if (sql == null) {
             try {
                 sql = new MYSQL();
-                sql.queryUpdate("CREATE TABLE IF NOT EXISTS Reports (id INT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(16), Reason VARCHAR (100))");
+                sql.queryUpdate("CREATE TABLE IF NOT EXISTS reports (uuid VARCHAR(36) PRIMARY KEY, currentname VARCHAR(16), Report LONGTEXT, username VARCHAR(16))");
             } catch (Exception e) {
                 e.printStackTrace();
             }

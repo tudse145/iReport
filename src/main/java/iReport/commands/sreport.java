@@ -28,7 +28,6 @@ public class sreport implements CommandExecutor {
             }
             plugin.getReports().set("reports.swearing." + player, "; " + target);
             sender.sendMessage(ChatColor.BLUE + "You successfully reported " + ChatColor.RED + target);
-            IReport.getMYSQL().queryUpdate("INSERT INTO reports (`name`,`Reason`) values ('" + target + "',' Swearing ')");
             plugin.saveReports();
             for (Player p : sender.getServer().getOnlinePlayers()) {
                 if ((p.isOp()) || (p.hasPermission("iReport.seereport"))) {
