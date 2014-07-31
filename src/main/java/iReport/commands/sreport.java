@@ -1,7 +1,6 @@
 package iReport.commands;
 
 import iReport.IReport;
-import iReport.mysql.MYSQL;
 import iReport.util.Utils;
 
 import org.bukkit.ChatColor;
@@ -29,9 +28,7 @@ public class sreport implements CommandExecutor {
             }
             plugin.getReports().set("reports.swearing." + player, "; " + target);
             sender.sendMessage(ChatColor.BLUE + "You successfully reported " + ChatColor.RED + target);
-            if (MYSQL.isenable) {
-                IReport.getMYSQL().queryUpdate("INSERT INTO reports (`name`,`Reason`) values ('" + target + "',' Swearing ')");
-            }
+            IReport.getMYSQL().queryUpdate("INSERT INTO reports (`name`,`Reason`) values ('" + target + "',' Swearing ')");
             plugin.saveReports();
             for (Player p : sender.getServer().getOnlinePlayers()) {
                 if ((p.isOp()) || (p.hasPermission("iReport.seereport"))) {

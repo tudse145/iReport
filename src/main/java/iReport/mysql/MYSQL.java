@@ -13,7 +13,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 public class MYSQL {
 
-    public static boolean isenable;
+    public boolean isenable;
     private String host;
     private int port;
     private String user;
@@ -82,6 +82,9 @@ public class MYSQL {
     }
 
     public void queryUpdate(String query) {
+        if (!isenable) {
+            return;
+        }
         PreparedStatement st = null;
         try {
             st = conn.prepareStatement(query);

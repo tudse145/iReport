@@ -3,7 +3,6 @@ package iReport.util;
 import static iReport.util.Data.init;
 import iReport.IReport;
 
-import java.io.File;
 import java.util.Map;
 import java.util.UUID;
 import java.util.logging.Level;
@@ -22,20 +21,15 @@ public class Utils implements Listener {
 
     @EventHandler
     public void login(final PlayerLoginEvent event) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                Player p = event.getPlayer();
-                if (!Data.init().playermap.containsKey(p.getUniqueId())) {
-                    Data.init().playermap.put(p.getUniqueId(), p.getName());
-                } else if (Data.init().playermap.get(p.getUniqueId()) != p.getName()) {
-                    Data.init().playermap.put(p.getUniqueId(), p.getName());
-                    if (Utils.isReported(p.getUniqueId())) {
-                        Utils.updateusernameMYSQL(p.getUniqueId(), p.getName());
-                    }
-                }
+        Player p = event.getPlayer();
+        if (!Data.init().playermap.containsKey(p.getUniqueId())) {
+            Data.init().playermap.put(p.getUniqueId(), p.getName());
+        } else if (Data.init().playermap.get(p.getUniqueId()) != p.getName()) {
+            Data.init().playermap.put(p.getUniqueId(), p.getName());
+            if (Utils.isReported(p.getUniqueId())) {
+                Utils.updateusernameMYSQL(p.getUniqueId(), p.getName());
             }
-        }).start();
+        }
     }
 
     public static boolean isReported(UUID uniqueId) {
@@ -75,9 +69,9 @@ public class Utils implements Listener {
         synchronized (data.playermap.get(p)) {
             if (data.playermapr.containsKey(p)) {
                 String s = data.playermapr.get(p);
-                data.playermapr.put(p, s + reporttype);
+                data.playermapr.put(p, s + reporttype + "reporter: " + sender.getName() + " ");
             } else {
-                data.playermapr.put(p, reporttype);
+                data.playermapr.put(p, reporttype + "reporter: " + sender.getName() + " ");
             }
         }
         updateMYSQL(Bukkit.getPlayer(target));

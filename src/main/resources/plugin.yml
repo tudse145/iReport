@@ -1,6 +1,6 @@
 name: iReport
 version:
-main: iReport.iReport
+main: iReport.IReport
 commands:
   greport:
     description: Report a griefer logs position of the reported

@@ -1,7 +1,6 @@
 package iReport.commands;
 
 import iReport.IReport;
-import iReport.mysql.MYSQL;
 import iReport.util.Utils;
 
 import org.bukkit.ChatColor;
@@ -30,9 +29,7 @@ public class HReport implements CommandExecutor {
             plugin.getReports().set("reports.hacking." + player, new StringBuilder("type: ").append(args[1]).toString() + "; " + target);
             sender.sendMessage(ChatColor.BLUE + "You successfully reported " + ChatColor.RED + target);
             plugin.saveReports();
-            if (MYSQL.isenable) {
-                IReport.getMYSQL().queryUpdate("INSERT INTO reports (`name`,`Reason`) values ('" + target + "','" + args[1] + "')");
-            }
+            IReport.getMYSQL().queryUpdate("INSERT INTO reports (`name`,`Reason`) values ('" + target + "','" + args[1] + "')");
             for (Player p : sender.getServer().getOnlinePlayers()) {
                 if ((p.isOp()) || (p.hasPermission("iReport.seereport"))) {
                     p.sendMessage(ChatColor.RED + player + " has reported " + target + " for hacking " + args[1]);

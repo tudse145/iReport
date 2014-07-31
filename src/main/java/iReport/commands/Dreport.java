@@ -2,6 +2,7 @@ package iReport.commands;
 
 import java.util.UUID;
 
+import iReport.IReport;
 import iReport.util.Data;
 
 import org.bukkit.ChatColor;
@@ -21,6 +22,7 @@ public class Dreport implements CommandExecutor {
                 data.playermapor.clear();
                 data.playermapr.clear();
                 sender.sendMessage(ChatColor.GREEN + "Successfully cleared reports");
+                IReport.getMYSQL().queryUpdate(label);
                 return true;
             } else {
                 sender.sendMessage(ChatColor.RED + "You don't have permission");
@@ -34,6 +36,7 @@ public class Dreport implements CommandExecutor {
             data.playermapr.remove(UUID.fromString(args[0]));
             data.playermapor.remove(s);
             sender.sendMessage(ChatColor.GREEN + "Successfully deleted " + s);
+            IReport.getMYSQL().queryUpdate(label);
         } catch (IllegalArgumentException e) {
             sender.sendMessage(ChatColor.RED + "invalid UUID");
         }
