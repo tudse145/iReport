@@ -29,12 +29,12 @@ public class sreport implements CommandExecutor {
             plugin.getReports().set("reports.swearing." + player, "; " + target);
             sender.sendMessage(ChatColor.BLUE + "You successfully reported " + ChatColor.RED + target);
             plugin.saveReports();
+            Utils.reportplayer(target, "sReport ", sender, args.length > 1 ? Boolean.valueOf(args[1]) : false);
             for (Player p : sender.getServer().getOnlinePlayers()) {
-                if ((p.isOp()) || (p.hasPermission("iReport.seereport"))) {
+                if ((p.isOp() || p.hasPermission("iReport.seereport")) && p != sender) {
                     p.sendMessage(ChatColor.RED + player + " has reported " + target + " for swearing");
                 }
             }
-            Utils.reportplayer(target, "sReport ", sender, args.length > 1 ? Boolean.valueOf(args[1]) : false);
             return true;
         }
         return false;

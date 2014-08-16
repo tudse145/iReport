@@ -5,9 +5,6 @@ import iReport.IReport;
 
 import java.util.Map;
 import java.util.UUID;
-import java.util.logging.Level;
-
-import javax.swing.text.StyledEditorKit.BoldAction;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -44,7 +41,6 @@ public class Utils implements Listener {
             return String.valueOf("x " + loc.getBlockX() + " y " + loc.getBlockY() + " z " + loc.getBlockZ());
         } catch (Exception e) {
             if (sender != null) {
-                IReport.logger.log(Level.WARNING, p + " is not online");
                 sender.sendMessage(ChatColor.RED + p + " is not online");
             }
         }
@@ -54,7 +50,6 @@ public class Utils implements Listener {
     }
 
     public static void reportplayer(String target, String reporttype, CommandSender sender, boolean b) {
-        
         boolean isreported = false;
         UUID p = null;
         try {
@@ -89,14 +84,12 @@ public class Utils implements Listener {
         Map<UUID, String> map3 = init().playermapr;
         if (isReported) {
             IReport.getMYSQL().queryUpdate("INSERT INTO reports (`uuid`, `currentname`, `Report`, `username`) values ('" + uuid + "','" + map1.get(uuid)+ "','" + map3.get(uuid) + "','" + map2.get(uuid) + "')");
-		} else {
+        } else {
             IReport.getMYSQL().queryUpdate("UPDATE Reports SET Report = '" + map3.get(uuid) + "' WHERE uuid = '" + uuid + "'");
-
-		}
-
+        }
     }
 
     public static void updateusernameMYSQL(UUID uniqueId, String name) {
-    	IReport.getMYSQL().queryUpdate("UPDATE Reports SET currentname = '" + name + "' WHERE uuid = '" + uniqueId + "'");
+        IReport.getMYSQL().queryUpdate("UPDATE Reports SET currentname = '" + name + "' WHERE uuid = '" + uniqueId + "'");
     }
 }

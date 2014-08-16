@@ -1,7 +1,6 @@
 package iReport.commands;
 
 import static iReport.util.Data.init;
-import iReport.IReport;
 import iReport.util.Data;
 
 import java.util.Arrays;
@@ -22,13 +21,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
 
 public class Reports implements CommandExecutor {
-
-    @SuppressWarnings("unused")
-    private IReport plugin;
-
-    public Reports(IReport iReport) {
-        this.plugin = iReport;
-    }
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String lable, String[] args) {

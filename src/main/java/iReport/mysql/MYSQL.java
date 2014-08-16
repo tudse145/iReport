@@ -1,5 +1,7 @@
 package iReport.mysql;
 
+import iReport.IReport;
+
 import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
@@ -7,6 +9,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.logging.Level;
 
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -19,9 +22,7 @@ public class MYSQL {
     private String user;
     private String password;
     private String database;
-
     private Connection conn;
-    private static MYSQL sql;
 
     public MYSQL() throws Exception {
         File file = new File("plugins/iReport/", "database.yml");
@@ -49,17 +50,6 @@ public class MYSQL {
         if (isenable) {
             this.oppenConnection();
         }
-    }
-
-    public static MYSQL getMYSQL() {
-        if (sql == null) {
-            try {
-                sql = new MYSQL();
-            } catch (Exception e) {
-                System.err.println("fail to cornedt to MYSQL");
-            }
-        }
-        return sql;
     }
 
     public Connection oppenConnection() throws Exception {
@@ -91,7 +81,7 @@ public class MYSQL {
             st.executeUpdate();
         } catch (SQLException e) {
         	e.printStackTrace();
-            System.err.println("Failed to send update '" + query + "'.");
+            IReport.logger.log(Level.SEVERE, "Failed to send update '" + query + "'.");
         } finally {
             this.closeRessources(null, st);
         }

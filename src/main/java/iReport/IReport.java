@@ -27,6 +27,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -37,6 +38,8 @@ public class IReport extends JavaPlugin {
     public static MYSQL sql;
     private File reportsfile;
     private YamlConfiguration newConfig;
+    private final CommandExecutor DREPORT = new Dreport();
+    private final CommandExecutor REPORTS = new Reports();
 
     public IReport() {
         this.reportsfile = new File(getDataFolder(), "reports.yml");
@@ -57,10 +60,10 @@ public class IReport extends JavaPlugin {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (label.equalsIgnoreCase("dreport") && args.length == 1) {
-            return new Dreport().onCommand(sender, command, label, args);
+            return DREPORT.onCommand(sender, command, label, args);
         }
         if (label.equalsIgnoreCase("reports")) {
-            return new Reports(this).onCommand(sender, command, label, args);
+            return REPORTS.onCommand(sender, command, label, args);
         }
 
         return super.onCommand(sender, command, label, args);
@@ -101,8 +104,10 @@ public class IReport extends JavaPlugin {
             Data.instens = (Data) o.readObject();
             o.close();
         } catch (FileNotFoundException e) {
-
-        } catch (Exception e) {
+        } catch (ClassCastException e) {
+            e.printStackTrace();
+            logger.log(Level.SEVERE, "Don't modyfy data.bin");
+		} catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -127,7 +132,8 @@ public class IReport extends JavaPlugin {
 
             InputStream defConfigStream = getResource("reports.yml");
             if (defConfigStream != null) {
-                YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(defConfigStream);
+                @SuppressWarnings("deprecation")
+			    YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(defConfigStream);
 
                 newConfig.setDefaults(defConfig);
             }
