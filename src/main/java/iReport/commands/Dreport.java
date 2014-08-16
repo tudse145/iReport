@@ -19,7 +19,7 @@ public class Dreport implements CommandExecutor {
             if (sender.hasPermission("ireport.dreport.all")) {
             	for (UUID uuid : data.playermapo.keySet()) {
                     IReport.getMYSQL().queryUpdate("DELETE FROM reports WHERE uuid = '" + uuid.toString() + "'");
-				}
+                }
                 data.playermapo.clear();
                 data.playermapor.clear();
                 data.playermapr.clear();

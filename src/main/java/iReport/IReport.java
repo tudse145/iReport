@@ -174,6 +174,9 @@ public class IReport extends JavaPlugin {
                 if ("usernameo".startsWith(args[0].toLowerCase())) {
                     l.add("usernameo");
                 }
+                if ("gui".startsWith(args[0].toLowerCase())) {
+                    l.add("gui");
+                }
                 return l;
             }
             if (args[0].toLowerCase().equals("uuid")) {
