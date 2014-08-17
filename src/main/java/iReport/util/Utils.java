@@ -69,9 +69,9 @@ public class Utils implements Listener {
             if (data.playermapr.containsKey(p)) {
             	isreported = true;
                 String s = data.playermapr.get(p);
-                data.playermapr.put(p, s + reporttype + "reporter: " + sender.getName() + " ");
+                data.playermapr.put(p, s + reporttype + "reporter: " + sender.getName() + " ;");
             } else {
-                data.playermapr.put(p, reporttype + "reporter: " + sender.getName() + " ");
+                data.playermapr.put(p, reporttype + "reporter: " + sender.getName() + " ;");
             }
         }
         updateMYSQL(Bukkit.getPlayer(target), isreported);
