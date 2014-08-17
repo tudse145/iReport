@@ -13,13 +13,13 @@ repositories {
     }
 }
 group = 'iReport'
-version = '2.0.1-SNAPSHOT'
+version = '2.0.1'
 archivesBaseName = 'iReport'
 targetCompatibility = '1.6'
 sourceCompatibility = '1.6'
 
 dependencies {
-    compile 'org.bukkit:bukkit:1.7.10-R0.1-SNAPSHOT'
+    compile 'org.bukkit:bukkit:1.7.9-R0.2'
 }
 
 processResources
