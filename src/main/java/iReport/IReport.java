@@ -107,7 +107,7 @@ public class IReport extends JavaPlugin {
         } catch (ClassCastException e) {
             e.printStackTrace();
             logger.log(Level.SEVERE, "Don't modyfy data.bin");
-		} catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -133,7 +133,7 @@ public class IReport extends JavaPlugin {
             InputStream defConfigStream = getResource("reports.yml");
             if (defConfigStream != null) {
                 @SuppressWarnings("deprecation")
-			    YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(defConfigStream);
+                YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(defConfigStream);
 
                 newConfig.setDefaults(defConfig);
             }

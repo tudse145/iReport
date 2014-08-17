@@ -67,7 +67,7 @@ public class Utils implements Listener {
             sender.sendMessage("player " + target + " is alredy reported with another UUID please look at the reports or add true");
         synchronized (data.playermap.get(p)) {
             if (data.playermapr.containsKey(p)) {
-            	isreported = true;
+                isreported = true;
                 String s = data.playermapr.get(p);
                 data.playermapr.put(p, s + reporttype + "reporter: " + sender.getName() + " ;");
             } else {
@@ -76,14 +76,14 @@ public class Utils implements Listener {
         }
         updateMYSQL(Bukkit.getPlayer(target), isreported);
     }
-    
+
     public static void updateMYSQL(Player player, boolean isReported) {
         UUID uuid = player.getUniqueId();
         Map<UUID, String> map1 = init().playermap;
         Map<UUID, String> map2 = init().playermapo;
         Map<UUID, String> map3 = init().playermapr;
         if (isReported) {
-            IReport.getMYSQL().queryUpdate("INSERT INTO reports (`uuid`, `currentname`, `Report`, `username`) values ('" + uuid + "','" + map1.get(uuid)+ "','" + map3.get(uuid) + "','" + map2.get(uuid) + "')");
+            IReport.getMYSQL().queryUpdate("INSERT INTO reports (`uuid`, `currentname`, `Report`, `username`) values ('" + uuid + "','" + map1.get(uuid) + "','" + map3.get(uuid) + "','" + map2.get(uuid) + "')");
         } else {
             IReport.getMYSQL().queryUpdate("UPDATE Reports SET Report = '" + map3.get(uuid) + "' WHERE uuid = '" + uuid + "'");
         }

@@ -17,6 +17,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 public class MYSQL {
 
     public boolean isenable;
+    private boolean debug;
     private String host;
     private int port;
     private String user;
@@ -35,6 +36,7 @@ public class MYSQL {
         cfg.addDefault(db + "user", "user");
         cfg.addDefault(db + "password", "password");
         cfg.addDefault(db + "database", "database");
+        cfg.addDefault(db + "debug", false);
         cfg.options().copyDefaults(true);
         try {
             cfg.save(file);
@@ -47,6 +49,7 @@ public class MYSQL {
         this.user = cfg.getString(db + "user");
         this.password = cfg.getString(db + "passsword");
         this.database = cfg.getString(db + "database");
+        this.debug = cfg.getBoolean(db + "debug");
         if (isenable) {
             this.oppenConnection();
         }
@@ -66,7 +69,9 @@ public class MYSQL {
         try {
             return this.conn != null || this.conn.isValid(1);
         } catch (SQLException e) {
-            e.printStackTrace();
+            if (debug) {
+                e.printStackTrace();
+            }
             return false;
         }
     }
@@ -80,7 +85,9 @@ public class MYSQL {
             st = conn.prepareStatement(query);
             st.executeUpdate();
         } catch (SQLException e) {
-        	e.printStackTrace();
+            if (debug) {
+                e.printStackTrace();
+            }
             IReport.logger.log(Level.SEVERE, "Failed to send update '" + query + "'.");
         } finally {
             this.closeRessources(null, st);
@@ -106,7 +113,9 @@ public class MYSQL {
         try {
             this.conn.close();
         } catch (SQLException e) {
-            e.printStackTrace();
+            if (debug) {
+                e.printStackTrace();
+            }
         } finally {
             this.conn = null;
 
