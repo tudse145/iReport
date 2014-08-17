@@ -15,9 +15,10 @@ public class ireportc implements CommandExecutor {
         sender.sendMessage(ChatColor.GREEN + "/sreport - Report a swearer");
         sender.sendMessage(ChatColor.GREEN + "/ireport - Show this help menu");
         sender.sendMessage(ChatColor.GREEN + "/reports - Shows all reported players");
+        sender.sendMessage(ChatColor.GREEN + "/reports gui - Shows all reported players in a GUI");
         sender.sendMessage(ChatColor.GREEN + "/dreport - Delete a report");
         sender.sendMessage(ChatColor.YELLOW + "==============================");
-        sender.sendMessage(ChatColor.DARK_PURPLE + "Created by tudse145 & heni123321");
+        sender.sendMessage(ChatColor.BLUE + "Created by tudse145 & heni123321");
         return true;
     }
 }
