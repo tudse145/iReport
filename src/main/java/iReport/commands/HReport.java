@@ -32,7 +32,7 @@ public class HReport implements CommandExecutor {
             Utils.reportplayer(target, "hReport: " + args[1] + " ", sender, args.length > 2 ? Boolean.valueOf(args[1]) : false);
             for (Player p : sender.getServer().getOnlinePlayers()) {
                 if ((p.isOp() || p.hasPermission("iReport.seereport")) && p != sender) {
-                    p.sendMessage(ChatColor.RED + player + " has reported " + target + " for hacking " + args[1]);
+                    p.sendMessage(ChatColor.RED + player + " has reported " + target + " for " + args[1] + " hacking ");
                 }
             }
             return true;
