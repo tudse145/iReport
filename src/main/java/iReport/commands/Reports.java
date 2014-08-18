@@ -4,6 +4,7 @@ import static iReport.util.Data.init;
 import iReport.util.Data;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -22,6 +23,8 @@ import org.bukkit.inventory.meta.SkullMeta;
 
 public class Reports implements CommandExecutor {
 
+    private static final Map<UUID, ItemStack> HEADS = new HashMap<UUID, ItemStack>();
+
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String lable, String[] args) {
         Map<UUID, String> map1 = init().playermap;
@@ -31,13 +34,23 @@ public class Reports implements CommandExecutor {
         if (sender instanceof HumanEntity &&  args.length == 1 && args[0].equalsIgnoreCase("gui")) { 
             for (UUID uuid : map2.keySet()) { 
             	List<String> list = new ArrayList<String>();
-                ItemStack i	 = new ItemStack(Material.SKULL_ITEM, 1); 
-                i.setDurability((short) 3); 
-                SkullMeta meta = (SkullMeta) i.getItemMeta(); 
-                meta.setOwner(map1.get(uuid)); 
-                meta.setDisplayName(map1.get(uuid)); 
-                meta.setLore(setLore(list, uuid));
-                i.setItemMeta(meta); 
+                ItemStack i	 = HEADS.get(uuid); 
+                if (i == null) {
+                	i = new ItemStack(Material.SKULL_ITEM, 1);
+                	i.setDurability((short) 3); 
+                    SkullMeta meta = (SkullMeta) i.getItemMeta(); 
+                    meta.setOwner(map1.get(uuid)); 
+                    meta.setDisplayName(map1.get(uuid)); 
+                    meta.setLore(setLore(list, uuid));
+                    i.setItemMeta(meta); 
+                    HEADS.put(uuid, i);
+				} else {
+                    SkullMeta meta = (SkullMeta) i.getItemMeta(); 
+                    meta.setLore(setLore(list, uuid));
+                    i.setItemMeta(meta); 
+                    HEADS.put(uuid, i);
+				}
+                
                 inv.addItem(i); 
             } 
             ((HumanEntity) sender).openInventory(inv); 

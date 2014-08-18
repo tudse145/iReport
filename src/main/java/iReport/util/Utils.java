@@ -38,7 +38,7 @@ public class Utils implements Listener {
     public static String getxyz(String p, CommandSender sender) {
         try {
             Location loc = Bukkit.getPlayer(p).getLocation();
-            return String.valueOf("x " + loc.getBlockX() + " y " + loc.getBlockY() + " z " + loc.getBlockZ());
+            return String.valueOf("world " + loc.getWorld().getName() + " x " + loc.getBlockX() + " y " + loc.getBlockY() + " z " + loc.getBlockZ());
         } catch (Exception e) {
             if (sender != null) {
                 sender.sendMessage(ChatColor.RED + p + " is not online");
