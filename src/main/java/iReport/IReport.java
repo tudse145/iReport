@@ -26,24 +26,17 @@ import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.plugin.java.JavaPlugin;
+import org.spongepowered.api.event.SpongeEventHandler;
+import org.spongepowered.api.event.state.ServerStartingEvent;
+import org.spongepowered.api.event.state.ServerStoppingEvent;
+import org.spongepowered.api.plugin.Plugin;
 
-public class IReport extends JavaPlugin {
+@Plugin(id = "iReport", name = "iReport", version = "2.0.1-SNAPSHOT")
+public class IReport {
     public static final Logger logger = Logger.getLogger("iReport");
     public static MYSQL sql;
-    private File reportsfile;
-    private YamlConfiguration newConfig;
-    private final CommandExecutor DREPORT = new Dreport();
-    private final CommandExecutor REPORTS = new Reports();
-
-    public IReport() {
-        this.reportsfile = new File(getDataFolder(), "reports.yml");
-    }
+    //private final Dreport DREPORT = new Dreport();
+    //private final Reports REPORTS = new Reports();
 
     public static MYSQL getMYSQL() {
         if (sql == null) {
@@ -53,11 +46,17 @@ public class IReport extends JavaPlugin {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+        } else if (sql.isenable && !sql.hasConnection()) {
+            try {
+                sql.oppenConnection();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
         return sql;
     }
 
-    @Override
+    /*@Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (label.equalsIgnoreCase("dreport") && args.length == 1) {
             return DREPORT.onCommand(sender, command, label, args);
@@ -67,40 +66,21 @@ public class IReport extends JavaPlugin {
         }
 
         return super.onCommand(sender, command, label, args);
-    }
+    }*/
 
-    @Override
-    public void onEnable() {
-        try {
-            File f = new File("plugins/iReport/", "config.yml");
-            Scanner sc = new Scanner(f);
-            while (sc.hasNext()) {
-                if (sc.nextLine().contains("reports:")) {
-                    sc.close();
-                    if (f.renameTo(new File("plugins/iReport/", "reports.yml"))) {
-                        break;
-                    } else {
-                        try {
-                            throw new IOException("fail to rename file config.yml, iReport will not load");
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                            return;
-                        }
-                    }
-                }
-            }
-            sc.close();
-        } catch (FileNotFoundException e) {
-        }
-        getCommand("greport").setExecutor(new greport(this));
+    @SpongeEventHandler
+    public void onEnable(ServerStartingEvent event) {
+        Utils.game = event.getGame();
+        Utils.controler = event.getGame().getPluginManager().getPlugin("iReport");
+        event.getGame().getEventManager().register(new Utils());
+        /*getCommand("greport").setExecutor(new greport(this));
         getCommand("hreport").setExecutor(new HReport(this));
         getCommand("sreport").setExecutor(new sreport(this));
-        getCommand("ireport").setExecutor(new ireportc());
-        getServer().getPluginManager().registerEvents(new Utils(), this);
+        getCommand("ireport").setExecutor(new ireportc());*/
 
         getMYSQL();
         try {
-            ObjectInputStream o = new ObjectInputStream(new FileInputStream(new File(getDataFolder(), "data.bin")));
+            ObjectInputStream o = new ObjectInputStream(new FileInputStream(new File(Utils.controler.getResourceFolder(true), "data.bin")));
             Data.instens = (Data) o.readObject();
             o.close();
         } catch (FileNotFoundException e) {
@@ -112,13 +92,13 @@ public class IReport extends JavaPlugin {
         }
     }
 
-    @Override
-    public void onDisable() {
+    @SpongeEventHandler
+    public void onDisable(ServerStoppingEvent event) {
         if (sql.isenable && sql.hasConnection()) {
             sql.closeConnection();
         }
         try {
-            ObjectOutputStream o = new ObjectOutputStream(new FileOutputStream(new File(getDataFolder(), "data.bin")));
+            ObjectOutputStream o = new ObjectOutputStream(new FileOutputStream(new File(Utils.controler.getResourceFolder(true), "data.bin")));
             o.writeObject(Data.init());
             o.close();
         } catch (IOException e) {
@@ -126,30 +106,7 @@ public class IReport extends JavaPlugin {
         }
     }
 
-    public FileConfiguration getReports() {
-        if (newConfig == null) {
-            newConfig = YamlConfiguration.loadConfiguration(reportsfile);
-
-            InputStream defConfigStream = getResource("reports.yml");
-            if (defConfigStream != null) {
-                @SuppressWarnings("deprecation")
-                YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(defConfigStream);
-
-                newConfig.setDefaults(defConfig);
-            }
-        }
-        return newConfig;
-    }
-
-    public void saveReports() {
-        try {
-            getReports().save(reportsfile);
-        } catch (IOException ex) {
-            logger.log(Level.SEVERE, "Could not save config to " + reportsfile, ex);
-        }
-    }
-
-    @Override
+    /*@Override
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
         Set<UUID> set = Data.init().playermapo.keySet();
         List<String> list2 = new ArrayList<String>();
@@ -196,5 +153,5 @@ public class IReport extends JavaPlugin {
             return list;
         }
         return super.onTabComplete(sender, command, alias, args);
-    }
+    }*/
 }

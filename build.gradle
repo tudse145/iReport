@@ -18,10 +18,6 @@ archivesBaseName = 'iReport'
 targetCompatibility = '1.6'
 sourceCompatibility = '1.6'
 
-dependencies {
-    compile 'org.bukkit:bukkit:1.7.9-R0.2'
-}
-
 processResources
 {
 	inputs.property "version", project.version

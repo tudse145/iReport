@@ -6,30 +6,30 @@ import iReport.IReport;
 import java.util.Map;
 import java.util.UUID;
 
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Location;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerLoginEvent;
+import org.spongepowered.api.Game;
+import org.spongepowered.api.entity.Player;
+import org.spongepowered.api.event.SpongeEventHandler;
+import org.spongepowered.api.math.Vector3d;
+import org.spongepowered.api.plugin.PluginContainer;
 
 @SuppressWarnings(value = { "deprecation" })
-public class Utils implements Listener {
+public class Utils {
 
-    @EventHandler
+    public static Game game;
+    public static PluginContainer controler;
+
+    /*@SpongeEventHandler
     public void login(final PlayerLoginEvent event) {
         Player p = event.getPlayer();
-        if (!Data.init().playermap.containsKey(p.getUniqueId())) {
-            Data.init().playermap.put(p.getUniqueId(), p.getName());
-        } else if (Data.init().playermap.get(p.getUniqueId()) != p.getName()) {
-            Data.init().playermap.put(p.getUniqueId(), p.getName());
-            if (Utils.isReported(p.getUniqueId())) {
-                Utils.updateusernameMYSQL(p.getUniqueId(), p.getName());
+        if (!Data.init().playermap.containsKey(p.getUniqueID())) {
+            Data.init().playermap.put(p.getUniqueID(), p.getName());
+        } else if (Data.init().playermap.get(p.getUniqueID()) != p.getName()) {
+            Data.init().playermap.put(p.getUniqueID(), p.getName());
+            if (Utils.isReported(p.getUniqueID())) {
+                Utils.updateusernameMYSQL(p.getUniqueID(), p.getName());
             }
         }
-    }
+    }*/
 
     public static boolean isReported(UUID uniqueId) {
         return Data.init().playermapr.get(uniqueId) != null;
@@ -37,8 +37,8 @@ public class Utils implements Listener {
 
     public static String getxyz(String p, CommandSender sender) {
         try {
-            Location loc = Bukkit.getPlayer(p).getLocation();
-            return String.valueOf("world " + loc.getWorld().getName() + " x " + loc.getBlockX() + " y " + loc.getBlockY() + " z " + loc.getBlockZ());
+            Vector3d loc = game.getPlayer(p).getLocation();
+            return String.valueOf("world " + loc.getWorld().getName() + " x " + loc.getX() + " y " + loc.getY() + " z " + loc.getZ());
         } catch (Exception e) {
             if (sender != null) {
                 sender.sendMessage(ChatColor.RED + p + " is not online");
@@ -53,7 +53,7 @@ public class Utils implements Listener {
         boolean isreported = false;
         UUID p = null;
         try {
-            p = Bukkit.getPlayer(target).getUniqueId();
+            p = game.getPlayer(target).getUniqueId();
         } catch (NullPointerException e) {
             sender.sendMessage(ChatColor.RED + target + " is not online");
             return;
@@ -74,11 +74,11 @@ public class Utils implements Listener {
                 data.playermapr.put(p, reporttype + "reporter: " + sender.getName() + " ;");
             }
         }
-        updateMYSQL(Bukkit.getPlayer(target), isreported);
+        updateMYSQL(game.getPlayer(target), isreported);
     }
 
     public static void updateMYSQL(Player player, boolean isReported) {
-        UUID uuid = player.getUniqueId();
+        UUID uuid = player.getUniqueID();
         Map<UUID, String> map1 = init().playermap;
         Map<UUID, String> map2 = init().playermapo;
         Map<UUID, String> map3 = init().playermapr;
