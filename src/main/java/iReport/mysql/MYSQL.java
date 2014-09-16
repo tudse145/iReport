@@ -9,10 +9,8 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.logging.Level;
 
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
+import org.apache.logging.log4j.Level;
 
 public class MYSQL {
 
@@ -27,7 +25,7 @@ public class MYSQL {
 
     public MYSQL() throws Exception {
         File file = new File("plugins/iReport/", "database.yml");
-        FileConfiguration cfg = YamlConfiguration.loadConfiguration(file);
+       /*FileConfiguration cfg = YamlConfiguration.loadConfiguration(file);
 
         String db = "database.";
         cfg.addDefault(db + "enable", false);
@@ -52,7 +50,7 @@ public class MYSQL {
         this.debug = cfg.getBoolean(db + "debug");
         if (isenable) {
             this.oppenConnection();
-        }
+        }*/
     }
 
     public Connection oppenConnection() throws Exception {
@@ -88,7 +86,7 @@ public class MYSQL {
             if (debug) {
                 e.printStackTrace();
             }
-            IReport.logger.log(Level.SEVERE, "Failed to send update '" + query + "'.");
+            IReport.LOGGER.log(Level.ERROR, "Failed to send update '" + query + "'.");
         } finally {
             this.closeRessources(null, st);
         }

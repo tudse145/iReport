@@ -79,7 +79,7 @@ public class IReport {
     public void onEnable(ServerStartingEvent event) {
         Utils.game = event.getGame();
         Utils.controler = event.getGame().getPluginManager().getPlugin("iReport");
-        event.getGame().getEventManager().register(new Utils());
+        //event.getGame().getEventManager().register(new Utils());
         /*getCommand("greport").setExecutor(new greport(this));
         getCommand("hreport").setExecutor(new HReport(this));
         getCommand("sreport").setExecutor(new sreport(this));
