@@ -23,17 +23,19 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.Set;
 import java.util.UUID;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.spongepowered.api.event.SpongeEventHandler;
+import org.spongepowered.api.event.state.PreInitializationEvent;
 import org.spongepowered.api.event.state.ServerStartingEvent;
 import org.spongepowered.api.event.state.ServerStoppingEvent;
 import org.spongepowered.api.plugin.Plugin;
 
 @Plugin(id = "iReport", name = "iReport", version = "2.0.1-SNAPSHOT")
 public class IReport {
-    public static final Logger logger = Logger.getLogger("iReport");
+    public static final Logger LOGGER = LogManager.getLogger("iReport");
     public static MYSQL sql;
     //private final Dreport DREPORT = new Dreport();
     //private final Reports REPORTS = new Reports();
@@ -69,6 +71,11 @@ public class IReport {
     }*/
 
     @SpongeEventHandler
+    public void pre(PreInitializationEvent event) {
+        Utils.configfolder = event.getSuggestedConfigurationDirectory();
+    }
+
+    @SpongeEventHandler
     public void onEnable(ServerStartingEvent event) {
         Utils.game = event.getGame();
         Utils.controler = event.getGame().getPluginManager().getPlugin("iReport");
@@ -80,13 +87,13 @@ public class IReport {
 
         getMYSQL();
         try {
-            ObjectInputStream o = new ObjectInputStream(new FileInputStream(new File(Utils.controler.getResourceFolder(true), "data.bin")));
+            ObjectInputStream o = new ObjectInputStream(new FileInputStream(new File(Utils.configfolder, "data.bin")));
             Data.instens = (Data) o.readObject();
             o.close();
         } catch (FileNotFoundException e) {
         } catch (ClassCastException e) {
             e.printStackTrace();
-            logger.log(Level.SEVERE, "Don't modyfy data.bin");
+            LOGGER.log(Level.ERROR, "Don't modyfy data.bin");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -98,7 +105,7 @@ public class IReport {
             sql.closeConnection();
         }
         try {
-            ObjectOutputStream o = new ObjectOutputStream(new FileOutputStream(new File(Utils.controler.getResourceFolder(true), "data.bin")));
+            ObjectOutputStream o = new ObjectOutputStream(new FileOutputStream(new File(Utils.configfolder, "data.bin")));
             o.writeObject(Data.init());
             o.close();
         } catch (IOException e) {

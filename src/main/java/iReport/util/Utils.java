@@ -3,6 +3,7 @@ package iReport.util;
 import static iReport.util.Data.init;
 import iReport.IReport;
 
+import java.io.File;
 import java.util.Map;
 import java.util.UUID;
 
@@ -17,6 +18,7 @@ public class Utils {
 
     public static Game game;
     public static PluginContainer controler;
+    public static File configfolder;
 
     /*@SpongeEventHandler
     public void login(final PlayerLoginEvent event) {
