@@ -2,12 +2,14 @@ package iReport.util;
 
 import static iReport.util.Data.init;
 import iReport.IReport;
+import iReport.commands.ireportc;
 
 import java.io.File;
 import java.util.Map;
 import java.util.UUID;
 
 import org.spongepowered.api.Game;
+import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.entity.Player;
 import org.spongepowered.api.event.SpongeEventHandler;
 import org.spongepowered.api.math.Vector3d;
@@ -37,13 +39,13 @@ public class Utils {
         return Data.init().playermapr.get(uniqueId) != null;
     }
 
-    public static String getxyz(String p, CommandSender sender) {
+    public static String getxyz(String p, CommandSource source) {
         try {
             Vector3d loc = game.getPlayer(p).getLocation();
             return String.valueOf("world " + loc.getWorld().getName() + " x " + loc.getX() + " y " + loc.getY() + " z " + loc.getZ());
         } catch (Exception e) {
-            if (sender != null) {
-                sender.sendMessage(ChatColor.RED + p + " is not online");
+            if (source != null) {
+                source.sendMessage(ChatColor.RED + p + " is not online");
             }
         }
 
@@ -51,7 +53,7 @@ public class Utils {
 
     }
 
-    public static void reportplayer(String target, String reporttype, CommandSender sender, boolean b) {
+    public static void reportplayer(String target, String reporttype, CommandSource sender, boolean b) {
         boolean isreported = false;
         UUID p = null;
         try {
@@ -93,5 +95,12 @@ public class Utils {
 
     public static void updateusernameMYSQL(UUID uniqueId, String name) {
         IReport.getMYSQL().queryUpdate("UPDATE Reports SET currentname = '" + name + "' WHERE uuid = '" + uniqueId + "'");
+    }
+
+    public static void PrintStackTrace(Throwable t) {
+        IReport.LOGGER.error(t.toString());
+        for (StackTraceElement Element : t.getStackTrace()) {
+            IReport.LOGGER.error("  "+Element.toString());
+        }
     }
 }

@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -72,7 +73,11 @@ public class IReport {
 
     @SpongeEventHandler
     public void pre(PreInitializationEvent event) {
-        Utils.configfolder = event.getSuggestedConfigurationDirectory();
+        try {
+            Utils.configfolder = event.getSuggestedConfigurationDirectory(); //== AbstractMethodError
+        } catch (Throwable e) {
+            Utils.PrintStackTrace(e);
+        }
     }
 
     @SpongeEventHandler
@@ -92,10 +97,10 @@ public class IReport {
             o.close();
         } catch (FileNotFoundException e) {
         } catch (ClassCastException e) {
-            e.printStackTrace();
+            Utils.PrintStackTrace(e);
             LOGGER.log(Level.ERROR, "Don't modyfy data.bin");
         } catch (Exception e) {
-            e.printStackTrace();
+            Utils.PrintStackTrace(e);
         }
     }
 
@@ -109,7 +114,7 @@ public class IReport {
             o.writeObject(Data.init());
             o.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            Utils.PrintStackTrace(e);
         }
     }
 

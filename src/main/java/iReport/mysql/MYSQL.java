@@ -1,6 +1,7 @@
 package iReport.mysql;
 
 import iReport.IReport;
+import iReport.util.Utils;
 
 import java.io.File;
 import java.io.IOException;
@@ -68,7 +69,7 @@ public class MYSQL {
             return this.conn != null || this.conn.isValid(1);
         } catch (SQLException e) {
             if (debug) {
-                e.printStackTrace();
+                Utils.PrintStackTrace(e);
             }
             return false;
         }
@@ -84,7 +85,7 @@ public class MYSQL {
             st.executeUpdate();
         } catch (SQLException e) {
             if (debug) {
-                e.printStackTrace();
+                Utils.PrintStackTrace(e);
             }
             IReport.LOGGER.log(Level.ERROR, "Failed to send update '" + query + "'.");
         } finally {
