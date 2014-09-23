@@ -1,24 +1,42 @@
 package iReport.commands;
 
-import org.bukkit.ChatColor;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
+import java.util.List;
 
-public class ireportc implements CommandExecutor {
+import org.spongepowered.api.command.CommandCallable;
+import org.spongepowered.api.command.CommandException;
+import org.spongepowered.api.command.CommandSource;
+import org.spongepowered.api.command.Description;
+
+public class ireportc implements CommandCallable {
 
     @Override
-    public boolean onCommand(CommandSender sender, Command arg1, String arg2, String[] arg3) {
-        sender.sendMessage(ChatColor.YELLOW + "==============================");
-        sender.sendMessage(ChatColor.GREEN + "/greport - Report a griefer");
-        sender.sendMessage(ChatColor.GREEN + "/hreport - Report a hacker");
-        sender.sendMessage(ChatColor.GREEN + "/sreport - Report a swearer");
-        sender.sendMessage(ChatColor.GREEN + "/ireport - Show this help menu");
-        sender.sendMessage(ChatColor.GREEN + "/reports - Shows all reported players");
-        sender.sendMessage(ChatColor.GREEN + "/reports gui - Shows all reported players in a GUI");
-        sender.sendMessage(ChatColor.GREEN + "/dreport - Delete a report");
-        sender.sendMessage(ChatColor.YELLOW + "==============================");
-        sender.sendMessage(ChatColor.BLUE + "Created by tudse145 & heni123321");
+    public List<String> getSuggestions(CommandSource source, String arguments) throws CommandException {
+        return null;
+    }
+
+    @Override
+    public boolean call(CommandSource source, String arguments, List<String> parents) throws CommandException {
+        source.sendMessage(ChatColor.YELLOW + "==============================");
+        source.sendMessage(ChatColor.GREEN + "/greport - Report a griefer");
+        source.sendMessage(ChatColor.GREEN + "/hreport - Report a hacker");
+        source.sendMessage(ChatColor.GREEN + "/sreport - Report a swearer");
+        source.sendMessage(ChatColor.GREEN + "/ireport - Show this help menu");
+        source.sendMessage(ChatColor.GREEN + "/reports - Shows all reported players");
+        source.sendMessage(ChatColor.GREEN + "/reports gui - Shows all reported players in a GUI");
+        source.sendMessage(ChatColor.GREEN + "/dreport - Delete a report");
+        source.sendMessage(ChatColor.YELLOW + "==============================");
+        source.sendMessage(ChatColor.BLUE + "Created by tudse145 & heni123321");
+        return true;
+    }
+
+    @Override
+    public Description getDescription() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public boolean testPermission(CommandSource source) {
         return true;
     }
 }

@@ -1,32 +1,54 @@
 package iReport.commands;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import iReport.IReport;
 import iReport.util.Data;
 
-import org.bukkit.ChatColor;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
+import org.spongepowered.api.command.CommandCallable;
+import org.spongepowered.api.command.CommandException;
+import org.spongepowered.api.command.CommandSource;
+import org.spongepowered.api.command.Description;
 
-public class Dreport implements CommandExecutor {
+public class Dreport implements CommandCallable {
 
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+    public List<String> getSuggestions(CommandSource source, String arguments) throws CommandException {
+        Set<UUID> set = Data.init().playermapo.keySet();
+        List<String> list2 = new ArrayList<String>();
+        for (UUID uuid : set) {
+            list2.add(uuid.toString());
+        }
+        List<String> list = new ArrayList<String>();
+        if (source.hasPermission("iReport.dreport")) {
+            for (String string : list2) {
+                if (string.startsWith(arguments.split(" ")[0])) {
+                    list.add(string);
+                }
+            }
+            return list;
+        }
+    }
+
+    @Override
+    public boolean call(CommandSource source, String arguments, List<String> parents) throws CommandException {
+        String[] args = arguments.split(" ");
         Data data = Data.init();
         if (args[0].equals("*")) {
-            if (sender.hasPermission("ireport.dreport.all")) {
+            if (source.hasPermission("ireport.dreport.all")) {
                 for (UUID uuid : data.playermapo.keySet()) {
                     IReport.getMYSQL().queryUpdate("DELETE FROM reports WHERE uuid = '" + uuid.toString() + "'");
                 }
                 data.playermapo.clear();
                 data.playermapor.clear();
                 data.playermapr.clear();
-                sender.sendMessage(ChatColor.GREEN + "Successfully cleared reports");
+                source.sendMessage(ChatColor.GREEN + "Successfully cleared reports");
                 return true;
             } else {
-                sender.sendMessage(ChatColor.RED + "You don't have permission");
+                source.sendMessage(ChatColor.RED + "You don't have permission");
                 return true;
             }
 
@@ -36,12 +58,23 @@ public class Dreport implements CommandExecutor {
             data.playermapo.remove(UUID.fromString(args[0]));
             data.playermapr.remove(UUID.fromString(args[0]));
             data.playermapor.remove(s);
-            sender.sendMessage(ChatColor.GREEN + "Successfully deleted " + s);
+            source.sendMessage(ChatColor.GREEN + "Successfully deleted " + s);
             IReport.getMYSQL().queryUpdate("DELETE FROM reports WHERE uuid = '" + UUID.fromString(args[0]) + "'");
         } catch (IllegalArgumentException e) {
-            sender.sendMessage(ChatColor.RED + "invalid UUID");
+            source.sendMessage(ChatColor.RED + "invalid UUID");
         }
         return true;
+    }
+
+    @Override
+    public Description getDescription() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public boolean testPermission(CommandSource source) {
+        return source.hasPermission("ireport.dreport");
     }
 
 }

@@ -1,15 +1,17 @@
 package iReport.commands;
 
+import java.util.List;
+
 import iReport.IReport;
 import iReport.util.Utils;
 
-import org.bukkit.ChatColor;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
+import org.spongepowered.api.command.CommandCallable;
+import org.spongepowered.api.command.CommandException;
+import org.spongepowered.api.command.CommandSource;
+import org.spongepowered.api.command.Description;
+import org.spongepowered.api.entity.Player;
 
-public class HReport implements CommandExecutor {
+public class HReport implements CommandCallable {
 
     private IReport plugin;
 
@@ -18,26 +20,39 @@ public class HReport implements CommandExecutor {
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, Command cmd, String arg1, String[] args) {
+    public List<String> getSuggestions(CommandSource source, String arguments) throws CommandException {
+        return null;
+    }
+
+    @Override
+    public boolean call(CommandSource sorce, String arguments, List<String> parents) throws CommandException {
+        String[] args = arguments.split(" ");
         if (args.length > 1) {
-            String player = sender.getName();
+            String player = sorce.getName();
             String target = args[0];
-            if (!sender.hasPermission("ireport.hreport")) {
-                sender.sendMessage(ChatColor.RED + "You don't have permission to perform this command");
-                return true;
-            }
             plugin.getReports().set("reports.hacking." + player, new StringBuilder("type: ").append(args[1]).toString() + "; " + target);
-            sender.sendMessage(ChatColor.BLUE + "You successfully reported " + ChatColor.RED + target);
+            sorce.sendMessage(ChatColor.BLUE + "You successfully reported " + ChatColor.RED + target);
             plugin.saveReports();
-            Utils.reportplayer(target, "hReport: " + args[1] + " ", sender, args.length > 2 ? Boolean.valueOf(args[1]) : false);
-            for (Player p : sender.getServer().getOnlinePlayers()) {
-                if ((p.isOp() || p.hasPermission("iReport.seereport")) && p != sender) {
+            Utils.reportplayer(target, "hReport: " + args[1] + " ", sorce, args.length > 2 ? Boolean.valueOf(args[1]) : false);
+            for (Player p : sorce.getServer().getOnlinePlayers()) {
+                if ((p.isOp() || p.hasPermission("iReport.seereport")) && p != sorce) {
                     p.sendMessage(ChatColor.RED + player + " has reported " + target + " for " + args[1] + " hacking ");
                 }
             }
             return true;
         }
         return false;
+    }
+
+    @Override
+    public Description getDescription() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public boolean testPermission(CommandSource source) {
+        return source.hasPermission("ireport.hreport");
     }
 
 }
