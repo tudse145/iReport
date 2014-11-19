@@ -2,15 +2,14 @@ apply plugin: 'java'
 apply plugin: 'eclipse'
 
 repositories {
-    mavenCentral()
     maven {
-        name = "bukkit"
-        url = "http://repo.bukkit.org/content/groups/public"
-    }
-    maven {
-        name = "spigot"
-        url = "http://repo.md-5.net/content/groups/public"
-    }
+        name = 'heroes-repo'
+        url = 'http://nexus.theyeticave.net/content/groups/public/'
+   }
+}
+
+dependencies {
+   compile 'org.spongepowered:SpongeAPI:1.0.0-SNAPSHOT'
 }
 group = 'iReport'
 version = '2.0.1'
@@ -18,8 +17,7 @@ archivesBaseName = 'iReport'
 targetCompatibility = '1.6'
 sourceCompatibility = '1.6'
 
-processResources
-{
+processResources {
 	inputs.property "version", project.version
 
 	from(sourceSets.main.resources.srcDirs) {

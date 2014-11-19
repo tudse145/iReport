@@ -1,23 +1,19 @@
 package iReport.commands;
 
-import java.util.List;
-
 import iReport.IReport;
 import iReport.util.Utils;
 
-import org.spongepowered.api.command.CommandCallable;
-import org.spongepowered.api.command.CommandException;
-import org.spongepowered.api.command.CommandSource;
-import org.spongepowered.api.command.Description;
+import java.util.List;
+
 import org.spongepowered.api.entity.Player;
+import org.spongepowered.api.util.command.CommandCallable;
+import org.spongepowered.api.util.command.CommandException;
+import org.spongepowered.api.util.command.CommandSource;
+import org.spongepowered.api.util.command.Description;
+
+import com.mojang.realmsclient.gui.ChatFormatting;
 
 public class greport implements CommandCallable {
-
-    private IReport plugin;
-
-    public greport(IReport plugin) {
-        this.plugin = plugin;
-    }
 
     @Override
     public List<String> getSuggestions(CommandSource source, String arguments) throws CommandException {
@@ -30,13 +26,11 @@ public class greport implements CommandCallable {
         if (args.length > 0) {
             String player = source.getName();
             String target = args[0];
-            plugin.getReports().set("reports.griefing." + player, Utils.getxyz(args[0], source) + "; " + target);
-            source.sendMessage(ChatColor.BLUE + "You successfully reported " + ChatColor.RED + target);
-            plugin.saveReports();
             Utils.reportplayer(target, "gReport: " + Utils.getxyz(args[0], null) + " ", source, args.length > 1 ? Boolean.valueOf(args[1]) : false);
-            for (Player p : source.getGame().getOnlinePlayers()) {
+            source.sendMessage(ChatFormatting.BLUE + "You successfully reported " + ChatFormatting.RED + target);
+            for (Player p : IReport.game.getOnlinePlayers()) {
                 if ((p.isOp() || p.hasPermission("iReport.seereport")) && p != source) {
-                    p.sendMessage(ChatColor.RED + player + " has reported " + target + " for griefing");
+                    p.sendMessage(ChatFormatting.RED + player + " has reported " + target + " for griefing");
                 }
             }
             return true;

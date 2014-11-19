@@ -1,23 +1,20 @@
 package iReport.commands;
 
-import java.util.List;
-
 import iReport.IReport;
 import iReport.util.Utils;
 
-import org.spongepowered.api.command.CommandCallable;
-import org.spongepowered.api.command.CommandException;
-import org.spongepowered.api.command.CommandSource;
-import org.spongepowered.api.command.Description;
+import java.util.List;
+
+import org.bukkit.ChatFormatting;
 import org.spongepowered.api.entity.Player;
+import org.spongepowered.api.util.command.CommandCallable;
+import org.spongepowered.api.util.command.CommandException;
+import org.spongepowered.api.util.command.CommandSource;
+import org.spongepowered.api.util.command.Description;
+
+import com.mojang.realmsclient.gui.ChatFormatting;
 
 public class HReport implements CommandCallable {
-
-    private IReport plugin;
-
-    public HReport(IReport plugin) {
-        this.plugin = plugin;
-    }
 
     @Override
     public List<String> getSuggestions(CommandSource source, String arguments) throws CommandException {
@@ -30,13 +27,11 @@ public class HReport implements CommandCallable {
         if (args.length > 1) {
             String player = sorce.getName();
             String target = args[0];
-            plugin.getReports().set("reports.hacking." + player, new StringBuilder("type: ").append(args[1]).toString() + "; " + target);
-            sorce.sendMessage(ChatColor.BLUE + "You successfully reported " + ChatColor.RED + target);
-            plugin.saveReports();
             Utils.reportplayer(target, "hReport: " + args[1] + " ", sorce, args.length > 2 ? Boolean.valueOf(args[1]) : false);
-            for (Player p : sorce.getServer().getOnlinePlayers()) {
+            sorce.sendMessage(ChatFormatting.BLUE + "You successfully reported " + ChatFormatting.RED + target);
+            for (Player p : IReport.game.getOnlinePlayers()) {
                 if ((p.isOp() || p.hasPermission("iReport.seereport")) && p != sorce) {
-                    p.sendMessage(ChatColor.RED + player + " has reported " + target + " for " + args[1] + " hacking ");
+                    p.sendMessage(ChatFormatting.RED + player + " has reported " + target + " for " + args[1] + " hacking ");
                 }
             }
             return true;

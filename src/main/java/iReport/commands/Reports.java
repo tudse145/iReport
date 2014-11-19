@@ -1,22 +1,22 @@
 package iReport.commands;
 
 import static iReport.util.Data.init;
-import iReport.util.Data;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.UUID;
 
-import org.spongepowered.api.command.CommandCallable;
-import org.spongepowered.api.command.CommandException;
-import org.spongepowered.api.command.CommandSource;
-import org.spongepowered.api.command.Description;
 import org.spongepowered.api.entity.HumanEntity;
-import org.spongepowered.api.inventory.ItemStack;
+import org.spongepowered.api.item.inventory.ItemStack;
+import org.spongepowered.api.util.command.CommandCallable;
+import org.spongepowered.api.util.command.CommandException;
+import org.spongepowered.api.util.command.CommandSource;
+import org.spongepowered.api.util.command.Description;
+
+import com.mojang.realmsclient.gui.ChatFormatting;
 
 public class Reports implements CommandCallable {
 
@@ -48,7 +48,7 @@ public class Reports implements CommandCallable {
     @Override
     public List<String> getSuggestions(CommandSource source, String arguments) throws CommandException {
         String[] args = arguments.split(" ");
-        Set<UUID> set = Data.init().playermapo.keySet();
+        Set<UUID> set = init().playermapo.keySet();
         List<String> list2 = new ArrayList<String>();
         for (UUID uuid : set) {
             list2.add(uuid.toString());
@@ -76,7 +76,7 @@ public class Reports implements CommandCallable {
                 }
             }
             if (args[0].toLowerCase().equals("usernameo")) {
-                for (String string : Data.init().playermapo.values()) {
+                for (String string : init().playermapo.values()) {
                     if (string.toLowerCase().startsWith(args[1].toLowerCase())) {
                         list.add(string);
                     }
@@ -93,7 +93,7 @@ public class Reports implements CommandCallable {
         Map<UUID, String> map1 = init().playermap;
         Map<UUID, String> map2 = init().playermapo;
         Map<UUID, String> map3 = init().playermapr;
-        Inventory inv = calculate(Data.init().playermapo.size());
+        Inventory inv = calculate(init().playermapo.size());
         if (source instanceof HumanEntity && args.length == 1 && args[0].equalsIgnoreCase("gui")) {
             for (UUID uuid : map2.keySet()) {
                 List<String> list = new ArrayList<String>();
@@ -125,11 +125,11 @@ public class Reports implements CommandCallable {
                 }
                 return true;
             } catch (Exception e) {
-                source.sendMessage(ChatColor.RED + "invalid UUID");
+                source.sendMessage(ChatFormatting .RED + "invalid UUID");
             }
         } else {
             if (map3.entrySet().size() == 0) {
-                source.sendMessage(ChatColor.RED + "There is no reports");
+                source.sendMessage(ChatFormatting .RED + "There is no reports");
                 return true;
             }
             for (Entry<UUID, String> entry : map3.entrySet()) {

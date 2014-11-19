@@ -2,25 +2,16 @@ package iReport.util;
 
 import static iReport.util.Data.init;
 import iReport.IReport;
-import iReport.commands.ireportc;
 
-import java.io.File;
 import java.util.Map;
 import java.util.UUID;
 
-import org.spongepowered.api.Game;
-import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.entity.Player;
-import org.spongepowered.api.event.SpongeEventHandler;
 import org.spongepowered.api.math.Vector3d;
-import org.spongepowered.api.plugin.PluginContainer;
+import org.spongepowered.api.util.command.CommandSource;
 
 @SuppressWarnings(value = { "deprecation" })
 public class Utils {
-
-    public static Game game;
-    public static PluginContainer controler;
-    public static File configfolder;
 
     /*@SpongeEventHandler
     public void login(final PlayerLoginEvent event) {
@@ -41,7 +32,7 @@ public class Utils {
 
     public static String getxyz(String p, CommandSource source) {
         try {
-            Vector3d loc = game.getPlayer(p).getLocation();
+            Player loc = IReport.game.getPlayer(p);
             return String.valueOf("world " + loc.getWorld().getName() + " x " + loc.getX() + " y " + loc.getY() + " z " + loc.getZ());
         } catch (Exception e) {
             if (source != null) {
@@ -57,7 +48,7 @@ public class Utils {
         boolean isreported = false;
         UUID p = null;
         try {
-            p = game.getPlayer(target).getUniqueId();
+            p = IReport.game.getPlayer(target).getUniqueId();
         } catch (NullPointerException e) {
             sender.sendMessage(ChatColor.RED + target + " is not online");
             return;
@@ -78,11 +69,11 @@ public class Utils {
                 data.playermapr.put(p, reporttype + "reporter: " + sender.getName() + " ;");
             }
         }
-        updateMYSQL(game.getPlayer(target), isreported);
+        updateMYSQL(IReport.game.getPlayer(target), isreported);
     }
 
     public static void updateMYSQL(Player player, boolean isReported) {
-        UUID uuid = player.getUniqueID();
+        UUID uuid = player.getUniqueId();
         Map<UUID, String> map1 = init().playermap;
         Map<UUID, String> map2 = init().playermapo;
         Map<UUID, String> map3 = init().playermapr;
