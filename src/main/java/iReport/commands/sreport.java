@@ -5,13 +5,14 @@ import iReport.util.Utils;
 
 import java.util.List;
 
-import org.spongepowered.api.entity.Player;
+import org.spongepowered.api.entity.player.Player;
+import org.spongepowered.api.text.format.TextColors;
+import org.spongepowered.api.text.message.Messages;
 import org.spongepowered.api.util.command.CommandCallable;
 import org.spongepowered.api.util.command.CommandException;
 import org.spongepowered.api.util.command.CommandSource;
-import org.spongepowered.api.util.command.Description;
 
-import com.mojang.realmsclient.gui.ChatFormatting;
+import com.google.common.base.Optional;
 
 public class sreport implements CommandCallable {
 
@@ -27,10 +28,11 @@ public class sreport implements CommandCallable {
             String player = source.getName();
             String target = args[0];
             Utils.reportplayer(target, "sReport ", source, args.length > 1 ? Boolean.valueOf(args[1]) : false);
-            source.sendMessage(ChatFormatting.BLUE + "You successfully reported " + ChatFormatting.RED + target);
-            for (Player p : IReport.game.getOnlinePlayers()) {
+            source.sendMessage(Messages.builder("You successfully reported ").color(TextColors.BLUE).append(
+                    Messages.builder(target).color(TextColors.RED).build()).build());
+            for (Player p : IReport.server.getOnlinePlayers()) {
                 if ((p.isOp() || p.hasPermission("iReport.seereport")) && p != source) {
-                    p.sendMessage(ChatFormatting.RED + player + " has reported " + target + " for swearing");
+                    p.sendMessage(Messages.builder(player + " has reported " + target + " for swearing").color(TextColors.RED).build());
                 }
             }
             return true;
@@ -39,13 +41,25 @@ public class sreport implements CommandCallable {
     }
 
     @Override
-    public Description getDescription() {
+    public boolean testPermission(CommandSource source) {
+        return source.hasPermission("ireport.sreport");
+    }
+
+    @Override
+    public Optional<String> getShortDescription() {
         // TODO Auto-generated method stub
         return null;
     }
 
     @Override
-    public boolean testPermission(CommandSource source) {
-        return source.hasPermission("ireport.sreport");
+    public Optional<String> getHelp() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public String getUsage() {
+        // TODO Auto-generated method stub
+        return null;
     }
 }

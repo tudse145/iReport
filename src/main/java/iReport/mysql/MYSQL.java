@@ -4,14 +4,15 @@ import iReport.IReport;
 import iReport.util.Utils;
 
 import java.io.File;
-import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import org.apache.logging.log4j.Level;
+import org.spongepowered.api.util.config.ConfigFile;
+
+import com.typesafe.config.ConfigValueFactory;
 
 public class MYSQL {
 
@@ -25,33 +26,28 @@ public class MYSQL {
     private Connection conn;
 
     public MYSQL() throws Exception {
-        File file = new File("plugins/iReport/", "database.yml");
-       /*FileConfiguration cfg = YamlConfiguration.loadConfiguration(file);
+        File file = new File("config/iReport", "database.cfg");
+        ConfigFile cfg = ConfigFile.parseFile(file);
 
         String db = "database.";
-        cfg.addDefault(db + "enable", false);
-        cfg.addDefault(db + "host", "localhost");
-        cfg.addDefault(db + "port", 3306);
-        cfg.addDefault(db + "user", "user");
-        cfg.addDefault(db + "password", "password");
-        cfg.addDefault(db + "database", "database");
-        cfg.addDefault(db + "debug", false);
-        cfg.options().copyDefaults(true);
-        try {
-            cfg.save(file);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        cfg = cfg.withValue(db + "enable", ConfigValueFactory.fromAnyRef(false));
+        cfg = cfg.withValue(db + "host", ConfigValueFactory.fromAnyRef("localhost"));
+        cfg = cfg.withValue(db + "port", ConfigValueFactory.fromAnyRef(3306));
+        cfg = cfg.withValue(db + "user", ConfigValueFactory.fromAnyRef("user"));
+        cfg = cfg.withValue(db + "password", ConfigValueFactory.fromAnyRef("password"));
+        cfg = cfg.withValue(db + "database", ConfigValueFactory.fromAnyRef("database"));
+        cfg = cfg.withValue(db + "debug", ConfigValueFactory.fromAnyRef(false));
+        cfg.save(true);
         isenable = cfg.getBoolean(db + "enable");
         this.host = cfg.getString(db + "host");
         this.port = cfg.getInt(db + "port");
         this.user = cfg.getString(db + "user");
-        this.password = cfg.getString(db + "passsword");
+        this.password = cfg.getString(db + "password");
         this.database = cfg.getString(db + "database");
         this.debug = cfg.getBoolean(db + "debug");
         if (isenable) {
             this.oppenConnection();
-        }*/
+        }
     }
 
     public Connection oppenConnection() throws Exception {
@@ -87,7 +83,7 @@ public class MYSQL {
             if (debug) {
                 Utils.PrintStackTrace(e);
             }
-            IReport.LOGGER.log(Level.ERROR, "Failed to send update '" + query + "'.");
+            IReport.LOGGER.error("Failed to send update '" + query + "'.");
         } finally {
             this.closeRessources(null, st);
         }

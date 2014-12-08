@@ -2,12 +2,13 @@ package iReport.commands;
 
 import java.util.List;
 
+import org.spongepowered.api.text.format.TextColors;
+import org.spongepowered.api.text.message.Messages;
 import org.spongepowered.api.util.command.CommandCallable;
 import org.spongepowered.api.util.command.CommandException;
 import org.spongepowered.api.util.command.CommandSource;
-import org.spongepowered.api.util.command.Description;
 
-import com.mojang.realmsclient.gui.ChatFormatting;
+import com.google.common.base.Optional;
 
 public class ireportc implements CommandCallable {
 
@@ -18,27 +19,39 @@ public class ireportc implements CommandCallable {
 
     @Override
     public boolean call(CommandSource source, String arguments, List<String> parents) throws CommandException {
-        source.sendMessage(ChatFormatting.YELLOW + "==============================");
-        source.sendMessage(ChatFormatting.GREEN + "/greport - Report a griefer");
-        source.sendMessage(ChatFormatting.GREEN + "/hreport - Report a hacker");
-        source.sendMessage(ChatFormatting.GREEN + "/sreport - Report a swearer");
-        source.sendMessage(ChatFormatting.GREEN + "/ireport - Show this help menu");
-        source.sendMessage(ChatFormatting.GREEN + "/reports - Shows all reported players");
-        source.sendMessage(ChatFormatting.GREEN + "/reports gui - Shows all reported players in a GUI");
-        source.sendMessage(ChatFormatting.GREEN + "/dreport - Delete a report");
-        source.sendMessage(ChatFormatting.YELLOW + "==============================");
-        source.sendMessage(ChatFormatting.BLUE + "Created by tudse145 & heni123321");
+        source.sendMessage(Messages.builder("==============================").color(TextColors.YELLOW).build());
+        source.sendMessage(Messages.builder("/greport - Report a griefer").color(TextColors.GREEN).build());
+        source.sendMessage(Messages.builder("/hreport - Report a hacker").color(TextColors.GREEN).build());
+        source.sendMessage(Messages.builder("/sreport - Report a swearer").color(TextColors.GREEN).build());
+        source.sendMessage(Messages.builder("/ireport - Show this help menu").color(TextColors.GREEN).build());
+        source.sendMessage(Messages.builder("/reports - Shows all reported players").color(TextColors.GREEN).build());
+        source.sendMessage(Messages.builder("/reports gui - Shows all reported players in a GUI").color(TextColors.GREEN).build());
+        source.sendMessage(Messages.builder("/dreport - Delete a report").color(TextColors.GREEN).build());
+        source.sendMessage(Messages.builder("==============================").color(TextColors.YELLOW).build());
+        source.sendMessage(Messages.builder("Created by tudse145 & heni123321").color(TextColors.BLUE).build());
         return true;
-    }
-
-    @Override
-    public Description getDescription() {
-        // TODO Auto-generated method stub
-        return null;
     }
 
     @Override
     public boolean testPermission(CommandSource source) {
         return true;
+    }
+
+    @Override
+    public Optional<String> getShortDescription() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public Optional<String> getHelp() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public String getUsage() {
+        // TODO Auto-generated method stub
+        return null;
     }
 }

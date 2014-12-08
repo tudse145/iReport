@@ -6,25 +6,27 @@ import iReport.IReport;
 import java.util.Map;
 import java.util.UUID;
 
-import org.spongepowered.api.entity.Player;
-import org.spongepowered.api.math.Vector3d;
+import org.spongepowered.api.entity.player.Player;
+import org.spongepowered.api.event.player.PlayerJoinEvent;
+import org.spongepowered.api.text.format.TextColors;
+import org.spongepowered.api.text.message.Messages;
 import org.spongepowered.api.util.command.CommandSource;
+import org.spongepowered.api.util.event.Subscribe;
 
-@SuppressWarnings(value = { "deprecation" })
 public class Utils {
 
-    /*@SpongeEventHandler
-    public void login(final PlayerLoginEvent event) {
+    @Subscribe
+    public void login(final PlayerJoinEvent event) {
         Player p = event.getPlayer();
-        if (!Data.init().playermap.containsKey(p.getUniqueID())) {
-            Data.init().playermap.put(p.getUniqueID(), p.getName());
-        } else if (Data.init().playermap.get(p.getUniqueID()) != p.getName()) {
-            Data.init().playermap.put(p.getUniqueID(), p.getName());
-            if (Utils.isReported(p.getUniqueID())) {
-                Utils.updateusernameMYSQL(p.getUniqueID(), p.getName());
+        if (!Data.init().playermap.containsKey(p.getUniqueId())) {
+            Data.init().playermap.put(p.getUniqueId(), p.getName());
+        } else if (Data.init().playermap.get(p.getUniqueId()) != p.getName()) {
+            Data.init().playermap.put(p.getUniqueId(), p.getName());
+            if (Utils.isReported(p.getUniqueId())) {
+                Utils.updateusernameMYSQL(p.getUniqueId(), p.getName());
             }
         }
-    }*/
+    }
 
     public static boolean isReported(UUID uniqueId) {
         return Data.init().playermapr.get(uniqueId) != null;
@@ -32,11 +34,11 @@ public class Utils {
 
     public static String getxyz(String p, CommandSource source) {
         try {
-            Player loc = IReport.game.getPlayer(p);
+            Player loc = IReport.server.getPlayer(p).get();
             return String.valueOf("world " + loc.getWorld().getName() + " x " + loc.getX() + " y " + loc.getY() + " z " + loc.getZ());
         } catch (Exception e) {
             if (source != null) {
-                source.sendMessage(ChatColor.RED + p + " is not online");
+                source.sendMessage(Messages.builder(p + " is not online").color(TextColors.RED).build());
             }
         }
 
@@ -48,9 +50,9 @@ public class Utils {
         boolean isreported = false;
         UUID p = null;
         try {
-            p = IReport.game.getPlayer(target).getUniqueId();
+            p = IReport.server.getPlayer(target).get().getUniqueId();
         } catch (NullPointerException e) {
-            sender.sendMessage(ChatColor.RED + target + " is not online");
+            sender.sendMessage(Messages.builder(target + " is not online").color(TextColors.RED).build());
             return;
         }
         Data data = Data.init();
@@ -69,7 +71,7 @@ public class Utils {
                 data.playermapr.put(p, reporttype + "reporter: " + sender.getName() + " ;");
             }
         }
-        updateMYSQL(IReport.game.getPlayer(target), isreported);
+        updateMYSQL(IReport.server.getPlayer(target).get(), isreported);
     }
 
     public static void updateMYSQL(Player player, boolean isReported) {

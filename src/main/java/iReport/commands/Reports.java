@@ -9,14 +9,15 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.UUID;
 
-import org.spongepowered.api.entity.HumanEntity;
+import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.ItemStack;
+import org.spongepowered.api.text.format.TextColors;
+import org.spongepowered.api.text.message.Messages;
 import org.spongepowered.api.util.command.CommandCallable;
 import org.spongepowered.api.util.command.CommandException;
 import org.spongepowered.api.util.command.CommandSource;
-import org.spongepowered.api.util.command.Description;
 
-import com.mojang.realmsclient.gui.ChatFormatting;
+import com.google.common.base.Optional;
 
 public class Reports implements CommandCallable {
 
@@ -97,7 +98,7 @@ public class Reports implements CommandCallable {
         if (source instanceof HumanEntity && args.length == 1 && args[0].equalsIgnoreCase("gui")) {
             for (UUID uuid : map2.keySet()) {
                 List<String> list = new ArrayList<String>();
-                ItemStack i = new ItemStack(Material.SKULL_ITEM, 1);
+                ItemStack i = new ItemStack(ItemTypes.SKULL);
                 i.setDurability((short) 3);
                 SkullMeta meta = (SkullMeta) i.getItemMeta();
                 meta.setOwner(map1.get(uuid));
@@ -114,28 +115,28 @@ public class Reports implements CommandCallable {
                 if (args[0].equalsIgnoreCase("uuid")) {
                     UUID u = UUID.fromString(args[1]);
                     for (String string : setLore(new ArrayList<String>(), u)) {
-                        source.sendMessage(string);
+                        source.sendMessage(Messages.builder(string).build());
                     }
                 }
                 if (args[0].equalsIgnoreCase("usernameo")) {
                     UUID u = init().playermapor.get(args[1]);
                     for (String string : setLore(new ArrayList<String>(), u)) {
-                        source.sendMessage(string);
+                        source.sendMessage(Messages.builder(string).build());
                     }
                 }
                 return true;
             } catch (Exception e) {
-                source.sendMessage(ChatFormatting .RED + "invalid UUID");
+                source.sendMessage(Messages.builder("invalid UUID").color(TextColors.RED).build());
             }
         } else {
             if (map3.entrySet().size() == 0) {
-                source.sendMessage(ChatFormatting .RED + "There is no reports");
+                source.sendMessage(Messages.builder("There is no reports").color(TextColors.RED).build());
                 return true;
             }
             for (Entry<UUID, String> entry : map3.entrySet()) {
                 UUID u = entry.getKey();
                 for (String string : setLore(new ArrayList<String>(), u)) {
-                    source.sendMessage(string);
+                    source.sendMessage(Messages.builder(string).build());
                 }
                 source.sendMessage(" ");
             }
@@ -145,13 +146,25 @@ public class Reports implements CommandCallable {
     }
 
     @Override
-    public Description getDescription() {
+    public boolean testPermission(CommandSource source) {
+        return source.hasPermission("ireport.reports");
+    }
+
+    @Override
+    public Optional<String> getShortDescription() {
         // TODO Auto-generated method stub
         return null;
     }
 
     @Override
-    public boolean testPermission(CommandSource source) {
-        return source.hasPermission("ireport.reports");
+    public Optional<String> getHelp() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public String getUsage() {
+        // TODO Auto-generated method stub
+        return null;
     }
 }

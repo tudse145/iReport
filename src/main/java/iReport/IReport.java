@@ -5,6 +5,7 @@ import iReport.commands.HReport;
 import iReport.commands.Reports;
 import iReport.commands.greport;
 import iReport.commands.ireportc;
+import iReport.commands.sreport;
 import iReport.mysql.MYSQL;
 import iReport.util.Data;
 import iReport.util.Utils;
@@ -17,24 +18,30 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
-import org.apache.logging.log4j.Level;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.spongepowered.api.Game;
-import org.spongepowered.api.event.Subscribe;
+import org.spongepowered.api.Server;
 import org.spongepowered.api.event.state.PreInitializationEvent;
 import org.spongepowered.api.event.state.ServerStartingEvent;
 import org.spongepowered.api.event.state.ServerStoppingEvent;
 import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.plugin.PluginContainer;
-import org.spongepowered.api.util.Owner;
+import org.spongepowered.api.service.config.ConfigDir;
+import org.spongepowered.api.util.event.Subscribe;
+
+import com.google.inject.Inject;
 
 @Plugin(id = "iReport", name = "iReport", version = "2.0.1-SNAPSHOT")
-public class IReport implements Owner {
-    public static final Logger LOGGER = LogManager.getLogger("iReport");
+public class IReport {
+    public static final Logger LOGGER = LoggerFactory.getLogger("iReport");
     public static MYSQL sql;
+    @Inject
     public static Game game;
+    public static Server server;
     public static PluginContainer controler;
+    @ConfigDir(sharedRoot = false)
+    @Inject
     public static File configfolder;
 
     public static MYSQL getMYSQL() {
@@ -55,25 +62,19 @@ public class IReport implements Owner {
         return sql;
     }
 
-    @Subscribe
-    public void pre(PreInitializationEvent event) {
-        try {
-            IReport.configfolder = event.getSuggestedConfigurationDirectory(); //== AbstractMethodError
-        } catch (Throwable e) {
-            Utils.PrintStackTrace(e);
-        }
-    }
 
     @Subscribe
     public void onEnable(ServerStartingEvent event) {
-        IReport.game = event.getGame();
-        game.getCommandDispatcher().registerCommand(new Dreport(), this, "dreport");
-        game.getCommandDispatcher().registerCommand(new greport(), this, "greport");
-        game.getCommandDispatcher().registerCommand(new HReport(), this, "hreport");
-        game.getCommandDispatcher().registerCommand(new ireportc(), this, "ireport");
-        game.getCommandDispatcher().registerCommand(new Reports(), this, "reports");
-        game.getCommandDispatcher().registerCommand(new Dreport(), this, "dreport");
-        //event.getGame().getEventManager().register(new Utils());
+        game = event.getGame();
+        server = game.getServer().get();
+//        game.getCommandDispatcher().register(this, new Dreport(), "dreport");
+//        game.getCommandDispatcher().register(this, new greport(), "greport");
+//        game.getCommandDispatcher().register(this, new HReport(), "hreport");
+//        game.getCommandDispatcher().register(this, new ireportc(), "ireport");
+//        game.getCommandDispatcher().register(this, new Reports(), "reports");
+//        game.getCommandDispatcher().register(this, new sreport(), "sreport");
+        event.getGame().getEventManager().register(this, new Utils());
+        System.out.println(configfolder);
         getMYSQL();
         try {
             ObjectInputStream o = new ObjectInputStream(new FileInputStream(new File(IReport.configfolder, "data.bin")));
@@ -82,7 +83,7 @@ public class IReport implements Owner {
         } catch (FileNotFoundException e) {
         } catch (ClassCastException e) {
             Utils.PrintStackTrace(e);
-            LOGGER.log(Level.ERROR, "Don't modyfy data.bin");
+            LOGGER.error("Don't modyfy data.bin");
         } catch (Exception e) {
             Utils.PrintStackTrace(e);
         }
