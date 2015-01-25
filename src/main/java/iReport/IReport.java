@@ -22,7 +22,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.Server;
-import org.spongepowered.api.event.state.PreInitializationEvent;
 import org.spongepowered.api.event.state.ServerStartingEvent;
 import org.spongepowered.api.event.state.ServerStoppingEvent;
 import org.spongepowered.api.plugin.Plugin;
@@ -36,13 +35,17 @@ import com.google.inject.Inject;
 public class IReport {
     public static final Logger LOGGER = LoggerFactory.getLogger("iReport");
     public static MYSQL sql;
-    @Inject
     public static Game game;
     public static Server server;
     public static PluginContainer controler;
-    @ConfigDir(sharedRoot = false)
-    @Inject
     public static File configfolder;
+
+    @Inject
+    public IReport(Game game, @ConfigDir(sharedRoot = false) File configfolder) {
+        IReport.game = game;
+        IReport.server = game.getServer().get();
+        IReport.configfolder = configfolder;
+    }
 
     public static MYSQL getMYSQL() {
         if (sql == null) {
@@ -62,19 +65,15 @@ public class IReport {
         return sql;
     }
 
-
     @Subscribe
     public void onEnable(ServerStartingEvent event) {
-        game = event.getGame();
-        server = game.getServer().get();
-//        game.getCommandDispatcher().register(this, new Dreport(), "dreport");
-//        game.getCommandDispatcher().register(this, new greport(), "greport");
-//        game.getCommandDispatcher().register(this, new HReport(), "hreport");
-//        game.getCommandDispatcher().register(this, new ireportc(), "ireport");
-//        game.getCommandDispatcher().register(this, new Reports(), "reports");
-//        game.getCommandDispatcher().register(this, new sreport(), "sreport");
+        game.getCommandDispatcher().register(this, new Dreport(), "dreport");
+        game.getCommandDispatcher().register(this, new greport(), "greport");
+        game.getCommandDispatcher().register(this, new HReport(), "hreport");
+        game.getCommandDispatcher().register(this, new ireportc(), "ireport");
+        game.getCommandDispatcher().register(this, new Reports(), "reports");
+        game.getCommandDispatcher().register(this, new sreport(), "sreport");
         event.getGame().getEventManager().register(this, new Utils());
-        System.out.println(configfolder);
         getMYSQL();
         try {
             ObjectInputStream o = new ObjectInputStream(new FileInputStream(new File(IReport.configfolder, "data.bin")));

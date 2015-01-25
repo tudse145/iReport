@@ -26,7 +26,7 @@ public class MYSQL {
     private Connection conn;
 
     public MYSQL() throws Exception {
-        File file = new File("config/iReport", "database.cfg");
+        File file = new File(IReport.configfolder, "database.cfg");
         ConfigFile cfg = ConfigFile.parseFile(file);
 
         String db = "database.";

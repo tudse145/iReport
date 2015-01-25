@@ -21,21 +21,18 @@ public class Dreport implements CommandCallable {
 
     @Override
     public List<String> getSuggestions(CommandSource source, String arguments) throws CommandException {
-        return Data.init().playermapo.keySet().parallelStream().map(UUID::toString).filter(s -> s.startsWith(arguments.split(" ")[0])).collect(Collectors.toList());
         Set<UUID> set = Data.init().playermapo.keySet();
         List<String> list2 = new ArrayList<String>();
         for (UUID uuid : set) {
             list2.add(uuid.toString());
         }
         List<String> list = new ArrayList<String>();
-        if (source.hasPermission("iReport.dreport")) {
-            for (String string : list2) {
-                if (string.startsWith(arguments.split(" ")[0])) {
-                    list.add(string);
-                }
+        for (String string : list2) {
+            if (string.startsWith(arguments.split(" ")[0])) {
+                list.add(string);
             }
-            return list;
         }
+        return list;
     }
 
     @Override

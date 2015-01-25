@@ -26,13 +26,12 @@ public class greport implements CommandCallable {
     public boolean call(CommandSource source, String arguments, List<String> parents) throws CommandException {
         String[] args = arguments.split(" ");
         if (args.length > 0) {
-            String player = source.getName();
+            String player = Utils.getName(source);
             String target = args[0];
             Utils.reportplayer(target, "gReport: " + Utils.getxyz(args[0], null) + " ", source, args.length > 1 ? Boolean.valueOf(args[1]) : false);
-            source.sendMessage(Messages.builder("You successfully reported ").color(TextColors.BLUE).append(
-                    Messages.builder(target).color(TextColors.RED).build()).build());
+            source.sendMessage(Messages.builder("You successfully reported ").color(TextColors.BLUE).append(Messages.builder(target).color(TextColors.RED).build()).build());
             for (Player p : IReport.server.getOnlinePlayers()) {
-                if ((p.isOp() || p.hasPermission("iReport.seereport")) && p != source) {
+                if (p.hasPermission("iReport.seereport") && p != source) {
                     p.sendMessage(Messages.builder(player + " has reported " + target + " for griefing").color(TextColors.RED).build());
                 }
             }

@@ -1,6 +1,7 @@
 package iReport.commands;
 
 import static iReport.util.Data.init;
+import iReport.IReport;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,6 +10,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.UUID;
 
+import org.spongepowered.api.entity.living.Human;
 import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.text.format.TextColors;
@@ -34,17 +36,17 @@ public class Reports implements CommandCallable {
         return list;
     }
 
-    private Inventory calculate(int size) {
-        double f = size;
-        f = f / 9;
-        if (f == size / 9) {
-            return Bukkit.createInventory(null, (int) (f * 9), "reports");
-        }
-        size = size / 9;
-        size++;
-        size = size * 9;
-        return Bukkit.createInventory(null, size, "reports");
-    }
+    // private Inventory calculate(int size) {
+    // float f = size;
+    // f = f / 9;
+    // if (f == size / 9) {
+    // return Bukkit.createInventory(null, (int) (f * 9), "reports");
+    // }
+    // size = size / 9;
+    // size++;
+    // size = size * 9;
+    // return Bukkit.createInventory(null, size, "reports");
+    // }
 
     @Override
     public List<String> getSuggestions(CommandSource source, String arguments) throws CommandException {
@@ -57,17 +59,16 @@ public class Reports implements CommandCallable {
         List<String> list = new ArrayList<String>();
         if (source.hasPermission("iReport.reports")) {
             if (args.length < 2) {
-                List<String> l = new ArrayList<String>();
                 if ("uuid".startsWith(args[0].toLowerCase())) {
-                    l.add("uuid");
+                    list.add("uuid");
                 }
                 if ("usernameo".startsWith(args[0].toLowerCase())) {
-                    l.add("usernameo");
+                    list.add("usernameo");
                 }
                 if ("gui".startsWith(args[0].toLowerCase())) {
-                    l.add("gui");
+                    list.add("gui");
                 }
-                return l;
+                return list;
             }
             if (args[0].toLowerCase().equals("uuid")) {
                 for (String string : list2) {
@@ -94,22 +95,24 @@ public class Reports implements CommandCallable {
         Map<UUID, String> map1 = init().playermap;
         Map<UUID, String> map2 = init().playermapo;
         Map<UUID, String> map3 = init().playermapr;
-        Inventory inv = calculate(init().playermapo.size());
-        if (source instanceof HumanEntity && args.length == 1 && args[0].equalsIgnoreCase("gui")) {
-            for (UUID uuid : map2.keySet()) {
-                List<String> list = new ArrayList<String>();
-                ItemStack i = new ItemStack(ItemTypes.SKULL);
-                i.setDurability((short) 3);
-                SkullMeta meta = (SkullMeta) i.getItemMeta();
-                meta.setOwner(map1.get(uuid));
-                meta.setDisplayName(map1.get(uuid));
-                meta.setLore(setLore(list, uuid));
-                i.setItemMeta(meta);
-                inv.addItem(i);
-            }
-            ((HumanEntity) source).openInventory(inv);
-            return true;
-        }
+        // if (source instanceof Human && args.length == 1 &&
+        // args[0].equalsIgnoreCase("gui")) {
+        // Inventory inv = calculate(init().playermapo.size());
+        // for (UUID uuid : map2.keySet()) {
+        // List<String> list = new ArrayList<String>();
+        // ItemStack i1 =
+        // IReport.game.getRegistry().getItemBuilder().withItemType(ItemTypes.SKULL).build();
+        // ItemStack i = new ItemStack(ItemTypes.SKULL);
+        // i.setDamage((short) 3);
+        // SkullMeta meta = (SkullMeta) i.getItemMeta();
+        // meta.setOwner(map1.get(uuid));
+        // meta.setDisplayName(map1.get(uuid));
+        // meta.setLore(setLore(list, uuid));
+        // i.setItemMeta(meta);
+        // inv.addItem(i);
+        // }
+        // ((Human) source).openInventory(inv);
+        // return true;
         if (args.length == 2) {
             try {
                 if (args[0].equalsIgnoreCase("uuid")) {

@@ -7,15 +7,17 @@ import java.util.Map;
 import java.util.UUID;
 
 import org.spongepowered.api.entity.player.Player;
-import org.spongepowered.api.event.player.PlayerJoinEvent;
+import org.spongepowered.api.entity.player.User;
+import org.spongepowered.api.event.entity.living.player.PlayerJoinEvent;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.message.Messages;
 import org.spongepowered.api.util.command.CommandSource;
-import org.spongepowered.api.util.event.Subscribe;
+import org.spongepowered.api.util.command.source.ConsoleSource;
+
+import com.flowpowered.math.vector.Vector3d;
 
 public class Utils {
 
-    @Subscribe
     public void login(final PlayerJoinEvent event) {
         Player p = event.getPlayer();
         if (!Data.init().playermap.containsKey(p.getUniqueId())) {
@@ -34,8 +36,9 @@ public class Utils {
 
     public static String getxyz(String p, CommandSource source) {
         try {
-            Player loc = IReport.server.getPlayer(p).get();
-            return String.valueOf("world " + loc.getWorld().getName() + " x " + loc.getX() + " y " + loc.getY() + " z " + loc.getZ());
+            Player player = IReport.server.getPlayer(p).get();
+            Vector3d loc = player.getLocation().getPosition();
+            return String.valueOf("world " + player.getWorld().getName() + " x " + loc.getX() + " y " + loc.getY() + " z " + loc.getZ());
         } catch (Exception e) {
             if (source != null) {
                 source.sendMessage(Messages.builder(p + " is not online").color(TextColors.RED).build());
@@ -66,9 +69,9 @@ public class Utils {
             if (data.playermapr.containsKey(p)) {
                 isreported = true;
                 String s = data.playermapr.get(p);
-                data.playermapr.put(p, s + reporttype + "reporter: " + sender.getName() + " ;");
+                data.playermapr.put(p, s + reporttype + "reporter: " + getName(sender) + " ;");
             } else {
-                data.playermapr.put(p, reporttype + "reporter: " + sender.getName() + " ;");
+                data.playermapr.put(p, reporttype + "reporter: " + getName(sender) + " ;");
             }
         }
         updateMYSQL(IReport.server.getPlayer(target).get(), isreported);
@@ -93,7 +96,17 @@ public class Utils {
     public static void PrintStackTrace(Throwable t) {
         IReport.LOGGER.error(t.toString());
         for (StackTraceElement Element : t.getStackTrace()) {
-            IReport.LOGGER.error("  "+Element.toString());
+            IReport.LOGGER.error("  " + Element.toString());
         }
+    }
+
+    public static String getName(CommandSource source) {
+        if (source instanceof User) {
+            return ((User) source).getName();
+        }
+        if (source instanceof ConsoleSource) {
+            return "Console";
+        }
+        return "";
     }
 }
