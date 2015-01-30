@@ -6,7 +6,7 @@ repositories {
     mavenCentral()
     maven {
         name 'Sponge maven repo'
-        url 'http://repo.spongepowered.org/Sponge/maven'
+        url 'http://repo.spongepowered.org/maven/'
     }
 }
 
@@ -18,19 +18,3 @@ version = '2.0.1'
 archivesBaseName = 'iReport'
 targetCompatibility = '1.6'
 sourceCompatibility = '1.6'
-
-processResources {
-	inputs.property "version", project.version
-
-	from(sourceSets.main.resources.srcDirs) {
-		include 'plugin.yml'
-
-        filter{line ->
-		    line.replaceAll("version:", "version: " + project.version)
-        }
-    }
-
-	from(sourceSets.main.resources.srcDirs) {
-		exclude 'plugin.yml'
-	}
-}

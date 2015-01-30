@@ -28,7 +28,7 @@ public class greport implements CommandCallable {
         if (args.length > 0) {
             String player = Utils.getName(source);
             String target = args[0];
-            Utils.reportplayer(target, "gReport: " + Utils.getxyz(args[0], null) + " ", source, args.length > 1 ? Boolean.valueOf(args[1]) : false);
+            Utils.reportplayer(target, "gReport: " + Utils.getxyz(args[0], source) + " ", source, args.length > 1 ? Boolean.valueOf(args[1]) : false);
             source.sendMessage(Messages.builder("You successfully reported ").color(TextColors.BLUE).append(Messages.builder(target).color(TextColors.RED).build()).build());
             for (Player p : IReport.server.getOnlinePlayers()) {
                 if (p.hasPermission("iReport.seereport") && p != source) {

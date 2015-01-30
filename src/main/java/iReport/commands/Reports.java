@@ -10,9 +10,14 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.UUID;
 
+import org.spongepowered.api.block.BlockTypes;
+import org.spongepowered.api.block.data.Skull;
+import org.spongepowered.api.block.meta.SkullTypes;
 import org.spongepowered.api.entity.living.Human;
+import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.ItemStack;
+import org.spongepowered.api.service.persistence.data.DataHolder;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.message.Messages;
 import org.spongepowered.api.util.command.CommandCallable;
@@ -95,6 +100,7 @@ public class Reports implements CommandCallable {
         Map<UUID, String> map1 = init().playermap;
         Map<UUID, String> map2 = init().playermapo;
         Map<UUID, String> map3 = init().playermapr;
+        ItemStack stack = IReport.game.getRegistry().getItemBuilder().itemType(ItemTypes.SKULL).damage(3).build();
         // if (source instanceof Human && args.length == 1 &&
         // args[0].equalsIgnoreCase("gui")) {
         // Inventory inv = calculate(init().playermapo.size());

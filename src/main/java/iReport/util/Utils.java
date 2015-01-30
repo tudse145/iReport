@@ -13,12 +13,14 @@ import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.message.Messages;
 import org.spongepowered.api.util.command.CommandSource;
 import org.spongepowered.api.util.command.source.ConsoleSource;
+import org.spongepowered.api.util.event.Subscribe;
 
 import com.flowpowered.math.vector.Vector3d;
 
 public class Utils {
 
-    public void login(final PlayerJoinEvent event) {
+    @Subscribe
+    public void login(PlayerJoinEvent event) {
         Player p = event.getPlayer();
         if (!Data.init().playermap.containsKey(p.getUniqueId())) {
             Data.init().playermap.put(p.getUniqueId(), p.getName());

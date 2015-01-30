@@ -27,16 +27,12 @@ public class MYSQL {
 
     public MYSQL() throws Exception {
         File file = new File(IReport.configfolder, "database.cfg");
-        ConfigFile cfg = ConfigFile.parseFile(file);
 
         String db = "database.";
-        cfg = cfg.withValue(db + "enable", ConfigValueFactory.fromAnyRef(false));
-        cfg = cfg.withValue(db + "host", ConfigValueFactory.fromAnyRef("localhost"));
-        cfg = cfg.withValue(db + "port", ConfigValueFactory.fromAnyRef(3306));
-        cfg = cfg.withValue(db + "user", ConfigValueFactory.fromAnyRef("user"));
-        cfg = cfg.withValue(db + "password", ConfigValueFactory.fromAnyRef("password"));
-        cfg = cfg.withValue(db + "database", ConfigValueFactory.fromAnyRef("database"));
-        cfg = cfg.withValue(db + "debug", ConfigValueFactory.fromAnyRef(false));
+        ConfigFile cfg = ConfigFile.parseFile(file).withValue(db + "enable", ConfigValueFactory.fromAnyRef(false)).withValue(db + "host", ConfigValueFactory.fromAnyRef("localhost"))
+                .withValue(db + "port", ConfigValueFactory.fromAnyRef(3306)).withValue(db + "user", ConfigValueFactory.fromAnyRef("user"))
+                .withValue(db + "password", ConfigValueFactory.fromAnyRef("password")).withValue(db + "database", ConfigValueFactory.fromAnyRef("database"))
+                .withValue(db + "debug", ConfigValueFactory.fromAnyRef(false));
         cfg.save(true);
         isenable = cfg.getBoolean(db + "enable");
         this.host = cfg.getString(db + "host");
