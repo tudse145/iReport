@@ -39,19 +39,16 @@ public class ireportc implements CommandCallable {
 
     @Override
     public Optional<String> getShortDescription() {
-        // TODO Auto-generated method stub
-        return null;
+        return Optional.of("Shows plugin help");
     }
 
     @Override
     public Optional<String> getHelp() {
-        // TODO Auto-generated method stub
-        return null;
+        return Optional.of("Shows plugin help");
     }
 
     @Override
     public String getUsage() {
-        // TODO Auto-generated method stub
-        return null;
+        return "/ireport";
     }
 }

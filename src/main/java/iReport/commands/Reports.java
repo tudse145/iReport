@@ -10,14 +10,8 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.UUID;
 
-import org.spongepowered.api.block.BlockTypes;
-import org.spongepowered.api.block.data.Skull;
-import org.spongepowered.api.block.meta.SkullTypes;
-import org.spongepowered.api.entity.living.Human;
-import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.ItemStack;
-import org.spongepowered.api.service.persistence.data.DataHolder;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.message.Messages;
 import org.spongepowered.api.util.command.CommandCallable;
@@ -94,7 +88,8 @@ public class Reports implements CommandCallable {
         return null;
     }
 
-    @Override
+    @SuppressWarnings("unused")
+	@Override
     public boolean call(CommandSource source, String arguments, List<String> parents) throws CommandException {
         String[] args = arguments.split(" ");
         Map<UUID, String> map1 = init().playermap;
@@ -161,19 +156,16 @@ public class Reports implements CommandCallable {
 
     @Override
     public Optional<String> getShortDescription() {
-        // TODO Auto-generated method stub
-        return null;
+        return Optional.of("Shows a list of reported players");
     }
 
     @Override
     public Optional<String> getHelp() {
-        // TODO Auto-generated method stub
-        return null;
+        return Optional.of("Shows a list of reported players");
     }
 
     @Override
     public String getUsage() {
-        // TODO Auto-generated method stub
-        return null;
+        return "/reports [gui]";
     }
 }

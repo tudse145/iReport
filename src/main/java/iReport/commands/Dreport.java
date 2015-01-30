@@ -7,8 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
-import java.util.stream.Collectors;
-
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.message.Messages;
 import org.spongepowered.api.util.command.CommandCallable;

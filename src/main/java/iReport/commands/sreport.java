@@ -46,19 +46,16 @@ public class sreport implements CommandCallable {
 
     @Override
     public Optional<String> getShortDescription() {
-        // TODO Auto-generated method stub
-        return null;
+        return Optional.of("Reports a player for swearing");
     }
 
     @Override
     public Optional<String> getHelp() {
-        // TODO Auto-generated method stub
-        return null;
+        return Optional.of("Reports a player for swearing");
     }
 
     @Override
     public String getUsage() {
-        // TODO Auto-generated method stub
-        return null;
+        return "/sreport <name>";
     }
 }

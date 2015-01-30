@@ -6,7 +6,6 @@ import iReport.util.Utils;
 import java.util.List;
 
 import org.spongepowered.api.entity.player.Player;
-import org.spongepowered.api.text.format.TextColor;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.message.Messages;
 import org.spongepowered.api.util.command.CommandCallable;
@@ -47,20 +46,17 @@ public class greport implements CommandCallable {
 
     @Override
     public Optional<String> getShortDescription() {
-        // TODO Auto-generated method stub
-        return null;
+        return Optional.of("Reports a player for grief");
     }
 
     @Override
     public Optional<String> getHelp() {
-        // TODO Auto-generated method stub
-        return null;
+        return Optional.of("Reports a player for grief");
     }
 
     @Override
     public String getUsage() {
-        // TODO Auto-generated method stub
-        return null;
+        return "/greport <name>";
     }
 
 }
