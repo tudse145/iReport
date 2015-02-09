@@ -9,9 +9,13 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
 
-import org.spongepowered.api.util.config.ConfigFile;
+import ninja.leaping.configurate.ConfigurationNode;
+import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
 
+import com.typesafe.config.Config;
 import com.typesafe.config.ConfigValueFactory;
 
 public class MYSQL {
@@ -28,19 +32,33 @@ public class MYSQL {
     public MYSQL() throws Exception {
         File file = new File(IReport.configfolder, "database.cfg");
 
+        boolean furstrun = false;
         String db = "database.";
-        ConfigFile cfg = ConfigFile.parseFile(file).withValue(db + "enable", ConfigValueFactory.fromAnyRef(false)).withValue(db + "host", ConfigValueFactory.fromAnyRef("localhost"))
-                .withValue(db + "port", ConfigValueFactory.fromAnyRef(3306)).withValue(db + "user", ConfigValueFactory.fromAnyRef("user"))
-                .withValue(db + "password", ConfigValueFactory.fromAnyRef("password")).withValue(db + "database", ConfigValueFactory.fromAnyRef("database"))
-                .withValue(db + "debug", ConfigValueFactory.fromAnyRef(false));
-        cfg.save(true);
-        isenable = cfg.getBoolean(db + "enable");
-        this.host = cfg.getString(db + "host");
-        this.port = cfg.getInt(db + "port");
-        this.user = cfg.getString(db + "user");
-        this.password = cfg.getString(db + "password");
-        this.database = cfg.getString(db + "database");
-        this.debug = cfg.getBoolean(db + "debug");
+        if (!file.exists()) {
+            file.createNewFile();
+            furstrun = true;
+        }
+        HoconConfigurationLoader cfgfile = HoconConfigurationLoader.builder().setFile(file).build();
+        ConfigurationNode config = cfgfile.load();
+        if (furstrun) {
+            Map<String, String> configDefaults = new HashMap<String, String>();
+            configDefaults.put(db + "enable", String.valueOf(false));
+            configDefaults.put(db + "host", "localhost");
+            configDefaults.put(db + "port", String.valueOf(3306));
+            configDefaults.put(db + "user", "user");
+            configDefaults.put(db + "password", "password");
+            configDefaults.put(db + "database", "database");
+            configDefaults.put(db + "debug", String.valueOf(false));
+            config.setValue(configDefaults);
+            cfgfile.save(config);
+        }
+        isenable = config.getNode(db + "enable").getBoolean();
+        this.host = config.getNode(db + "host").getString();
+        this.port = config.getNode(db + "port").getInt();
+        this.user = config.getNode(db + "user").getString();
+        this.password = config.getNode(db + "password").getString();
+        this.database = config.getNode(db + "database").getString();
+        this.debug = config.getNode(db + "debug").getBoolean();
         if (isenable) {
             this.oppenConnection();
         }

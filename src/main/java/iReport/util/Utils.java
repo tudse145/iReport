@@ -98,7 +98,7 @@ public class Utils {
     public static void PrintStackTrace(Throwable t) {
         IReport.LOGGER.error(t.toString());
         for (StackTraceElement Element : t.getStackTrace()) {
-            IReport.LOGGER.error("  " + Element.toString());
+            IReport.LOGGER.error("\tat " + Element.toString());
         }
     }
 

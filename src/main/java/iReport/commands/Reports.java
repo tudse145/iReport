@@ -56,36 +56,33 @@ public class Reports implements CommandCallable {
             list2.add(uuid.toString());
         }
         List<String> list = new ArrayList<String>();
-        if (source.hasPermission("iReport.reports")) {
-            if (args.length < 2) {
-                if ("uuid".startsWith(args[0].toLowerCase())) {
-                    list.add("uuid");
-                }
-                if ("usernameo".startsWith(args[0].toLowerCase())) {
-                    list.add("usernameo");
-                }
-                if ("gui".startsWith(args[0].toLowerCase())) {
-                    list.add("gui");
-                }
-                return list;
+        if (args.length < 2) {
+            if ("uuid".startsWith(args[0].toLowerCase())) {
+                list.add("uuid");
             }
-            if (args[0].toLowerCase().equals("uuid")) {
-                for (String string : list2) {
-                    if (string.toLowerCase().startsWith(args[1].toLowerCase())) {
-                        list.add(string);
-                    }
-                }
+            if ("usernameo".startsWith(args[0].toLowerCase())) {
+                list.add("usernameo");
             }
-            if (args[0].toLowerCase().equals("usernameo")) {
-                for (String string : init().playermapo.values()) {
-                    if (string.toLowerCase().startsWith(args[1].toLowerCase())) {
-                        list.add(string);
-                    }
-                }
+            if ("gui".startsWith(args[0].toLowerCase())) {
+                list.add("gui");
             }
             return list;
         }
-        return null;
+        if (args[0].toLowerCase().equals("uuid")) {
+            for (String string : list2) {
+                if (string.toLowerCase().startsWith(args[1].toLowerCase())) {
+                    list.add(string);
+                }
+            }
+        }
+        if (args[0].toLowerCase().equals("usernameo")) {
+            for (String string : init().playermapo.values()) {
+                if (string.toLowerCase().startsWith(args[1].toLowerCase())) {
+                    list.add(string);
+                }
+            }
+        }
+        return list;
     }
 
     @SuppressWarnings("unused")

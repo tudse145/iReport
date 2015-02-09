@@ -22,6 +22,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.Server;
+import org.spongepowered.api.event.state.PreInitializationEvent;
 import org.spongepowered.api.event.state.ServerStartingEvent;
 import org.spongepowered.api.event.state.ServerStoppingEvent;
 import org.spongepowered.api.plugin.Plugin;
@@ -66,7 +67,7 @@ public class IReport {
     }
 
     @Subscribe
-    public void onEnable(ServerStartingEvent event) {
+    public void onEnable(PreInitializationEvent event) {
         game.getCommandDispatcher().register(this, new Dreport(), "dreport");
         game.getCommandDispatcher().register(this, new greport(), "greport");
         game.getCommandDispatcher().register(this, new HReport(), "hreport");
