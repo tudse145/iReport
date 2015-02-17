@@ -1,12 +1,15 @@
 apply plugin: 'java'
 apply plugin: 'eclipse'
-apply plugin: 'idea'
 
 repositories {
     mavenCentral()
     maven {
         name 'Sponge maven repo'
         url 'http://repo.spongepowered.org/maven/'
+    }
+    maven {
+        name 'sonatypeSnapshot'
+        url 'https://oss.sonatype.org/content/repositories/snapshots/'
     }
 }
 

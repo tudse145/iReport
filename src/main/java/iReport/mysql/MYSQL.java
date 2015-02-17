@@ -15,9 +15,6 @@ import java.util.Map;
 import ninja.leaping.configurate.ConfigurationNode;
 import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
 
-import com.typesafe.config.Config;
-import com.typesafe.config.ConfigValueFactory;
-
 public class MYSQL {
 
     public boolean isenable;

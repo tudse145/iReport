@@ -10,7 +10,10 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.UUID;
 
+import org.spongepowered.api.entity.living.Human;
 import org.spongepowered.api.item.ItemTypes;
+import org.spongepowered.api.item.inventory.Inventories;
+import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.message.Messages;
@@ -35,17 +38,17 @@ public class Reports implements CommandCallable {
         return list;
     }
 
-    // private Inventory calculate(int size) {
-    // float f = size;
-    // f = f / 9;
-    // if (f == size / 9) {
-    // return Bukkit.createInventory(null, (int) (f * 9), "reports");
-    // }
-    // size = size / 9;
-    // size++;
-    // size = size * 9;
-    // return Bukkit.createInventory(null, size, "reports");
-    // }
+    private Inventory calculate(int size) {
+        float f = size;
+        f = f / 9;
+        if (f == size / 9) {
+            return Inventories.customInventoryBuilder().size((int) (f * 9)).build();
+        }
+        size = size / 9;
+        size++;
+        size = size * 9;
+        return Inventories.customInventoryBuilder().size(size).build();
+    }
 
     @Override
     public List<String> getSuggestions(CommandSource source, String arguments) throws CommandException {
@@ -86,31 +89,27 @@ public class Reports implements CommandCallable {
     }
 
     @SuppressWarnings("unused")
-	@Override
+    @Override
     public boolean call(CommandSource source, String arguments, List<String> parents) throws CommandException {
         String[] args = arguments.split(" ");
         Map<UUID, String> map1 = init().playermap;
         Map<UUID, String> map2 = init().playermapo;
         Map<UUID, String> map3 = init().playermapr;
-        ItemStack stack = IReport.game.getRegistry().getItemBuilder().itemType(ItemTypes.SKULL).damage(3).build();
-        // if (source instanceof Human && args.length == 1 &&
-        // args[0].equalsIgnoreCase("gui")) {
-        // Inventory inv = calculate(init().playermapo.size());
-        // for (UUID uuid : map2.keySet()) {
-        // List<String> list = new ArrayList<String>();
-        // ItemStack i1 =
-        // IReport.game.getRegistry().getItemBuilder().withItemType(ItemTypes.SKULL).build();
-        // ItemStack i = new ItemStack(ItemTypes.SKULL);
-        // i.setDamage((short) 3);
-        // SkullMeta meta = (SkullMeta) i.getItemMeta();
-        // meta.setOwner(map1.get(uuid));
-        // meta.setDisplayName(map1.get(uuid));
-        // meta.setLore(setLore(list, uuid));
-        // i.setItemMeta(meta);
-        // inv.addItem(i);
-        // }
-        // ((Human) source).openInventory(inv);
-        // return true;
+        if (source instanceof Human && args.length == 1 && args[0].equalsIgnoreCase("gui")) {
+            Inventory inv = calculate(init().playermapo.size());
+            for (UUID uuid : map2.keySet()) {
+                List<String> list = new ArrayList<String>();
+                ItemStack i = IReport.game.getRegistry().getItemBuilder().itemType(ItemTypes.SKULL).damage(3).build();
+                // SkullMeta meta = (SkullMeta) i.getItemMeta();
+                // meta.setOwner(map1.get(uuid));
+                // meta.setDisplayName(map1.get(uuid));
+                // meta.setLore(setLore(list, uuid));
+                // i.setItemMeta(meta);
+                inv.offer(i);
+            }
+            ((Human) source).openInventory(inv);
+            return true;
+        }
         if (args.length == 2) {
             try {
                 if (args[0].equalsIgnoreCase("uuid")) {
