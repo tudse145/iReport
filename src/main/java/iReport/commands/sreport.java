@@ -25,7 +25,7 @@ public class sreport implements CommandCallable {
     public boolean call(CommandSource source, String arguments, List<String> parents) throws CommandException {
         String[] args = arguments.split(" ");
         if (args.length > 0) {
-            String player = Utils.getName(source);
+            String player = source.getName();
             String target = args[0];
             Utils.reportplayer(target, "sReport ", source, args.length > 1 ? Boolean.valueOf(args[1]) : false);
             source.sendMessage(Messages.builder("You successfully reported ").color(TextColors.BLUE).append(Messages.builder(target).color(TextColors.RED).build()).build());

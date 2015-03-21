@@ -27,6 +27,9 @@ public class MYSQL {
     private Connection conn;
 
     public MYSQL() throws Exception {
+        if (!IReport.configfolder.exists()) {
+            IReport.configfolder.mkdir();
+        }
         File file = new File(IReport.configfolder, "database.cfg");
 
         boolean furstrun = false;

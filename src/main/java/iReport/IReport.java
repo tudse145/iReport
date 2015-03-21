@@ -23,7 +23,6 @@ import org.slf4j.LoggerFactory;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.Server;
 import org.spongepowered.api.event.state.PreInitializationEvent;
-import org.spongepowered.api.event.state.ServerStartingEvent;
 import org.spongepowered.api.event.state.ServerStoppingEvent;
 import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.plugin.PluginContainer;
@@ -32,6 +31,7 @@ import org.spongepowered.api.util.event.Subscribe;
 
 import com.google.inject.Inject;
 
+@SuppressWarnings("unused")
 @Plugin(id = "iReport", name = "iReport", version = "2.0.1-SNAPSHOT")
 public class IReport {
     public static final Logger LOGGER = LoggerFactory.getLogger("iReport");

@@ -25,7 +25,7 @@ public class HReport implements CommandCallable {
     public boolean call(CommandSource sorce, String arguments, List<String> parents) throws CommandException {
         String[] args = arguments.split(" ");
         if (args.length > 1) {
-            String player = Utils.getName(sorce);
+            String player = sorce.getName();
             String target = args[0];
             Utils.reportplayer(target, "hReport: " + args[1] + " ", sorce, args.length > 2 ? Boolean.valueOf(args[1]) : false);
             sorce.sendMessage(Messages.builder("You successfully reported ").color(TextColors.BLUE).append(Messages.builder(target).color(TextColors.RED).build()).build());

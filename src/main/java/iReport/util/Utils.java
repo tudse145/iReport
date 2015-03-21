@@ -8,10 +8,12 @@ import java.util.UUID;
 
 import org.spongepowered.api.entity.player.Player;
 import org.spongepowered.api.entity.player.User;
+import org.spongepowered.api.event.entity.living.player.PlayerChatEvent;
 import org.spongepowered.api.event.entity.living.player.PlayerJoinEvent;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.message.Messages;
 import org.spongepowered.api.util.command.CommandSource;
+import org.spongepowered.api.util.command.source.CommandBlockSource;
 import org.spongepowered.api.util.command.source.ConsoleSource;
 import org.spongepowered.api.util.event.Subscribe;
 
@@ -19,7 +21,7 @@ import com.flowpowered.math.vector.Vector3d;
 
 public class Utils {
 
-    @Subscribe
+    @Subscribe(ignoreCancelled = false)
     public void login(PlayerJoinEvent event) {
         Player p = event.getPlayer();
         if (!Data.init().playermap.containsKey(p.getUniqueId())) {
@@ -31,7 +33,7 @@ public class Utils {
             }
         }
     }
-
+    
     public static boolean isReported(UUID uniqueId) {
         return Data.init().playermapr.get(uniqueId) != null;
     }
@@ -56,7 +58,7 @@ public class Utils {
         UUID p = null;
         try {
             p = IReport.server.getPlayer(target).get().getUniqueId();
-        } catch (NullPointerException e) {
+        } catch (IllegalStateException e) {
             sender.sendMessage(Messages.builder(target + " is not online").color(TextColors.RED).build());
             return;
         }
@@ -71,9 +73,9 @@ public class Utils {
             if (data.playermapr.containsKey(p)) {
                 isreported = true;
                 String s = data.playermapr.get(p);
-                data.playermapr.put(p, s + reporttype + "reporter: " + getName(sender) + " ;");
+                data.playermapr.put(p, s + reporttype + "reporter: " + sender.getName() + " ;");
             } else {
-                data.playermapr.put(p, reporttype + "reporter: " + getName(sender) + " ;");
+                data.playermapr.put(p, reporttype + "reporter: " + sender.getName() + " ;");
             }
         }
         updateMYSQL(IReport.server.getPlayer(target).get(), isreported);
@@ -100,15 +102,5 @@ public class Utils {
         for (StackTraceElement Element : t.getStackTrace()) {
             IReport.LOGGER.error("\tat " + Element.toString());
         }
-    }
-
-    public static String getName(CommandSource source) {
-        if (source instanceof User) {
-            return ((User) source).getName();
-        }
-        if (source instanceof ConsoleSource) {
-            return "Console";
-        }
-        return "";
     }
 }
