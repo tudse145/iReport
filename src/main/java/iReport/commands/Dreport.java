@@ -7,8 +7,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+
+import org.spongepowered.api.text.Texts;
 import org.spongepowered.api.text.format.TextColors;
-import org.spongepowered.api.text.message.Messages;
 import org.spongepowered.api.util.command.CommandCallable;
 import org.spongepowered.api.util.command.CommandException;
 import org.spongepowered.api.util.command.CommandSource;
@@ -45,10 +46,10 @@ public class Dreport implements CommandCallable {
                 data.playermapo.clear();
                 data.playermapor.clear();
                 data.playermapr.clear();
-                source.sendMessage(Messages.builder("Successfully cleared reports").color(TextColors.GREEN).build());
+                source.sendMessage(Texts.builder("Successfully cleared reports").color(TextColors.GREEN).build());
                 return true;
             } else {
-                source.sendMessage(Messages.builder("You don't have permission").color(TextColors.RED).build());
+                source.sendMessage(Texts.builder("You don't have permission").color(TextColors.RED).build());
                 return true;
             }
 
@@ -58,10 +59,10 @@ public class Dreport implements CommandCallable {
             data.playermapo.remove(UUID.fromString(args[0]));
             data.playermapr.remove(UUID.fromString(args[0]));
             data.playermapor.remove(s);
-            source.sendMessage(Messages.builder("Successfully deleted " + s).color(TextColors.GREEN).build());
+            source.sendMessage(Texts.builder("Successfully deleted " + s).color(TextColors.GREEN).build());
             IReport.getMYSQL().queryUpdate("DELETE FROM reports WHERE uuid = '" + UUID.fromString(args[0]) + "'");
         } catch (IllegalArgumentException e) {
-            source.sendMessage(Messages.builder("invalid UUID").color(TextColors.RED).build());
+            source.sendMessage(Texts.builder("invalid UUID").color(TextColors.RED).build());
         }
         return true;
     }

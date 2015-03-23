@@ -10,8 +10,8 @@ import org.spongepowered.api.entity.player.Player;
 import org.spongepowered.api.entity.player.User;
 import org.spongepowered.api.event.entity.living.player.PlayerChatEvent;
 import org.spongepowered.api.event.entity.living.player.PlayerJoinEvent;
+import org.spongepowered.api.text.Texts;
 import org.spongepowered.api.text.format.TextColors;
-import org.spongepowered.api.text.message.Messages;
 import org.spongepowered.api.util.command.CommandSource;
 import org.spongepowered.api.util.command.source.CommandBlockSource;
 import org.spongepowered.api.util.command.source.ConsoleSource;
@@ -45,7 +45,7 @@ public class Utils {
             return String.valueOf("world " + player.getWorld().getName() + " x " + loc.getX() + " y " + loc.getY() + " z " + loc.getZ());
         } catch (Exception e) {
             if (source != null) {
-                source.sendMessage(Messages.builder(p + " is not online").color(TextColors.RED).build());
+                source.sendMessage(Texts.builder(p + " is not online").color(TextColors.RED).build());
             }
         }
 
@@ -59,7 +59,7 @@ public class Utils {
         try {
             p = IReport.server.getPlayer(target).get().getUniqueId();
         } catch (IllegalStateException e) {
-            sender.sendMessage(Messages.builder(target + " is not online").color(TextColors.RED).build());
+            sender.sendMessage(Texts.builder(target + " is not online").color(TextColors.RED).build());
             return;
         }
         Data data = Data.init();
@@ -68,7 +68,7 @@ public class Utils {
         if (!data.playermapor.containsKey(target) && o == null ? true : o.equals(p) || b)
             data.playermapor.put(target, p);
         else
-            sender.sendMessage("player " + target + " is alredy reported with another UUID please look at the reports or add true");
+            sender.sendMessage(Texts.of("player " + target + " is alredy reported with another UUID please look at the reports or add true"));
         synchronized (data.playermap.get(p)) {
             if (data.playermapr.containsKey(p)) {
                 isreported = true;

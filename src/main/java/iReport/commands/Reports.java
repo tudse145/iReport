@@ -19,9 +19,9 @@ import org.spongepowered.api.item.inventory.Inventories;
 import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.custom.CustomInventory;
+import org.spongepowered.api.text.Text;
+import org.spongepowered.api.text.Texts;
 import org.spongepowered.api.text.format.TextColors;
-import org.spongepowered.api.text.message.Message;
-import org.spongepowered.api.text.message.Messages;
 import org.spongepowered.api.util.command.CommandCallable;
 import org.spongepowered.api.util.command.CommandException;
 import org.spongepowered.api.util.command.CommandSource;
@@ -30,17 +30,17 @@ import com.google.common.base.Optional;
 
 public class Reports implements CommandCallable {
 
-    private List<Message> setLore(UUID uuid) {
-        List<Message> list = new ArrayList<Message>();
+    private List<Text> setLore(UUID uuid) {
+        List<Text> list = new ArrayList<Text>();
         Map<UUID, String> map1 = init().playermap;
         Map<UUID, String> map2 = init().playermapo;
         Map<UUID, String> map3 = init().playermapr;
-        list.add(Messages.of("UUID: " + uuid));
-        list.add(Messages.of("currentname: " + map1.get(uuid)));
+        list.add(Texts.of("UUID: " + uuid));
+        list.add(Texts.of("currentname: " + map1.get(uuid)));
         for (String string : map3.get(uuid).split(";")) {
-            list.add(Messages.of(string));
+            list.add(Texts.of(string));
         }
-        list.add(Messages.of("username: " + map2.get(uuid)));
+        list.add(Texts.of("username: " + map2.get(uuid)));
         return list;
     }
 
@@ -130,17 +130,17 @@ public class Reports implements CommandCallable {
                 }
                 return true;
             } catch (Exception e) {
-                source.sendMessage(Messages.builder("invalid UUID").color(TextColors.RED).build());
+                source.sendMessage(Texts.builder("invalid UUID").color(TextColors.RED).build());
             }
         } else {
             if (map3.isEmpty()) {
-                source.sendMessage(Messages.builder("There is no reports").color(TextColors.RED).build());
+                source.sendMessage(Texts.builder("There is no reports").color(TextColors.RED).build());
                 return true;
             }
             for (Entry<UUID, String> entry : map3.entrySet()) {
                 UUID u = entry.getKey();
                 source.sendMessage(setLore(u));
-                source.sendMessage(" ");
+                source.sendMessage(Texts.of(" "));
             }
             return true;
         }
