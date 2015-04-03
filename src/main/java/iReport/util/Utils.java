@@ -7,14 +7,10 @@ import java.util.Map;
 import java.util.UUID;
 
 import org.spongepowered.api.entity.player.Player;
-import org.spongepowered.api.entity.player.User;
-import org.spongepowered.api.event.entity.living.player.PlayerChatEvent;
-import org.spongepowered.api.event.entity.living.player.PlayerJoinEvent;
+import org.spongepowered.api.event.entity.player.PlayerJoinEvent;
 import org.spongepowered.api.text.Texts;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.util.command.CommandSource;
-import org.spongepowered.api.util.command.source.CommandBlockSource;
-import org.spongepowered.api.util.command.source.ConsoleSource;
 import org.spongepowered.api.util.event.Subscribe;
 
 import com.flowpowered.math.vector.Vector3d;
@@ -33,7 +29,7 @@ public class Utils {
             }
         }
     }
-    
+
     public static boolean isReported(UUID uniqueId) {
         return Data.init().playermapr.get(uniqueId) != null;
     }

@@ -31,7 +31,6 @@ import org.spongepowered.api.util.event.Subscribe;
 
 import com.google.inject.Inject;
 
-@SuppressWarnings("unused")
 @Plugin(id = "iReport", name = "iReport", version = "2.0.1-SNAPSHOT")
 public class IReport {
     public static final Logger LOGGER = LoggerFactory.getLogger("iReport");
@@ -44,7 +43,7 @@ public class IReport {
     @Inject
     public IReport(Game game, @ConfigDir(sharedRoot = false) File configfolder) {
         IReport.game = game;
-        IReport.server = game.getServer().get();
+        IReport.server = game.getServer();
         IReport.configfolder = configfolder;
     }
 

@@ -16,7 +16,6 @@ import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.data.LoreItemData;
 import org.spongepowered.api.item.data.OwnableData;
 import org.spongepowered.api.item.inventory.Inventories;
-import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.custom.CustomInventory;
 import org.spongepowered.api.text.Text;
@@ -25,8 +24,6 @@ import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.util.command.CommandCallable;
 import org.spongepowered.api.util.command.CommandException;
 import org.spongepowered.api.util.command.CommandSource;
-
-import com.google.common.base.Optional;
 
 public class Reports implements CommandCallable {
 
@@ -153,17 +150,17 @@ public class Reports implements CommandCallable {
     }
 
     @Override
-    public Optional<String> getShortDescription() {
-        return Optional.of("Shows a list of reported players");
+    public String getShortDescription(CommandSource source) {
+        return "Shows a list of reported players";
     }
 
     @Override
-    public Optional<String> getHelp() {
-        return Optional.of("Shows a list of reported players");
+    public Text getHelp(CommandSource source) {
+        return Texts.of("Shows a list of reported players");
     }
 
     @Override
-    public String getUsage() {
+    public String getUsage(CommandSource source) {
         return "/reports [gui]";
     }
 }

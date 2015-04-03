@@ -2,13 +2,12 @@ package iReport.commands;
 
 import java.util.List;
 
+import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.Texts;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.util.command.CommandCallable;
 import org.spongepowered.api.util.command.CommandException;
 import org.spongepowered.api.util.command.CommandSource;
-
-import com.google.common.base.Optional;
 
 public class ireportc implements CommandCallable {
 
@@ -38,17 +37,17 @@ public class ireportc implements CommandCallable {
     }
 
     @Override
-    public Optional<String> getShortDescription() {
-        return Optional.of("Shows plugin help");
+    public String getShortDescription(CommandSource source) {
+        return "Shows plugin help";
     }
 
     @Override
-    public Optional<String> getHelp() {
-        return Optional.of("Shows plugin help");
+    public Text getHelp(CommandSource source) {
+        return Texts.of("Shows plugin help");
     }
 
     @Override
-    public String getUsage() {
+    public String getUsage(CommandSource source) {
         return "/ireport";
     }
 }
