@@ -11,3 +11,4 @@ target
 build
 /bin
 /.nb-gradle/private/
+/build/

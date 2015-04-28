@@ -1,19 +1,22 @@
 package iReport.util;
 
 import static iReport.util.Data.init;
-import iReport.IReport;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
 import org.spongepowered.api.entity.player.Player;
+import org.spongepowered.api.event.Subscribe;
 import org.spongepowered.api.event.entity.player.PlayerJoinEvent;
 import org.spongepowered.api.text.Texts;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.util.command.CommandSource;
-import org.spongepowered.api.util.event.Subscribe;
 
 import com.flowpowered.math.vector.Vector3d;
+
+import iReport.IReport;
 
 public class Utils {
 
@@ -38,7 +41,7 @@ public class Utils {
         try {
             Player player = IReport.server.getPlayer(p).get();
             Vector3d loc = player.getLocation().getPosition();
-            return String.valueOf("world " + player.getWorld().getName() + " x " + loc.getX() + " y " + loc.getY() + " z " + loc.getZ());
+            return String.valueOf("world " + player.getWorld().getName() + " x " + (int)loc.getX() + " y " + (int)loc.getY() + " z " + (int)loc.getZ());
         } catch (Exception e) {
             if (source != null) {
                 source.sendMessage(Texts.builder(p + " is not online").color(TextColors.RED).build());
@@ -98,5 +101,13 @@ public class Utils {
         for (StackTraceElement Element : t.getStackTrace()) {
             IReport.LOGGER.error("\tat " + Element.toString());
         }
+    }
+    
+    public static List<String> getPlayerNames() {
+        List<String> playerNames = new ArrayList<String>();
+        for (Player player : IReport.server.getOnlinePlayers()) {
+            playerNames.add(player.getName());
+        }
+        return playerNames;
     }
 }

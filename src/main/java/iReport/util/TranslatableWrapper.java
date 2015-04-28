@@ -1,33 +1,30 @@
 package iReport.util;
 
+import java.util.Locale;
+import java.util.ResourceBundle;
+
+import org.spongepowered.api.text.translation.ResourceBundleTranslation;
 import org.spongepowered.api.text.translation.Translatable;
 import org.spongepowered.api.text.translation.Translation;
 
-public class TranslatableWrapper implements Translatable, Translation {
+import com.google.common.base.Function;
 
-    private String name;
+public class TranslatableWrapper implements Translatable {
+
+    private ResourceBundleTranslation name;
+    private static final Function<Locale, ResourceBundle> LOOKUP_FUNC = new Function<Locale, ResourceBundle>() {
+        public ResourceBundle apply(Locale input) {
+           return ResourceBundle.getBundle("org.spongepowered.api.Translations", input);
+        }
+    };
+
 
     public TranslatableWrapper(String name) {
-        this.name = name;
+        this.name = new ResourceBundleTranslation(name, LOOKUP_FUNC);
     }
 
     @Override
     public Translation getTranslation() {
-        return this;
-    }
-
-    @Override
-    public String getId() {
-        return name;
-    }
-
-    @Override
-    public String get() {
-        return name;
-    }
-
-    @Override
-    public String get(Object... args) {
         return name;
     }
 }

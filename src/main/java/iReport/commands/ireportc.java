@@ -7,7 +7,10 @@ import org.spongepowered.api.text.Texts;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.util.command.CommandCallable;
 import org.spongepowered.api.util.command.CommandException;
+import org.spongepowered.api.util.command.CommandResult;
 import org.spongepowered.api.util.command.CommandSource;
+
+import com.google.common.base.Optional;
 
 public class ireportc implements CommandCallable {
 
@@ -17,7 +20,7 @@ public class ireportc implements CommandCallable {
     }
 
     @Override
-    public boolean call(CommandSource source, String arguments, List<String> parents) throws CommandException {
+    public Optional<CommandResult> process(CommandSource source, String arguments) throws CommandException {
         source.sendMessage(Texts.builder("==============================").color(TextColors.YELLOW).build());
         source.sendMessage(Texts.builder("/greport - Report a griefer").color(TextColors.GREEN).build());
         source.sendMessage(Texts.builder("/hreport - Report a hacker").color(TextColors.GREEN).build());
@@ -28,7 +31,7 @@ public class ireportc implements CommandCallable {
         source.sendMessage(Texts.builder("/dreport - Delete a report").color(TextColors.GREEN).build());
         source.sendMessage(Texts.builder("==============================").color(TextColors.YELLOW).build());
         source.sendMessage(Texts.builder("Created by tudse145 & heni123321").color(TextColors.BLUE).build());
-        return true;
+        return Optional.of(CommandResult.success());
     }
 
     @Override
@@ -37,17 +40,17 @@ public class ireportc implements CommandCallable {
     }
 
     @Override
-    public String getShortDescription(CommandSource source) {
-        return "Shows plugin help";
+    public Optional<Text> getShortDescription(CommandSource source) {
+        return Optional.of((Text)Texts.of("Shows plugin help"));
     }
 
     @Override
-    public Text getHelp(CommandSource source) {
-        return Texts.of("Shows plugin help");
+    public Optional<Text> getHelp(CommandSource source) {
+        return Optional.of((Text)Texts.of("Shows plugin help"));
     }
 
     @Override
-    public String getUsage(CommandSource source) {
-        return "/ireport";
+    public Text getUsage(CommandSource source) {
+        return Texts.of("");
     }
 }

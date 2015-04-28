@@ -13,7 +13,10 @@ import org.spongepowered.api.text.Texts;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.util.command.CommandCallable;
 import org.spongepowered.api.util.command.CommandException;
+import org.spongepowered.api.util.command.CommandResult;
 import org.spongepowered.api.util.command.CommandSource;
+
+import com.google.common.base.Optional;
 
 public class Dreport implements CommandCallable {
 
@@ -34,7 +37,7 @@ public class Dreport implements CommandCallable {
     }
 
     @Override
-    public boolean call(CommandSource source, String arguments, List<String> parents) throws CommandException {
+    public Optional<CommandResult> process(CommandSource source, String arguments) throws CommandException {
         String[] args = arguments.split(" ");
         Data data = Data.init();
         if (args[0].equals("*")) {
@@ -46,10 +49,10 @@ public class Dreport implements CommandCallable {
                 data.playermapor.clear();
                 data.playermapr.clear();
                 source.sendMessage(Texts.builder("Successfully cleared reports").color(TextColors.GREEN).build());
-                return true;
+                return Optional.of(CommandResult.success());
             } else {
-                source.sendMessage(Texts.builder("You don't have permission").color(TextColors.RED).build());
-                return true;
+                //source.sendMessage(Texts.builder("You don't have permission").color(TextColors.RED).build());
+                throw new CommandException(Texts.builder("You don't have permission").color(TextColors.RED).build());
             }
 
         }
@@ -61,9 +64,10 @@ public class Dreport implements CommandCallable {
             source.sendMessage(Texts.builder("Successfully deleted " + s).color(TextColors.GREEN).build());
             IReport.getMYSQL().queryUpdate("DELETE FROM reports WHERE uuid = '" + UUID.fromString(args[0]) + "'");
         } catch (IllegalArgumentException e) {
-            source.sendMessage(Texts.builder("invalid UUID").color(TextColors.RED).build());
+            //source.sendMessage(Texts.builder("invalid UUID").color(TextColors.RED).build());
+            throw new CommandException(Texts.builder("invalid UUID").color(TextColors.RED).build());
         }
-        return true;
+        return Optional.of(CommandResult.success());
     }
 
     @Override
@@ -72,18 +76,17 @@ public class Dreport implements CommandCallable {
     }
 
     @Override
-    public String getShortDescription(CommandSource source) {
-        return "Deletes a report";
+    public Optional<Text> getShortDescription(CommandSource source) {
+        return Optional.of((Text)Texts.of("Deletes a report"));
     }
 
     @Override
-    public Text getHelp(CommandSource source) {
-        return Texts.of("Deletes a report");
+    public Optional<Text> getHelp(CommandSource source) {
+        return Optional.of((Text)Texts.of("Deletes a report"));
     }
 
     @Override
-    public String getUsage(CommandSource source) {
-        return "/dreport <UUID>";
+    public Text getUsage(CommandSource source) {
+        return Texts.of("<UUID>");
     }
-
 }

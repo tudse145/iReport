@@ -11,31 +11,34 @@ import org.spongepowered.api.text.Texts;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.util.command.CommandCallable;
 import org.spongepowered.api.util.command.CommandException;
+import org.spongepowered.api.util.command.CommandResult;
 import org.spongepowered.api.util.command.CommandSource;
+
+import com.google.common.base.Optional;
 
 public class HReport implements CommandCallable {
 
     @Override
     public List<String> getSuggestions(CommandSource source, String arguments) throws CommandException {
-        return null;
+        return Utils.getPlayerNames();
     }
 
     @Override
-    public boolean call(CommandSource sorce, String arguments, List<String> parents) throws CommandException {
+    public Optional<CommandResult> process(CommandSource source, String arguments) throws CommandException {
         String[] args = arguments.split(" ");
-        if (args.length > 1) {
-            String player = sorce.getName();
+        if (args.length > 1 && !args[0].isEmpty() && !args[1].isEmpty()) {
+            String player = source.getName();
             String target = args[0];
-            Utils.reportplayer(target, "hReport: " + args[1] + " ", sorce, args.length > 2 ? Boolean.valueOf(args[1]) : false);
-            sorce.sendMessage(Texts.builder("You successfully reported ").color(TextColors.BLUE).append(Texts.builder(target).color(TextColors.RED).build()).build());
+            Utils.reportplayer(target, "hReport: " + args[1] + " ", source, args.length > 2 ? Boolean.valueOf(args[1]) : false);
+            source.sendMessage(Texts.builder("You successfully reported ").color(TextColors.BLUE).append(Texts.builder(target).color(TextColors.RED).build()).build());
             for (Player p : IReport.server.getOnlinePlayers()) {
-                if (p.hasPermission("iReport.seereport") && p != sorce) {
+                if (p.hasPermission("iReport.seereport") && p != source) {
                     p.sendMessage(Texts.builder(player + " has reported " + target + " for " + args[1] + " hacking ").color(TextColors.RED).build());
                 }
             }
-            return true;
+            return Optional.of(CommandResult.success());
         }
-        return false;
+        throw new CommandException(Texts.builder("Not enough arguments").color(TextColors.RED).build());
     }
 
     @Override
@@ -44,18 +47,18 @@ public class HReport implements CommandCallable {
     }
 
     @Override
-    public String getShortDescription(CommandSource source) {
-        return "Reports a player for hack";
+    public Optional<Text> getShortDescription(CommandSource source) {
+        return Optional.of((Text)Texts.of("Reports a player for hack"));
     }
 
     @Override
-    public Text getHelp(CommandSource source) {
-        return Texts.of("Reports a player for hack");
+    public Optional<Text> getHelp(CommandSource source) {
+        return Optional.of((Text)Texts.of("Reports a player for hack"));
     }
 
     @Override
-    public String getUsage(CommandSource source) {
-        return "/hreport <name>";
+    public Text getUsage(CommandSource source) {
+        return Texts.of("<name>");
     }
 
 }

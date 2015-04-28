@@ -11,19 +11,22 @@ import org.spongepowered.api.text.Texts;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.util.command.CommandCallable;
 import org.spongepowered.api.util.command.CommandException;
+import org.spongepowered.api.util.command.CommandResult;
 import org.spongepowered.api.util.command.CommandSource;
+
+import com.google.common.base.Optional;
 
 public class greport implements CommandCallable {
 
     @Override
     public List<String> getSuggestions(CommandSource source, String arguments) throws CommandException {
-        return null;
+        return Utils.getPlayerNames();
     }
 
     @Override
-    public boolean call(CommandSource source, String arguments, List<String> parents) throws CommandException {
+    public Optional<CommandResult> process(CommandSource source, String arguments) throws CommandException {
         String[] args = arguments.split(" ");
-        if (args.length > 0) {
+        if (args.length > 0 && !args[0].isEmpty()) {
             String player = source.getName();
             String target = args[0];
             Utils.reportplayer(target, "gReport: " + Utils.getxyz(args[0], source) + " ", source, args.length > 1 ? Boolean.valueOf(args[1]) : false);
@@ -33,9 +36,9 @@ public class greport implements CommandCallable {
                     p.sendMessage(Texts.builder(player + " has reported " + target + " for griefing").color(TextColors.RED).build());
                 }
             }
-            return true;
+            return Optional.of(CommandResult.success());
         }
-        return false;
+        throw new CommandException(Texts.builder("Not enough arguments").color(TextColors.RED).build());
     }
 
     @Override
@@ -44,18 +47,18 @@ public class greport implements CommandCallable {
     }
 
     @Override
-    public String getShortDescription(CommandSource source) {
-        return "Reports a player for grief";
+    public Optional<Text> getShortDescription(CommandSource source) {
+        return Optional.of((Text)Texts.of("Reports a player for grief"));
     }
 
     @Override
-    public Text getHelp(CommandSource source) {
-        return Texts.of("Reports a player for grief");
+    public Optional<Text> getHelp(CommandSource source) {
+        return Optional.of((Text)Texts.of("Reports a player for grief"));
     }
 
     @Override
-    public String getUsage(CommandSource source) {
-        return "/greport <name>";
+    public Text getUsage(CommandSource source) {
+        return Texts.of("<name>");
     }
 
 }

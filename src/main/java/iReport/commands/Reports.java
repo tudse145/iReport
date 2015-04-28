@@ -1,8 +1,6 @@
 package iReport.commands;
 
 import static iReport.util.Data.init;
-import iReport.IReport;
-import iReport.util.TranslatableWrapper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,19 +9,26 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.UUID;
 
+import org.spongepowered.api.data.manipulators.OwnableData;
+import org.spongepowered.api.data.manipulators.items.LoreData;
 import org.spongepowered.api.entity.living.Human;
 import org.spongepowered.api.item.ItemTypes;
-import org.spongepowered.api.item.data.LoreItemData;
-import org.spongepowered.api.item.data.OwnableData;
 import org.spongepowered.api.item.inventory.Inventories;
 import org.spongepowered.api.item.inventory.ItemStack;
+import org.spongepowered.api.item.inventory.ItemStackBuilder;
 import org.spongepowered.api.item.inventory.custom.CustomInventory;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.Texts;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.util.command.CommandCallable;
 import org.spongepowered.api.util.command.CommandException;
+import org.spongepowered.api.util.command.CommandResult;
 import org.spongepowered.api.util.command.CommandSource;
+
+import com.google.common.base.Optional;
+
+import iReport.IReport;
+import iReport.util.TranslatableWrapper;
 
 public class Reports implements CommandCallable {
 
@@ -63,7 +68,7 @@ public class Reports implements CommandCallable {
             list2.add(uuid.toString());
         }
         List<String> list = new ArrayList<String>();
-        if (args.length < 2) {
+        if (args.length < 2 && !arguments.endsWith(" ")) {
             if ("uuid".startsWith(args[0].toLowerCase())) {
                 list.add("uuid");
             }
@@ -77,14 +82,14 @@ public class Reports implements CommandCallable {
         }
         if (args[0].toLowerCase().equals("uuid")) {
             for (String string : list2) {
-                if (string.toLowerCase().startsWith(args[1].toLowerCase())) {
+                if (string.toLowerCase().startsWith(args.length > 1 ? args[1] : "")) {
                     list.add(string);
                 }
             }
         }
         if (args[0].toLowerCase().equals("usernameo")) {
             for (String string : init().playermapo.values()) {
-                if (string.toLowerCase().startsWith(args[1].toLowerCase())) {
+                if (string.toLowerCase().startsWith(args.length > 1 ? args[1] : "")) {
                     list.add(string);
                 }
             }
@@ -92,9 +97,8 @@ public class Reports implements CommandCallable {
         return list;
     }
 
-    @SuppressWarnings("unused")
     @Override
-    public boolean call(CommandSource source, String arguments, List<String> parents) throws CommandException {
+    public Optional<CommandResult> process(CommandSource source, String arguments) throws CommandException {
         String[] args = arguments.split(" ");
         Map<UUID, String> map1 = init().playermap;
         Map<UUID, String> map2 = init().playermapo;
@@ -102,18 +106,17 @@ public class Reports implements CommandCallable {
         if (source instanceof Human && args.length == 1 && args[0].equalsIgnoreCase("gui")) {
             CustomInventory inv = calculate(init().playermapo.size());
             for (UUID uuid : map2.keySet()) {
-                List<String> list = new ArrayList<String>();
-                ItemStack i = IReport.game.getRegistry().getItemBuilder().itemType(ItemTypes.SKULL).quantity(1).build();
-                OwnableData od = i.getOrCreateItemData(OwnableData.class).get();
+                ItemStack i = IReport.game.getRegistry().getBuilderOf(ItemStackBuilder.class).get().itemType(ItemTypes.SKULL).quantity(1).build();
+                OwnableData od = i.getOrCreate(OwnableData.class).get();
                 od.setProfile(IReport.game.getRegistry().createGameProfile(uuid, map1.get(uuid)));
-                i.setItemData(od);
-                LoreItemData ld = i.getOrCreateItemData(LoreItemData.class).get();
+                i.offer(od);
+                LoreData ld = i.getOrCreate(LoreData.class).get();
                 ld.set(setLore(uuid));
-                i.setItemData(ld);
+                i.offer(ld);
                 inv.offer(i);
             }
             ((Human) source).openInventory(inv);
-            return true;
+            return Optional.of(CommandResult.success());
         }
         if (args.length == 2) {
             try {
@@ -125,23 +128,23 @@ public class Reports implements CommandCallable {
                     UUID u = init().playermapor.get(args[1]);
                     source.sendMessage(setLore(u));
                 }
-                return true;
+                return Optional.of(CommandResult.success());
             } catch (Exception e) {
-                source.sendMessage(Texts.builder("invalid UUID").color(TextColors.RED).build());
+                //source.sendMessage(Texts.builder("invalid UUID").color(TextColors.RED).build());
+                throw new CommandException(Texts.builder("invalid UUID").color(TextColors.RED).build());
             }
         } else {
             if (map3.isEmpty()) {
                 source.sendMessage(Texts.builder("There is no reports").color(TextColors.RED).build());
-                return true;
+                return Optional.of(CommandResult.success());
             }
             for (Entry<UUID, String> entry : map3.entrySet()) {
                 UUID u = entry.getKey();
                 source.sendMessage(setLore(u));
                 source.sendMessage(Texts.of(" "));
             }
-            return true;
+            return Optional.of(CommandResult.success());
         }
-        return false;
     }
 
     @Override
@@ -150,17 +153,18 @@ public class Reports implements CommandCallable {
     }
 
     @Override
-    public String getShortDescription(CommandSource source) {
-        return "Shows a list of reported players";
+    public Optional<Text> getShortDescription(CommandSource source) {
+        return Optional.of((Text)Texts.of("Shows a list of reported players"));
     }
 
     @Override
-    public Text getHelp(CommandSource source) {
-        return Texts.of("Shows a list of reported players");
+    public Optional<Text> getHelp(CommandSource source) {
+        return Optional.of((Text)Texts.of("Shows a list of reported players"));
     }
 
     @Override
-    public String getUsage(CommandSource source) {
-        return "/reports [gui]";
+    public Text getUsage(CommandSource source) {
+        return Texts.of("[gui]");
     }
+
 }
