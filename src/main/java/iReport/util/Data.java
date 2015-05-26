@@ -1,22 +1,23 @@
 package iReport.util;
 
 import java.io.Serializable;
-import java.util.HashMap;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
-public class Data implements Serializable {
+public final class Data implements Serializable {
     private static final long serialVersionUID = 8569734081216879910L;
-    public HashMap<UUID, String> playermap;
-    public HashMap<UUID, String> playermapo;
-    public HashMap<String, UUID> playermapor;
-    public HashMap<UUID, String> playermapr;
+    public ConcurrentMap<UUID, String> playermap;
+    public ConcurrentMap<UUID, String> playermapo;
+    public ConcurrentMap<String, UUID> playermapor;
+    public ConcurrentMap<UUID, String> playermapr;
     public static Data instens;
 
     public Data() {
-        playermap = new HashMap<UUID, String>();
-        playermapo = new HashMap<UUID, String>();
-        playermapr = new HashMap<UUID, String>();
-        playermapor = new HashMap<String, UUID>();
+        playermap = new ConcurrentHashMap<UUID, String>();
+        playermapo = new ConcurrentHashMap<UUID, String>();
+        playermapr = new ConcurrentHashMap<UUID, String>();
+        playermapor = new ConcurrentHashMap<String, UUID>();
     }
 
     public static Data init() {

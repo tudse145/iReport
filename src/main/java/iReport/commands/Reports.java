@@ -9,13 +9,12 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.UUID;
 
-import org.spongepowered.api.data.manipulators.OwnableData;
-import org.spongepowered.api.data.manipulators.items.LoreData;
+import org.spongepowered.api.data.manipulator.OwnableData;
+import org.spongepowered.api.data.manipulator.item.LoreData;
 import org.spongepowered.api.entity.living.Human;
 import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.Inventories;
 import org.spongepowered.api.item.inventory.ItemStack;
-import org.spongepowered.api.item.inventory.ItemStackBuilder;
 import org.spongepowered.api.item.inventory.custom.CustomInventory;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.Texts;
@@ -30,7 +29,7 @@ import com.google.common.base.Optional;
 import iReport.IReport;
 import iReport.util.TranslatableWrapper;
 
-public class Reports implements CommandCallable {
+public final class Reports implements CommandCallable {
 
     private List<Text> setLore(UUID uuid) {
         List<Text> list = new ArrayList<Text>();
@@ -106,7 +105,7 @@ public class Reports implements CommandCallable {
         if (source instanceof Human && args.length == 1 && args[0].equalsIgnoreCase("gui")) {
             CustomInventory inv = calculate(init().playermapo.size());
             for (UUID uuid : map2.keySet()) {
-                ItemStack i = IReport.game.getRegistry().getBuilderOf(ItemStackBuilder.class).get().itemType(ItemTypes.SKULL).quantity(1).build();
+                ItemStack i = IReport.game.getRegistry().getItemBuilder().itemType(ItemTypes.SKULL).quantity(1).build();
                 OwnableData od = i.getOrCreate(OwnableData.class).get();
                 od.setProfile(IReport.game.getRegistry().createGameProfile(uuid, map1.get(uuid)));
                 i.offer(od);

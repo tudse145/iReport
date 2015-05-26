@@ -12,7 +12,7 @@ import org.spongepowered.api.util.command.CommandSource;
 
 import com.google.common.base.Optional;
 
-public class ireportc implements CommandCallable {
+public final class ireportc implements CommandCallable {
 
     @Override
     public List<String> getSuggestions(CommandSource source, String arguments) throws CommandException {

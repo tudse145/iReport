@@ -15,15 +15,15 @@ import java.util.Map;
 import ninja.leaping.configurate.ConfigurationNode;
 import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
 
-public class MYSQL {
+public final class MYSQL {
 
-    public boolean isenable;
-    private boolean debug;
-    private String host;
-    private int port;
-    private String user;
-    private String password;
-    private String database;
+    public final boolean isenable;
+    private final boolean debug;
+    private final String host;
+    private final int port;
+    private final String user;
+    private final String password;
+    private final String database;
     private Connection conn;
 
     public MYSQL() throws Exception {

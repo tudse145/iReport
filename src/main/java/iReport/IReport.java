@@ -1,12 +1,11 @@
 package iReport;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.UUID;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,9 +29,11 @@ import iReport.commands.sreport;
 import iReport.mysql.MYSQL;
 import iReport.util.Data;
 import iReport.util.Utils;
+import ninja.leaping.configurate.ConfigurationNode;
+import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
 
 @Plugin(id = "iReport", name = "iReport", version = "2.0.1-SNAPSHOT")
-public class IReport {
+public final class IReport {
     public static final Logger LOGGER = LoggerFactory.getLogger("iReport");
     public static MYSQL sql;
     public static Game game;
@@ -73,18 +74,12 @@ public class IReport {
         game.getCommandDispatcher().register(this, new ireportc(), "ireport");
         game.getCommandDispatcher().register(this, new Reports(), "reports");
         game.getCommandDispatcher().register(this, new sreport(), "sreport");
-        event.getGame().getEventManager().register(this, new Utils());
+        event.getGame().getEventManager().register(this, Utils.INSTENCE);
         getMYSQL();
         try {
-            ObjectInputStream o = new ObjectInputStream(new FileInputStream(new File(IReport.configfolder, "data.bin")));
-            Data.instens = (Data) o.readObject();
-            o.close();
-        } catch (FileNotFoundException e) {
-        } catch (ClassCastException e) {
-            Utils.PrintStackTrace(e);
-            LOGGER.error("Don't modyfy data.bin");
+            loadFile();
         } catch (Exception e) {
-            Utils.PrintStackTrace(e);
+            e.printStackTrace();
         }
     }
 
@@ -94,11 +89,47 @@ public class IReport {
             sql.closeConnection();
         }
         try {
-            ObjectOutputStream o = new ObjectOutputStream(new FileOutputStream(new File(IReport.configfolder, "data.bin")));
-            o.writeObject(Data.init());
-            o.close();
-        } catch (IOException e) {
-            Utils.PrintStackTrace(e);
+            saveFile();
+        } catch (IOException e1) {
+            e1.printStackTrace();
         }
     }
+    
+    public void saveFile() throws IOException {
+        File file = new File(IReport.configfolder, "reports.cfg");
+        file.delete();
+        file.createNewFile();
+        HoconConfigurationLoader cfgfile = HoconConfigurationLoader.builder().setFile(file).build();
+        ConfigurationNode config = cfgfile.load();
+        ConfigurationNode node = config.getNode("reports");
+        Map<String, String> configDefaults = new HashMap<String, String>();
+        for (UUID uuid : Data.init().playermapo.keySet()) {
+            ConfigurationNode node2 = node.getNode(uuid.toString());
+            configDefaults.put("reportedename", Data.init().playermapo.get(uuid));
+            configDefaults.put("currenttname", Data.init().playermap.get(uuid));
+            configDefaults.put("reports", Data.init().playermapr.get(uuid));
+            node2.setValue(configDefaults);
+            cfgfile.save(config);
+        }
+    }
+    
+
+    private void loadFile() throws IOException {
+        File file = new File(IReport.configfolder, "reports.cfg");
+        HoconConfigurationLoader cfgfile = HoconConfigurationLoader.builder().setFile(file).build();
+        ConfigurationNode config = cfgfile.load();
+        Data data = Data.init();
+        ConfigurationNode nodde = config.getNode("reports");
+        for (Entry<Object, ? extends ConfigurationNode> node : nodde.getChildrenMap().entrySet()) {
+            UUID uuid = UUID.fromString((String) node.getKey());
+            String currenttname = node.getValue().getNode("currenttname").getString();
+            String reportedename = node.getValue().getNode("reportedename").getString();
+            String reports = node.getValue().getNode("reports").getString();
+            data.playermap.put(uuid, currenttname);
+            data.playermapo.put(uuid, reportedename);
+            data.playermapr.put(uuid, reports);
+            data.playermapor.put(reportedename, uuid);
+        }
+    }
+
 }
