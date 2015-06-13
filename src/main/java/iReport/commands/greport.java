@@ -25,6 +25,10 @@ public final class greport implements CommandCallable {
 
     @Override
     public Optional<CommandResult> process(CommandSource source, String arguments) throws CommandException {
+        if (!testPermission(source)) {
+            source.sendMessage(Texts.of(TextColors.RED, "You don't have permission to use this command"));
+            return Optional.<CommandResult>absent();
+        }
         String[] args = arguments.split(" ");
         if (args.length > 0 && !args[0].isEmpty()) {
             String player = source.getName();

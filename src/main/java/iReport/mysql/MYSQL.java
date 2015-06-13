@@ -12,6 +12,10 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.spongepowered.api.service.sql.SqlService;
+
+import com.google.common.base.Optional;
+
 import ninja.leaping.configurate.ConfigurationNode;
 import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
 
@@ -28,7 +32,7 @@ public final class MYSQL {
 
     public MYSQL() throws Exception {
         if (!IReport.configfolder.exists()) {
-            IReport.configfolder.mkdir();
+            IReport.configfolder.mkdirs();
         }
         File file = new File(IReport.configfolder, "database.cfg");
 
@@ -65,8 +69,13 @@ public final class MYSQL {
     }
 
     public Connection oppenConnection() throws Exception {
-        Class.forName("com.mysql.jdbc.Driver");
-        conn = DriverManager.getConnection("jdbc:mysql://" + this.host + ":" + this.port + "/" + this.database, this.user, this.password);
+        Optional<SqlService> provide = IReport.game.getServiceManager().provide(SqlService.class);
+        if (provide.isPresent()) {
+            provide.get().getDataSource("jdbc:mysql://" + this.host + ":" + this.port + "/" + this.database).getConnection(this.user, this.password);
+        }else {
+            Class.forName("com.mysql.jdbc.Driver");
+            conn = DriverManager.getConnection("jdbc:mysql://" + this.host + ":" + this.port + "/" + this.database, this.user, this.password);
+        }
         return conn;
     }
 
@@ -79,28 +88,29 @@ public final class MYSQL {
             return this.conn != null || this.conn.isValid(1);
         } catch (SQLException e) {
             if (debug) {
-                Utils.PrintStackTrace(e);
+                Utils.printStackTrace(e);
             }
             return false;
         }
     }
 
-    public void queryUpdate(String query) {
+    public ResultSet queryUpdate(String query) {
         if (!isenable) {
-            return;
+            return null;
         }
         PreparedStatement st = null;
         try {
             st = conn.prepareStatement(query);
-            st.executeUpdate();
+            return st.getResultSet();
         } catch (SQLException e) {
             if (debug) {
-                Utils.PrintStackTrace(e);
+                Utils.printStackTrace(e);
             }
             IReport.LOGGER.error("Failed to send update '" + query + "'.");
         } finally {
             this.closeRessources(null, st);
         }
+        return null;
     }
 
     public void closeRessources(ResultSet rs, PreparedStatement st) {
@@ -123,7 +133,7 @@ public final class MYSQL {
             this.conn.close();
         } catch (SQLException e) {
             if (debug) {
-                e.printStackTrace();
+                Utils.printStackTrace(e);
             }
         } finally {
             this.conn = null;

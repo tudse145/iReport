@@ -11,12 +11,13 @@ import org.spongepowered.api.util.command.CommandResult;
 import org.spongepowered.api.util.command.CommandSource;
 
 import com.google.common.base.Optional;
+import com.google.common.collect.Lists;
 
 public final class ireportc implements CommandCallable {
 
     @Override
     public List<String> getSuggestions(CommandSource source, String arguments) throws CommandException {
-        return null;
+        return Lists.newArrayList();
     }
 
     @Override

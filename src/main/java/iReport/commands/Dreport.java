@@ -2,7 +2,11 @@ package iReport.commands;
 
 import iReport.IReport;
 import iReport.util.Data;
+import ninja.leaping.configurate.ConfigurationNode;
+import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -17,11 +21,17 @@ import org.spongepowered.api.util.command.CommandResult;
 import org.spongepowered.api.util.command.CommandSource;
 
 import com.google.common.base.Optional;
+import com.google.common.collect.Lists;
 
-public class Dreport implements CommandCallable {
+public final class Dreport implements CommandCallable {
 
+    private static  File file = new File(IReport.configfolder, "reports.cfg");
+    
     @Override
     public List<String> getSuggestions(CommandSource source, String arguments) throws CommandException {
+        if (!testPermission(source)) {
+            return Lists.newArrayList();
+        }
         Set<UUID> set = Data.init().playermapo.keySet();
         List<String> list2 = new ArrayList<String>();
         for (UUID uuid : set) {
@@ -38,11 +48,16 @@ public class Dreport implements CommandCallable {
 
     @Override
     public Optional<CommandResult> process(CommandSource source, String arguments) throws CommandException {
+        if (!testPermission(source)) {
+            source.sendMessage(Texts.of(TextColors.RED, "You don't have permission to use this command"));
+            return Optional.<CommandResult>absent();
+        }
         String[] args = arguments.split(" ");
         Data data = Data.init();
         if (args[0].equals("*")) {
             if (source.hasPermission("ireport.dreport.all")) {
                 for (UUID uuid : data.playermapo.keySet()) {
+                    delete(uuid.toString());
                     IReport.getMYSQL().queryUpdate("DELETE FROM reports WHERE uuid = '" + uuid.toString() + "'");
                 }
                 data.playermapo.clear();
@@ -58,9 +73,11 @@ public class Dreport implements CommandCallable {
         }
         try {
             String s = data.playermapo.get(UUID.fromString(args[0]));
-            data.playermapo.remove(UUID.fromString(args[0]));
-            data.playermapr.remove(UUID.fromString(args[0]));
+            UUID uuid = UUID.fromString(args[0]);
+            data.playermapo.remove(uuid);
+            data.playermapr.remove(uuid);
             data.playermapor.remove(s);
+            delete(uuid.toString());
             source.sendMessage(Texts.builder("Successfully deleted " + s).color(TextColors.GREEN).build());
             IReport.getMYSQL().queryUpdate("DELETE FROM reports WHERE uuid = '" + UUID.fromString(args[0]) + "'");
         } catch (IllegalArgumentException e) {
@@ -88,5 +105,14 @@ public class Dreport implements CommandCallable {
     @Override
     public Text getUsage(CommandSource source) {
         return Texts.of("<UUID>");
+    }
+    
+    public void delete(String uuid) {
+        HoconConfigurationLoader cfgfile = HoconConfigurationLoader.builder().setFile(file).build();
+        try {
+            ConfigurationNode config = cfgfile.load();
+            config.getNode("reports").removeChild(uuid);
+        } catch (IOException e) {
+        }
     }
 }

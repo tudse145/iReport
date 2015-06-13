@@ -25,6 +25,7 @@ import org.spongepowered.api.util.command.CommandResult;
 import org.spongepowered.api.util.command.CommandSource;
 
 import com.google.common.base.Optional;
+import com.google.common.collect.Lists;
 
 import iReport.IReport;
 import iReport.util.TranslatableWrapper;
@@ -60,6 +61,9 @@ public final class Reports implements CommandCallable {
 
     @Override
     public List<String> getSuggestions(CommandSource source, String arguments) throws CommandException {
+        if (!testPermission(source)) {
+            return Lists.newArrayList();
+        }
         String[] args = arguments.split(" ");
         Set<UUID> set = init().playermapo.keySet();
         List<String> list2 = new ArrayList<String>();
@@ -98,6 +102,10 @@ public final class Reports implements CommandCallable {
 
     @Override
     public Optional<CommandResult> process(CommandSource source, String arguments) throws CommandException {
+        if (!testPermission(source)) {
+            source.sendMessage(Texts.of(TextColors.RED, "You don't have permission to use this command"));
+            return Optional.<CommandResult>absent();
+        }
         String[] args = arguments.split(" ");
         Map<UUID, String> map1 = init().playermap;
         Map<UUID, String> map2 = init().playermapo;

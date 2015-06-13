@@ -2,8 +2,6 @@ package iReport;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Map.Entry;
 import java.util.UUID;
 
@@ -54,13 +52,13 @@ public final class IReport {
                 sql = new MYSQL();
                 sql.queryUpdate("CREATE TABLE IF NOT EXISTS reports (uuid VARCHAR(36) PRIMARY KEY, currentname VARCHAR(16), Report LONGTEXT, username VARCHAR(16))");
             } catch (Exception e) {
-                e.printStackTrace();
+                Utils.printStackTrace(e);
             }
         } else if (sql.isenable && !sql.hasConnection()) {
             try {
                 sql.oppenConnection();
             } catch (Exception e) {
-                e.printStackTrace();
+                Utils.printStackTrace(e);
             }
         }
         return sql;
@@ -79,7 +77,7 @@ public final class IReport {
         try {
             loadFile();
         } catch (Exception e) {
-            e.printStackTrace();
+            Utils.printStackTrace(e);
         }
     }
 
@@ -88,32 +86,11 @@ public final class IReport {
         if (sql.isenable && sql.hasConnection()) {
             sql.closeConnection();
         }
-        try {
-            saveFile();
-        } catch (IOException e1) {
-            e1.printStackTrace();
-        }
-    }
-    
-    public void saveFile() throws IOException {
-        File file = new File(IReport.configfolder, "reports.cfg");
-        file.delete();
-        file.createNewFile();
-        HoconConfigurationLoader cfgfile = HoconConfigurationLoader.builder().setFile(file).build();
-        ConfigurationNode config = cfgfile.load();
-        ConfigurationNode node = config.getNode("reports");
-        Map<String, String> configDefaults = new HashMap<String, String>();
         for (UUID uuid : Data.init().playermapo.keySet()) {
-            ConfigurationNode node2 = node.getNode(uuid.toString());
-            configDefaults.put("reportedename", Data.init().playermapo.get(uuid));
-            configDefaults.put("currenttname", Data.init().playermap.get(uuid));
-            configDefaults.put("reports", Data.init().playermapr.get(uuid));
-            node2.setValue(configDefaults);
-            cfgfile.save(config);
+            Utils.savePlayer(uuid);;
         }
     }
     
-
     private void loadFile() throws IOException {
         File file = new File(IReport.configfolder, "reports.cfg");
         HoconConfigurationLoader cfgfile = HoconConfigurationLoader.builder().setFile(file).build();
