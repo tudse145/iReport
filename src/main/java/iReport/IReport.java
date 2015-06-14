@@ -123,5 +123,6 @@ public final class IReport {
             data.playermapr.put(uuid, reports);
             data.playermapor.put(reportedename, uuid);
         }
+        resultSet.close();
     }
 }
