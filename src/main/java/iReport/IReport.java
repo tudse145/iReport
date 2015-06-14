@@ -2,6 +2,8 @@ package iReport;
 
 import java.io.File;
 import java.io.IOException;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Map.Entry;
 import java.util.UUID;
 
@@ -54,12 +56,6 @@ public final class IReport {
             } catch (Exception e) {
                 Utils.printStackTrace(e);
             }
-        } else if (sql.isenable && !sql.hasConnection()) {
-            try {
-                sql.oppenConnection();
-            } catch (Exception e) {
-                Utils.printStackTrace(e);
-            }
         }
         return sql;
     }
@@ -74,18 +70,23 @@ public final class IReport {
         game.getCommandDispatcher().register(this, new sreport(), "sreport");
         event.getGame().getEventManager().register(this, Utils.INSTENCE);
         getMYSQL();
-        try {
-            loadFile();
-        } catch (Exception e) {
-            Utils.printStackTrace(e);
+        if (sql.isenable) {
+            try {
+                loadSql();
+            } catch (SQLException e) {
+                Utils.printStackTrace(e);
+            }
+        } else {
+            try {
+                loadFile();
+            } catch (Exception e) {
+                Utils.printStackTrace(e);
+            }
         }
     }
 
     @Subscribe
     public void onDisable(ServerStoppingEvent event) {
-        if (sql.isenable && sql.hasConnection()) {
-            sql.closeConnection();
-        }
         for (UUID uuid : Data.init().playermapo.keySet()) {
             Utils.savePlayer(uuid);;
         }
@@ -109,4 +110,18 @@ public final class IReport {
         }
     }
 
+    private void loadSql() throws SQLException {
+        ResultSet resultSet = sql.queryUpdate("select * from reports", false);
+        Data data = Data.init();
+        while (resultSet.next()) {
+            UUID uuid = UUID.fromString(resultSet.getString("uuid"));
+            String currenttname = resultSet.getString("currentname");
+            String reportedename = resultSet.getString("Report");
+            String reports = resultSet.getString("username");
+            data.playermap.put(uuid, currenttname);
+            data.playermapo.put(uuid, reportedename);
+            data.playermapr.put(uuid, reports);
+            data.playermapor.put(reportedename, uuid);
+        }
+    }
 }

@@ -12,6 +12,8 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.sql.DataSource;
+
 import org.spongepowered.api.service.sql.SqlService;
 
 import com.google.common.base.Optional;
@@ -28,9 +30,12 @@ public final class MYSQL {
     private final String user;
     private final String password;
     private final String database;
-    private Connection conn;
+    private DataSource ds;
 
     public MYSQL() throws Exception {
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+        } catch (ClassNotFoundException e) {}
         if (!IReport.configfolder.exists()) {
             IReport.configfolder.mkdirs();
         }
@@ -44,71 +49,65 @@ public final class MYSQL {
         }
         HoconConfigurationLoader cfgfile = HoconConfigurationLoader.builder().setFile(file).build();
         ConfigurationNode config = cfgfile.load();
+        ConfigurationNode node = config.getNode(db);
         if (furstrun) {
             Map<String, String> configDefaults = new HashMap<String, String>();
-            configDefaults.put(db + "enable", String.valueOf(false));
-            configDefaults.put(db + "host", "localhost");
-            configDefaults.put(db + "port", String.valueOf(3306));
-            configDefaults.put(db + "user", "user");
-            configDefaults.put(db + "password", "password");
-            configDefaults.put(db + "database", "database");
-            configDefaults.put(db + "debug", String.valueOf(false));
-            config.setValue(configDefaults);
+            configDefaults.put("enable", String.valueOf(false));
+            configDefaults.put("host", "localhost");
+            configDefaults.put("port", String.valueOf(3306));
+            configDefaults.put("user", "user");
+            configDefaults.put("password", "password");
+            configDefaults.put("database", "database");
+            configDefaults.put("debug", String.valueOf(false));
+            node.setValue(configDefaults);
             cfgfile.save(config);
         }
-        isenable = config.getNode(db + "enable").getBoolean();
-        this.host = config.getNode(db + "host").getString();
-        this.port = config.getNode(db + "port").getInt();
-        this.user = config.getNode(db + "user").getString();
-        this.password = config.getNode(db + "password").getString();
-        this.database = config.getNode(db + "database").getString();
-        this.debug = config.getNode(db + "debug").getBoolean();
-        if (isenable) {
-            this.oppenConnection();
+        isenable = node.getNode("enable").getBoolean();
+        this.host = node.getNode("host").getString();
+        this.port = node.getNode("port").getInt();
+        this.user = node.getNode("user").getString();
+        this.password = node.getNode("password").getString();
+        this.database = node.getNode("database").getString();
+        this.debug = node.getNode("debug").getBoolean();
+        Optional<SqlService> provide = IReport.game.getServiceManager().provide(SqlService.class);
+        if (provide.isPresent()) {
+            ds = provide.get().getDataSource("jdbc:mysql://" + this.host + ":" + this.port + "/" + this.database);
         }
     }
 
     public Connection oppenConnection() throws Exception {
-        Optional<SqlService> provide = IReport.game.getServiceManager().provide(SqlService.class);
-        if (provide.isPresent()) {
-            provide.get().getDataSource("jdbc:mysql://" + this.host + ":" + this.port + "/" + this.database).getConnection(this.user, this.password);
-        }else {
-            Class.forName("com.mysql.jdbc.Driver");
-            conn = DriverManager.getConnection("jdbc:mysql://" + this.host + ":" + this.port + "/" + this.database, this.user, this.password);
-        }
-        return conn;
-    }
-
-    public Connection getConnection() {
-        return this.conn;
-    }
-
-    public boolean hasConnection() {
-        try {
-            return this.conn != null || this.conn.isValid(1);
-        } catch (SQLException e) {
-            if (debug) {
-                Utils.printStackTrace(e);
-            }
-            return false;
+        if (ds != null) {
+            return ds.getConnection(this.user, this.password);
+        } else {
+            return DriverManager.getConnection("jdbc:mysql://" + this.host + ":" + this.port + "/" + this.database, this.user, this.password);
         }
     }
 
-    public ResultSet queryUpdate(String query) {
+    public void queryUpdate(String query) {
+        queryUpdate(query, true);
+    }
+    
+    public ResultSet queryUpdate(String query, boolean closeRespltset) {
         if (!isenable) {
             return null;
         }
         PreparedStatement st = null;
+        ResultSet rs = null;
         try {
-            st = conn.prepareStatement(query);
-            return st.getResultSet();
-        } catch (SQLException e) {
+            st = oppenConnection().prepareStatement(query);
+            rs = st.executeQuery();
+            return rs;
+        } catch (Exception e) {
             if (debug) {
                 Utils.printStackTrace(e);
             }
             IReport.LOGGER.error("Failed to send update '" + query + "'.");
         } finally {
-            this.closeRessources(null, st);
+            if (!closeRespltset) {
+                this.closeRessources(null, st);
+            } else {
+                closeRessources(rs, st);
+            }
         }
         return null;
     }
@@ -118,26 +117,15 @@ public final class MYSQL {
             try {
                 rs.close();
             } catch (SQLException e) {
+                Utils.printStackTrace(e);
             }
         }
         if (st != null) {
             try {
                 st.close();
             } catch (SQLException e) {
-            }
-        }
-    }
-
-    public void closeConnection() {
-        try {
-            this.conn.close();
-        } catch (SQLException e) {
-            if (debug) {
                 Utils.printStackTrace(e);
             }
-        } finally {
-            this.conn = null;
-
         }
     }
 }
