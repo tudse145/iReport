@@ -66,7 +66,6 @@ public final class Dreport implements CommandCallable {
                 source.sendMessage(Texts.builder("Successfully cleared reports").color(TextColors.GREEN).build());
                 return Optional.of(CommandResult.success());
             } else {
-                //source.sendMessage(Texts.builder("You don't have permission").color(TextColors.RED).build());
                 throw new CommandException(Texts.builder("You don't have permission").color(TextColors.RED).build());
             }
 
@@ -81,7 +80,6 @@ public final class Dreport implements CommandCallable {
             source.sendMessage(Texts.builder("Successfully deleted " + s).color(TextColors.GREEN).build());
             IReport.getMYSQL().queryUpdate("DELETE FROM reports WHERE uuid = '" + UUID.fromString(args[0]) + "'");
         } catch (IllegalArgumentException e) {
-            //source.sendMessage(Texts.builder("invalid UUID").color(TextColors.RED).build());
             throw new CommandException(Texts.builder("invalid UUID").color(TextColors.RED).build());
         }
         return Optional.of(CommandResult.success());
@@ -112,6 +110,7 @@ public final class Dreport implements CommandCallable {
         try {
             ConfigurationNode config = cfgfile.load();
             config.getNode("reports").removeChild(uuid);
+            cfgfile.save(config);
         } catch (IOException e) {
         }
     }

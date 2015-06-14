@@ -137,7 +137,6 @@ public final class Reports implements CommandCallable {
                 }
                 return Optional.of(CommandResult.success());
             } catch (Exception e) {
-                //source.sendMessage(Texts.builder("invalid UUID").color(TextColors.RED).build());
                 throw new CommandException(Texts.builder("invalid UUID").color(TextColors.RED).build());
             }
         } else {
