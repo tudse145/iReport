@@ -17,6 +17,7 @@ import org.spongepowered.api.event.Subscribe;
 import org.spongepowered.api.event.entity.player.PlayerJoinEvent;
 import org.spongepowered.api.text.Texts;
 import org.spongepowered.api.text.format.TextColors;
+import org.spongepowered.api.util.command.CommandException;
 import org.spongepowered.api.util.command.CommandSource;
 
 import com.flowpowered.math.vector.Vector3d;
@@ -47,20 +48,14 @@ public enum Utils {
         return Data.init().playermapr.get(uniqueId) != null;
     }
 
-    public static String getxyz(String p, CommandSource source) {
+    public static String getxyz(String p, CommandSource source) throws CommandException {
         try {
             Player player = IReport.server.getPlayer(p).get();
             Vector3d loc = player.getLocation().getPosition();
             return String.valueOf("world " + player.getWorld().getName() + " x " + (int)loc.getX() + " y " + (int)loc.getY() + " z " + (int)loc.getZ());
         } catch (Exception e) {
-            printStackTrace(e);
-            if (source != null) {
-                source.sendMessage(Texts.builder(p + " is not online").color(TextColors.RED).build());
-            }
+            throw new CommandException(Texts.builder(p + " is not online").color(TextColors.RED).build());
         }
-
-        return null;
-
     }
 
     public static void reportplayer(String target, String reporttype, CommandSource sender, boolean forcw) {
@@ -97,7 +92,7 @@ public enum Utils {
         Map<UUID, String> map1 = init().playermap;
         Map<UUID, String> map2 = init().playermapo;
         Map<UUID, String> map3 = init().playermapr;
-        if (isReported) {
+        if (!isReported) {
             IReport.getMYSQL().queryUpdate("INSERT INTO reports (`uuid`, `currentname`, `Report`, `username`) values ('" + uuid + "','" + map1.get(uuid) + "','" + map3.get(uuid) + "','" + map2.get(uuid) + "')");
         } else {
             IReport.getMYSQL().queryUpdate("UPDATE Reports SET Report = '" + map3.get(uuid) + "' WHERE uuid = '" + uuid + "'");

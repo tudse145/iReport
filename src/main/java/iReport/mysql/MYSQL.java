@@ -71,7 +71,9 @@ public final class MYSQL {
         this.debug = node.getNode("debug").getBoolean();
         Optional<SqlService> provide = IReport.game.getServiceManager().provide(SqlService.class);
         if (provide.isPresent()) {
-            ds = provide.get().getDataSource("jdbc:mysql://" + this.host + ":" + this.port + "/" + this.database);
+            try {
+                ds = provide.get().getDataSource("jdbc:mysql://" + this.host + ":" + this.port + "/" + this.database);
+            } catch (Exception e) {}
         }
     }
 
@@ -86,7 +88,7 @@ public final class MYSQL {
     public void queryUpdate(String query) {
         queryUpdate(query, true);
     }
-    
+
     public ResultSet queryUpdate(String query, boolean closeRespltset) {
         if (!isenable) {
             return null;
