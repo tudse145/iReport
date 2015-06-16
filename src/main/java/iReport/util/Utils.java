@@ -53,7 +53,7 @@ public enum Utils {
             Player player = IReport.server.getPlayer(p).get();
             Vector3d loc = player.getLocation().getPosition();
             return String.valueOf("world " + player.getWorld().getName() + " x " + (int)loc.getX() + " y " + (int)loc.getY() + " z " + (int)loc.getZ());
-        } catch (Exception e) {
+        } catch (IllegalStateException e) {
             throw new CommandException(Texts.builder(p + " is not online").color(TextColors.RED).build());
         }
     }

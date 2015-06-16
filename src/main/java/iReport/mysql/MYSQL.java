@@ -24,12 +24,12 @@ import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
 public final class MYSQL {
 
     public final boolean isenable;
-    private final boolean debug;
     private final String host;
     private final int port;
     private final String user;
     private final String password;
     private final String database;
+    private final String prodocol;
     private DataSource ds;
 
     public MYSQL() throws Exception {
@@ -58,7 +58,7 @@ public final class MYSQL {
             configDefaults.put("user", "user");
             configDefaults.put("password", "password");
             configDefaults.put("database", "database");
-            configDefaults.put("debug", String.valueOf(false));
+            configDefaults.put("prodocol", "mysql");
             node.setValue(configDefaults);
             cfgfile.save(config);
         }
@@ -68,11 +68,11 @@ public final class MYSQL {
         this.user = node.getNode("user").getString();
         this.password = node.getNode("password").getString();
         this.database = node.getNode("database").getString();
-        this.debug = node.getNode("debug").getBoolean();
+        this.prodocol = node.getNode("prodocol").getString();
         Optional<SqlService> provide = IReport.game.getServiceManager().provide(SqlService.class);
         if (provide.isPresent()) {
             try {
-                ds = provide.get().getDataSource("jdbc:mysql://" + this.host + ":" + this.port + "/" + this.database);
+                ds = provide.get().getDataSource("jdbc:" + this.prodocol + "://" + this.host + ":" + this.port + "/" + this.database);
             } catch (Exception e) {}
         }
     }
@@ -81,7 +81,7 @@ public final class MYSQL {
         if (ds != null) {
             return ds.getConnection(this.user, this.password);
         } else {
-            return DriverManager.getConnection("jdbc:mysql://" + this.host + ":" + this.port + "/" + this.database, this.user, this.password);
+            return DriverManager.getConnection("jdbc:" + this.prodocol + "://" + this.host + ":" + this.port + "/" + this.database, this.user, this.password);
         }
     }
 
@@ -100,9 +100,7 @@ public final class MYSQL {
             rs = st.executeQuery();
             return rs;
         } catch (Exception e) {
-            if (debug) {
-                Utils.printStackTrace(e);
-            }
+            Utils.printStackTrace(e);
             IReport.LOGGER.error("Failed to send update '" + query + "'.");
         } finally {
             if (!closeRespltset) {
