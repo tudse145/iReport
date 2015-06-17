@@ -74,7 +74,12 @@ public final class IReport {
             try {
                 loadSql();
             } catch (SQLException e) {
-                Utils.printStackTrace(e);
+                try {
+                    loadFile();
+                } catch (IOException e1) {
+                    Utils.invokeIfAvalebule(Throwable.class, "addSuppressed", e1, e, Throwable.class);
+                    Utils.printStackTrace(e1);
+                }
             }
         } else {
             try {
