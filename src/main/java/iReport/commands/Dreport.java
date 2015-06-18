@@ -58,8 +58,8 @@ public final class Dreport implements CommandCallable {
             if (source.hasPermission("ireport.dreport.all")) {
                 for (UUID uuid : data.playermapo.keySet()) {
                     delete(uuid.toString());
-                    IReport.getMYSQL().queryUpdate("DELETE FROM reports WHERE uuid = '" + uuid.toString() + "'");
                 }
+                IReport.getMYSQL().queryUpdate("DELETE * FROM reports");
                 data.playermapo.clear();
                 data.playermapor.clear();
                 data.playermapr.clear();
@@ -71,8 +71,8 @@ public final class Dreport implements CommandCallable {
 
         }
         try {
-            String s = data.playermapo.get(UUID.fromString(args[0]));
             UUID uuid = UUID.fromString(args[0]);
+            String s = data.playermapo.get(uuid);
             data.playermapo.remove(uuid);
             data.playermapr.remove(uuid);
             data.playermapor.remove(s);
