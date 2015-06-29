@@ -59,7 +59,7 @@ public final class Dreport implements CommandCallable {
                 for (UUID uuid : data.playermapo.keySet()) {
                     delete(uuid.toString());
                 }
-                IReport.getMYSQL().queryUpdate("DELETE * FROM reports");
+                IReport.getMYSQL().queryUpdate("DELETE FROM reports");
                 data.playermapo.clear();
                 data.playermapor.clear();
                 data.playermapr.clear();
