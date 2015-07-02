@@ -48,15 +48,10 @@ public final class Reports implements CommandCallable {
 
     private CustomInventory calculate(int size) {
         TranslatableWrapper t = new TranslatableWrapper("reports");
-        float f = size;
-        f = f / 9;
-        if (f == size / 9) {
-            return Inventories.customInventoryBuilder().name(t).size((int) (f * 9)).build();
+        if (size % 9 == 0) {
+            return Inventories.customInventoryBuilder().name(t).size(size).build();
         }
-        size = size / 9;
-        size++;
-        size = size * 9;
-        return Inventories.customInventoryBuilder().name(t).size(size).build();
+        return Inventories.customInventoryBuilder().name(t).size(size + Math.abs(size % 9 - 9)).build();
     }
 
     @Override
