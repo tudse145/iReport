@@ -68,7 +68,7 @@ public final class IReport {
         game.getCommandDispatcher().register(this, new ireportc(), "ireport");
         game.getCommandDispatcher().register(this, new Reports(), "reports");
         game.getCommandDispatcher().register(this, new sreport(), "sreport");
-        event.getGame().getEventManager().register(this, Utils.INSTENCE);
+        game.getEventManager().register(this, Utils.INSTENCE);
         getMYSQL();
         if (sql.isenable) {
             try {
