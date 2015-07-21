@@ -7,7 +7,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.ResourceBundle;
 import java.util.UUID;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -15,12 +17,16 @@ import java.util.concurrent.locks.ReentrantLock;
 import org.spongepowered.api.entity.player.Player;
 import org.spongepowered.api.event.Subscribe;
 import org.spongepowered.api.event.entity.player.PlayerJoinEvent;
+import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.Texts;
 import org.spongepowered.api.text.format.TextColors;
+import org.spongepowered.api.text.translation.ResourceBundleTranslation;
+import org.spongepowered.api.util.TextMessageException;
 import org.spongepowered.api.util.command.CommandException;
 import org.spongepowered.api.util.command.CommandSource;
 
 import com.flowpowered.math.vector.Vector3d;
+import com.google.common.base.Function;
 
 import iReport.IReport;
 import ninja.leaping.configurate.ConfigurationNode;
@@ -28,6 +34,7 @@ import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
 
 public enum Utils {
     INSTENCE;
+
     
     public static final Lock LOCK = new ReentrantLock();
 
@@ -50,9 +57,9 @@ public enum Utils {
 
     public static String getxyz(String p, CommandSource source) throws CommandException {
         try {
-            Player player = IReport.server.getPlayer(p).get();
+            Player player = Constance.server.getPlayer(p).get();
             Vector3d loc = player.getLocation().getPosition();
-            return String.valueOf("world " + player.getWorld().getName() + " x " + (int)loc.getX() + " y " + (int)loc.getY() + " z " + (int)loc.getZ());
+            return String.valueOf("world " + player.getWorld().getName() + " x " + (int) loc.getX() + " y " + (int) loc.getY() + " z " + (int) loc.getZ());
         } catch (IllegalStateException e) {
             throw new CommandException(Texts.builder(p + " is not online").color(TextColors.RED).build());
         }
@@ -62,7 +69,7 @@ public enum Utils {
         boolean isreported = false;
         UUID p = null;
         try {
-            p = IReport.server.getPlayer(target).get().getUniqueId();
+            p = Constance.server.getPlayer(target).get().getUniqueId();
         } catch (IllegalStateException e) {
             sender.sendMessage(Texts.builder(target + " is not online").color(TextColors.RED).build());
             return;
@@ -84,7 +91,7 @@ public enum Utils {
         }
         savePlayer(p);
         LOCK.unlock();
-        updateMYSQL(IReport.server.getPlayer(target).get(), isreported);
+        updateMYSQL(Constance.server.getPlayer(target).get(), isreported);
     }
 
     public static void updateMYSQL(Player player, boolean isReported) {
@@ -111,24 +118,25 @@ public enum Utils {
         try {
             Throwable[] suprests = invokeIfAvalebule(Throwable.class, "getSuppressed", t);
             for (Throwable tb : suprests) {
-                IReport.LOGGER.error("\tSuppressed: "+tb.toString());
+                IReport.LOGGER.error("\tSuppressed: " + tb.toString());
                 for (StackTraceElement Element : tb.getStackTrace()) {
                     IReport.LOGGER.error("\t \tat " + Element.toString());
                 }
             }
-        } catch (Exception e) {}
+        } catch (Exception e) {
+        }
     }
-    
+
     public static List<String> getPlayerNames() {
         List<String> playerNames = new ArrayList<String>();
-        for (Player player : IReport.server.getOnlinePlayers()) {
+        for (Player player : Constance.server.getOnlinePlayers()) {
             playerNames.add(player.getName());
         }
         return playerNames;
     }
-    
+
     public static void savePlayer(UUID uuid) {
-        File file = new File(IReport.configfolder, "reports.cfg");
+        File file = new File(Constance.configfolder, "reports.cfg");
         HoconConfigurationLoader cfgfile = HoconConfigurationLoader.builder().setFile(file).build();
         ConfigurationNode config;
         try {
@@ -145,24 +153,33 @@ public enum Utils {
             printStackTrace(e);
         }
     }
-    
+
     @SuppressWarnings("unchecked")
     public static <T> T invokeIfAvalebule(Class<?> invoke, String method, Object instence, Object... argsandclass) {
         int count = 0;
-        Object[] args = new Object[argsandclass.length/2];
-        Class<?>[] classes = new Class[argsandclass.length/2];
-        for (int i = 1; i < argsandclass.length; i = i+2) {
+        Object[] args = new Object[argsandclass.length / 2];
+        Class<?>[] classes = new Class[argsandclass.length / 2];
+        for (int i = 1; i < argsandclass.length; i = i + 2) {
             classes[count] = (Class<?>) argsandclass[i];
             count++;
         }
-        count=0;
-        for (int i = 0; i < argsandclass.length; i = i+2) {
+        count = 0;
+        for (int i = 0; i < argsandclass.length; i = i + 2) {
             args[count] = argsandclass[i];
             count++;
         }
         try {
             return (T) invoke.getDeclaredMethod(method, classes).invoke(instence, args);
         } catch (Exception e) {
+            return null;
+        }
+    }
+    
+    @SuppressWarnings("deprecation")
+    public static Text get(ResourceBundleTranslation key, Object... args) {
+        try {
+            return Texts.legacy('&').from(key.get(Constance.locale, args));
+        } catch (TextMessageException e) {
             return null;
         }
     }

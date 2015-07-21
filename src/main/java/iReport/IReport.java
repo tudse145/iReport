@@ -4,18 +4,19 @@ import java.io.File;
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.UUID;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.spongepowered.api.Game;
-import org.spongepowered.api.Server;
 import org.spongepowered.api.event.Subscribe;
 import org.spongepowered.api.event.state.PreInitializationEvent;
 import org.spongepowered.api.event.state.ServerStoppingEvent;
 import org.spongepowered.api.plugin.Plugin;
-import org.spongepowered.api.plugin.PluginContainer;
 import org.spongepowered.api.service.config.ConfigDir;
 
 import com.google.inject.Inject;
@@ -27,6 +28,7 @@ import iReport.commands.greport;
 import iReport.commands.ireportc;
 import iReport.commands.sreport;
 import iReport.mysql.MYSQL;
+import iReport.util.Constance;
 import iReport.util.Data;
 import iReport.util.Utils;
 import ninja.leaping.configurate.ConfigurationNode;
@@ -35,42 +37,38 @@ import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
 @Plugin(id = "iReport", name = "iReport", version = "2.0.1-SNAPSHOT")
 public final class IReport {
     public static final Logger LOGGER = LoggerFactory.getLogger("iReport");
-    public static MYSQL sql;
-    public static Game game;
-    public static Server server;
-    public static PluginContainer controler;
-    public static File configfolder;
 
     @Inject
     public IReport(Game game, @ConfigDir(sharedRoot = false) File configfolder) {
-        IReport.game = game;
-        IReport.server = game.getServer();
-        IReport.configfolder = configfolder;
+        Constance.game = game;
+        Constance.server = game.getServer();
+        Constance.configfolder = configfolder;
     }
 
     public static MYSQL getMYSQL() {
-        if (sql == null) {
+        if (Constance.sql == null) {
             try {
-                sql = new MYSQL();
-                sql.queryUpdate("CREATE TABLE IF NOT EXISTS reports (uuid VARCHAR(36) PRIMARY KEY, currentname VARCHAR(16), Report LONGTEXT, username VARCHAR(16))");
+                Constance.sql = new MYSQL();
+                Constance.sql.queryUpdate("CREATE TABLE IF NOT EXISTS reports (uuid VARCHAR(36) PRIMARY KEY, currentname VARCHAR(16), Report LONGTEXT, username VARCHAR(16))");
             } catch (Exception e) {
                 Utils.printStackTrace(e);
             }
         }
-        return sql;
+        return Constance.sql;
     }
 
     @Subscribe
     public void onEnable(PreInitializationEvent event) {
-        game.getCommandDispatcher().register(this, new Dreport(), "dreport");
-        game.getCommandDispatcher().register(this, new greport(), "greport");
-        game.getCommandDispatcher().register(this, new HReport(), "hreport");
-        game.getCommandDispatcher().register(this, new ireportc(), "ireport");
-        game.getCommandDispatcher().register(this, new Reports(), "reports");
-        game.getCommandDispatcher().register(this, new sreport(), "sreport");
-        game.getEventManager().register(this, Utils.INSTENCE);
+        loadCfg();
+        Constance.game.getCommandDispatcher().register(this, new Dreport(), "dreport");
+        Constance.game.getCommandDispatcher().register(this, new greport(), "greport");
+        Constance.game.getCommandDispatcher().register(this, new HReport(), "hreport");
+        Constance.game.getCommandDispatcher().register(this, new ireportc(), "ireport");
+        Constance.game.getCommandDispatcher().register(this, new Reports(), "reports");
+        Constance.game.getCommandDispatcher().register(this, new sreport(), "sreport");
+        Constance.game.getEventManager().register(this, Utils.INSTENCE);
         getMYSQL();
-        if (sql.isenable) {
+        if (Constance.sql.isenable) {
             try {
                 loadSql();
             } catch (SQLException e) {
@@ -93,12 +91,13 @@ public final class IReport {
     @Subscribe
     public void onDisable(ServerStoppingEvent event) {
         for (UUID uuid : Data.init().playermapo.keySet()) {
-            Utils.savePlayer(uuid);;
+            Utils.savePlayer(uuid);
+            ;
         }
     }
-    
+
     private void loadFile() throws IOException {
-        File file = new File(IReport.configfolder, "reports.cfg");
+        File file = new File(Constance.configfolder, "reports.cfg");
         HoconConfigurationLoader cfgfile = HoconConfigurationLoader.builder().setFile(file).build();
         ConfigurationNode config = cfgfile.load();
         Data data = Data.init();
@@ -116,7 +115,7 @@ public final class IReport {
     }
 
     private void loadSql() throws SQLException {
-        ResultSet resultSet = sql.queryUpdate("select * from reports", false);
+        ResultSet resultSet = Constance.sql.queryUpdate("select * from reports", false);
         Data data = Data.init();
         while (resultSet.next()) {
             UUID uuid = UUID.fromString(resultSet.getString("uuid"));
@@ -129,5 +128,30 @@ public final class IReport {
             data.playermapor.put(reportedename, uuid);
         }
         resultSet.close();
+    }
+
+    private void loadCfg() {
+        if (!Constance.configfolder.exists()) {
+            Constance.configfolder.mkdirs();
+        }
+        File file = new File(Constance.configfolder, "config.cfg");
+        try {
+            boolean furstrun = false;
+            if (!file.exists()) {
+                file.createNewFile();
+                furstrun = true;
+            }
+            HoconConfigurationLoader cfgfile = HoconConfigurationLoader.builder().setFile(file).build();
+            ConfigurationNode config = cfgfile.load();
+            if (furstrun) {
+                Map<String, String> map = new HashMap<String, String>();
+                map.put("local", Locale.getDefault().toString());
+                config.setValue(map);
+                cfgfile.save(config);
+            }
+            Constance.locale = new Locale(config.getNode("local").getString());
+        } catch (IOException e) {
+            Utils.printStackTrace(e);
+        }
     }
 }

@@ -1,6 +1,6 @@
 package iReport.commands;
 
-import iReport.IReport;
+import iReport.util.Constance;
 import iReport.util.Utils;
 
 import java.util.List;
@@ -24,10 +24,9 @@ public final class sreport implements CommandCallable {
     }
 
     @Override
-    public Optional<CommandResult> process(CommandSource source, String arguments) throws CommandException {
+    public CommandResult process(CommandSource source, String arguments) throws CommandException {
         if (!testPermission(source)) {
-            source.sendMessage(Texts.of(TextColors.RED, "You don't have permission to use this command"));
-            return Optional.<CommandResult>absent();
+            throw new CommandException(Texts.of(TextColors.RED, "You don't have permission to use this command"));
         }
         String[] args = arguments.split(" ");
         if (args.length > 0 && !args[0].isEmpty()) {
@@ -35,12 +34,12 @@ public final class sreport implements CommandCallable {
             String target = args[0];
             Utils.reportplayer(target, "sReport ", source, args.length > 1 ? Boolean.valueOf(args[1]) : false);
             source.sendMessage(Texts.builder("You successfully reported ").color(TextColors.BLUE).append(Texts.builder(target).color(TextColors.RED).build()).build());
-            for (Player p : IReport.server.getOnlinePlayers()) {
+            for (Player p : Constance.server.getOnlinePlayers()) {
                 if (p.hasPermission("iReport.seereport") && p != source) {
                     p.sendMessage(Texts.builder(player + " has reported " + target + " for swearing").color(TextColors.RED).build());
                 }
             }
-            return Optional.of(CommandResult.success());
+            return CommandResult.success();
         }
         throw new CommandException(Texts.builder("Not enough arguments").color(TextColors.RED).build());
     }
@@ -52,12 +51,12 @@ public final class sreport implements CommandCallable {
 
     @Override
     public Optional<Text> getShortDescription(CommandSource source) {
-        return Optional.of((Text)Texts.of("Reports a player for swearing"));
+        return Optional.of((Text) Texts.of("Reports a player for swearing"));
     }
 
     @Override
     public Optional<Text> getHelp(CommandSource source) {
-        return Optional.of((Text)Texts.of("Reports a player for swearing"));
+        return Optional.of((Text) Texts.of("Reports a player for swearing"));
     }
 
     @Override

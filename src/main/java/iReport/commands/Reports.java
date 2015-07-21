@@ -27,7 +27,7 @@ import org.spongepowered.api.util.command.CommandSource;
 import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
 
-import iReport.IReport;
+import iReport.util.Constance;
 import iReport.util.TranslatableWrapper;
 
 public final class Reports implements CommandCallable {
@@ -96,10 +96,9 @@ public final class Reports implements CommandCallable {
     }
 
     @Override
-    public Optional<CommandResult> process(CommandSource source, String arguments) throws CommandException {
+    public CommandResult process(CommandSource source, String arguments) throws CommandException {
         if (!testPermission(source)) {
-            source.sendMessage(Texts.of(TextColors.RED, "You don't have permission to use this command"));
-            return Optional.<CommandResult>absent();
+            throw new CommandException(Texts.of(TextColors.RED, "You don't have permission to use this command"));
         }
         String[] args = arguments.split(" ");
         Map<UUID, String> map1 = init().playermap;
@@ -108,9 +107,9 @@ public final class Reports implements CommandCallable {
         if (source instanceof Human && args.length == 1 && args[0].equalsIgnoreCase("gui")) {
             CustomInventory inv = calculate(init().playermapo.size());
             for (UUID uuid : map2.keySet()) {
-                ItemStack i = IReport.game.getRegistry().getItemBuilder().itemType(ItemTypes.SKULL).quantity(1).build();
+                ItemStack i = Constance.game.getRegistry().getItemBuilder().itemType(ItemTypes.SKULL).quantity(1).build();
                 OwnableData od = i.getOrCreate(OwnableData.class).get();
-                od.setProfile(IReport.game.getRegistry().createGameProfile(uuid, map1.get(uuid)));
+                od.setProfile(Constance.game.getRegistry().createGameProfile(uuid, map1.get(uuid)));
                 i.offer(od);
                 LoreData ld = i.getOrCreate(LoreData.class).get();
                 ld.set(setLore(uuid));
@@ -118,7 +117,7 @@ public final class Reports implements CommandCallable {
                 inv.offer(i);
             }
             ((Human) source).openInventory(inv);
-            return Optional.of(CommandResult.success());
+            return CommandResult.success();
         }
         if (args.length == 2) {
             try {
@@ -130,21 +129,21 @@ public final class Reports implements CommandCallable {
                     UUID u = init().playermapor.get(args[1]);
                     source.sendMessage(setLore(u));
                 }
-                return Optional.of(CommandResult.success());
+                return CommandResult.success();
             } catch (Exception e) {
                 throw new CommandException(Texts.builder("invalid UUID").color(TextColors.RED).build());
             }
         } else {
             if (map3.isEmpty()) {
                 source.sendMessage(Texts.builder("There is no reports").color(TextColors.RED).build());
-                return Optional.of(CommandResult.success());
+                return CommandResult.success();
             }
             for (Entry<UUID, String> entry : map3.entrySet()) {
                 UUID u = entry.getKey();
                 source.sendMessage(setLore(u));
                 source.sendMessage(Texts.of(" "));
             }
-            return Optional.of(CommandResult.success());
+            return CommandResult.success();
         }
     }
 
@@ -155,12 +154,12 @@ public final class Reports implements CommandCallable {
 
     @Override
     public Optional<Text> getShortDescription(CommandSource source) {
-        return Optional.of((Text)Texts.of("Shows a list of reported players"));
+        return Optional.of((Text) Texts.of("Shows a list of reported players"));
     }
 
     @Override
     public Optional<Text> getHelp(CommandSource source) {
-        return Optional.of((Text)Texts.of("Shows a list of reported players"));
+        return Optional.of((Text) Texts.of("Shows a list of reported players"));
     }
 
     @Override

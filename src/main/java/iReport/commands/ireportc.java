@@ -21,7 +21,7 @@ public final class ireportc implements CommandCallable {
     }
 
     @Override
-    public Optional<CommandResult> process(CommandSource source, String arguments) throws CommandException {
+    public CommandResult process(CommandSource source, String arguments) throws CommandException {
         source.sendMessage(Texts.builder("==============================").color(TextColors.YELLOW).build());
         source.sendMessage(Texts.builder("/greport - Report a griefer").color(TextColors.GREEN).build());
         source.sendMessage(Texts.builder("/hreport - Report a hacker").color(TextColors.GREEN).build());
@@ -32,7 +32,7 @@ public final class ireportc implements CommandCallable {
         source.sendMessage(Texts.builder("/dreport - Delete a report").color(TextColors.GREEN).build());
         source.sendMessage(Texts.builder("==============================").color(TextColors.YELLOW).build());
         source.sendMessage(Texts.builder("Created by tudse145 & heni123321").color(TextColors.BLUE).build());
-        return Optional.of(CommandResult.success());
+        return CommandResult.success();
     }
 
     @Override
@@ -42,12 +42,12 @@ public final class ireportc implements CommandCallable {
 
     @Override
     public Optional<Text> getShortDescription(CommandSource source) {
-        return Optional.of((Text)Texts.of("Shows plugin help"));
+        return Optional.of((Text) Texts.of("Shows plugin help"));
     }
 
     @Override
     public Optional<Text> getHelp(CommandSource source) {
-        return Optional.of((Text)Texts.of("Shows plugin help"));
+        return Optional.of((Text) Texts.of("Shows plugin help"));
     }
 
     @Override

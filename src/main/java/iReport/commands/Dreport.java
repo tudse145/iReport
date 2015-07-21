@@ -1,6 +1,7 @@
 package iReport.commands;
 
 import iReport.IReport;
+import iReport.util.Constance;
 import iReport.util.Data;
 import ninja.leaping.configurate.ConfigurationNode;
 import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
@@ -25,8 +26,8 @@ import com.google.common.collect.Lists;
 
 public final class Dreport implements CommandCallable {
 
-    private static  File file = new File(IReport.configfolder, "reports.cfg");
-    
+    private static File file = new File(Constance.configfolder, "reports.cfg");
+
     @Override
     public List<String> getSuggestions(CommandSource source, String arguments) throws CommandException {
         if (!testPermission(source)) {
@@ -47,10 +48,9 @@ public final class Dreport implements CommandCallable {
     }
 
     @Override
-    public Optional<CommandResult> process(CommandSource source, String arguments) throws CommandException {
+    public CommandResult process(CommandSource source, String arguments) throws CommandException {
         if (!testPermission(source)) {
-            source.sendMessage(Texts.of(TextColors.RED, "You don't have permission to use this command"));
-            return Optional.<CommandResult>absent();
+            throw new CommandException(Texts.of(TextColors.RED, "You don't have permission to use this command"));
         }
         String[] args = arguments.split(" ");
         Data data = Data.init();
@@ -64,7 +64,7 @@ public final class Dreport implements CommandCallable {
                 data.playermapor.clear();
                 data.playermapr.clear();
                 source.sendMessage(Texts.builder("Successfully cleared reports").color(TextColors.GREEN).build());
-                return Optional.of(CommandResult.success());
+                return CommandResult.success();
             } else {
                 throw new CommandException(Texts.builder("You don't have permission").color(TextColors.RED).build());
             }
@@ -82,7 +82,7 @@ public final class Dreport implements CommandCallable {
         } catch (IllegalArgumentException e) {
             throw new CommandException(Texts.builder("invalid UUID").color(TextColors.RED).build());
         }
-        return Optional.of(CommandResult.success());
+        return CommandResult.success();
     }
 
     @Override
@@ -92,19 +92,19 @@ public final class Dreport implements CommandCallable {
 
     @Override
     public Optional<Text> getShortDescription(CommandSource source) {
-        return Optional.of((Text)Texts.of("Deletes a report"));
+        return Optional.of((Text) Texts.of("Deletes a report"));
     }
 
     @Override
     public Optional<Text> getHelp(CommandSource source) {
-        return Optional.of((Text)Texts.of("Deletes a report"));
+        return Optional.of((Text) Texts.of("Deletes a report"));
     }
 
     @Override
     public Text getUsage(CommandSource source) {
         return Texts.of("<UUID>");
     }
-    
+
     public void delete(String uuid) {
         HoconConfigurationLoader cfgfile = HoconConfigurationLoader.builder().setFile(file).build();
         try {

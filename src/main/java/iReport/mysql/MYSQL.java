@@ -1,6 +1,7 @@
 package iReport.mysql;
 
 import iReport.IReport;
+import iReport.util.Constance;
 import iReport.util.Utils;
 
 import java.io.File;
@@ -33,13 +34,7 @@ public final class MYSQL {
     private DataSource ds;
 
     public MYSQL() throws Exception {
-        try {
-            Class.forName("com.mysql.jdbc.Driver");
-        } catch (ClassNotFoundException e) {}
-        if (!IReport.configfolder.exists()) {
-            IReport.configfolder.mkdirs();
-        }
-        File file = new File(IReport.configfolder, "database.cfg");
+        File file = new File(Constance.configfolder, "database.cfg");
 
         boolean furstrun = false;
         String db = "database.";
@@ -69,11 +64,12 @@ public final class MYSQL {
         this.password = node.getNode("password").getString();
         this.database = node.getNode("database").getString();
         this.prodocol = node.getNode("prodocol").getString();
-        Optional<SqlService> provide = IReport.game.getServiceManager().provide(SqlService.class);
-        if (provide.isPresent()) {
+        Optional<SqlService> provide = Constance.game.getServiceManager().provide(SqlService.class);
+        if (provide.isPresent() && isenable) {
             try {
                 ds = provide.get().getDataSource("jdbc:" + this.prodocol + "://" + this.host + ":" + this.port + "/" + this.database);
-            } catch (Exception e) {}
+            } catch (Exception e) {
+            }
         }
     }
 
