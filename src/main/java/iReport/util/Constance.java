@@ -29,19 +29,20 @@ public final class Constance {
     public static PluginContainer controler;
     public static File configfolder;
     public static Locale locale;
-	public static final Logger LOGGER = LoggerFactory.getLogger("iReport");
+    public static final Logger LOGGER = LoggerFactory.getLogger("iReport");
 
-    private Constance() {}
+    private Constance() {
+    }
 
-	public static MYSQL getMYSQL() {
-	    if (sql == null) {
-	        try {
-	            sql = new MYSQL();
-	            sql.queryUpdate("CREATE TABLE IF NOT EXISTS reports (uuid VARCHAR(36) PRIMARY KEY, currentname VARCHAR(16), Report LONGTEXT, username VARCHAR(16))");
-	        } catch (Exception e) {
-	            Utils.printStackTrace(e);
-	        }
-	    }
-	    return sql;
-	}
+    public static MYSQL getMYSQL() {
+        if (sql == null) {
+            try {
+                sql = new MYSQL();
+                sql.queryUpdate("CREATE TABLE IF NOT EXISTS reports (uuid VARCHAR(36) PRIMARY KEY, currentname VARCHAR(16), Report LONGTEXT, username VARCHAR(16))");
+            } catch (Exception e) {
+                Utils.printStackTrace(e);
+            }
+        }
+        return sql;
+    }
 }

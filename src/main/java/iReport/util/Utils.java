@@ -32,12 +32,11 @@ import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
 public enum Utils {
     INSTENCE;
 
-    
     private static final Lock LOCK = new ReentrantLock();
 
     @Subscribe(ignoreCancelled = false)
     public void login(GameClientAuthEvent event) {
-    	GameProfile profile = event.getProfile();
+        GameProfile profile = event.getProfile();
         if (!Data.init().playermap.containsKey(profile.getUniqueId())) {
             Data.init().playermap.put(profile.getUniqueId(), profile.getName());
         } else if (Data.init().playermap.get(profile.getUniqueId()) != profile.getName()) {
@@ -79,18 +78,18 @@ public enum Utils {
         else
             sender.sendMessage(Texts.of("player " + target + " is alredy reported with another UUID please look at the reports or add true"));
         LOCK.lock();
-		try {
-			if (data.playermapr.containsKey(p)) {
-	            isreported = true;
-	            String s = data.playermapr.get(p);
-	            data.playermapr.put(p, s + reporttype + "reporter: " + sender.getName() + " ;");
-	        } else {
-	            data.playermapr.put(p, reporttype + "reporter: " + sender.getName() + " ;");
-	        }
-	        savePlayer(p);
-		} finally {
-			LOCK.unlock();
-		}
+        try {
+            if (data.playermapr.containsKey(p)) {
+                isreported = true;
+                String s = data.playermapr.get(p);
+                data.playermapr.put(p, s + reporttype + "reporter: " + sender.getName() + " ;");
+            } else {
+                data.playermapr.put(p, reporttype + "reporter: " + sender.getName() + " ;");
+            }
+            savePlayer(p);
+        } finally {
+            LOCK.unlock();
+        }
         updateMYSQL(Constance.server.getPlayer(target).get(), isreported);
     }
 
@@ -174,7 +173,7 @@ public enum Utils {
             return null;
         }
     }
-    
+
     @SuppressWarnings("deprecation")
     public static Text get(ResourceBundleTranslation key, Object... args) {
         try {

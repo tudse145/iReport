@@ -10,9 +10,6 @@ import java.util.Set;
 import java.util.UUID;
 
 import org.spongepowered.api.data.key.Keys;
-import org.spongepowered.api.data.manipulator.mutable.OwnableData;
-import org.spongepowered.api.data.manipulator.mutable.item.LoreData;
-import org.spongepowered.api.data.value.mutable.ListValue;
 import org.spongepowered.api.entity.living.Human;
 import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.Inventories;
@@ -111,9 +108,10 @@ public final class Reports implements CommandCallable {
             for (UUID uuid : map2.keySet()) {
                 ItemStack i = Constance.game.getRegistry().getItemBuilder().itemType(ItemTypes.SKULL).quantity(1).build();
                 i.offer(Keys.OWNED_BY_PROFILE, Constance.game.getRegistry().createGameProfile(uuid, map1.get(uuid)));
-                /*LoreData ld = i.getOrCreate(LoreData.class).get();
-                ld.set(setLore(uuid));
-                i.offer(ld);*/
+                /*
+                 * LoreData ld = i.getOrCreate(LoreData.class).get();
+                 * ld.set(setLore(uuid)); i.offer(ld);
+                 */
                 i.offer(i.getValue(Keys.SIGN_LINES).get().addAll(setLore(uuid)));
                 inv.offer(i);
             }
