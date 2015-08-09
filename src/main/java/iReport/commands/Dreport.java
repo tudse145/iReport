@@ -1,6 +1,5 @@
 package iReport.commands;
 
-import iReport.IReport;
 import iReport.util.Constance;
 import iReport.util.Data;
 import ninja.leaping.configurate.ConfigurationNode;
@@ -59,7 +58,7 @@ public final class Dreport implements CommandCallable {
                 for (UUID uuid : data.playermapo.keySet()) {
                     delete(uuid.toString());
                 }
-                IReport.getMYSQL().queryUpdate("DELETE FROM reports");
+                Constance.getMYSQL().queryUpdate("DELETE FROM reports");
                 data.playermapo.clear();
                 data.playermapor.clear();
                 data.playermapr.clear();
@@ -78,7 +77,7 @@ public final class Dreport implements CommandCallable {
             data.playermapor.remove(s);
             delete(uuid.toString());
             source.sendMessage(Texts.builder("Successfully deleted " + s).color(TextColors.GREEN).build());
-            IReport.getMYSQL().queryUpdate("DELETE FROM reports WHERE uuid = '" + UUID.fromString(args[0]) + "'");
+            Constance.getMYSQL().queryUpdate("DELETE FROM reports WHERE uuid = '" + UUID.fromString(args[0]) + "'");
         } catch (IllegalArgumentException e) {
             throw new CommandException(Texts.builder("invalid UUID").color(TextColors.RED).build());
         }

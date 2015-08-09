@@ -7,16 +7,15 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
-import java.util.ResourceBundle;
 import java.util.UUID;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
+import org.spongepowered.api.event.network.GameClientAuthEvent;
+import org.spongepowered.api.GameProfile;
 import org.spongepowered.api.entity.player.Player;
 import org.spongepowered.api.event.Subscribe;
-import org.spongepowered.api.event.entity.player.PlayerJoinEvent;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.Texts;
 import org.spongepowered.api.text.format.TextColors;
@@ -26,9 +25,7 @@ import org.spongepowered.api.util.command.CommandException;
 import org.spongepowered.api.util.command.CommandSource;
 
 import com.flowpowered.math.vector.Vector3d;
-import com.google.common.base.Function;
 
-import iReport.IReport;
 import ninja.leaping.configurate.ConfigurationNode;
 import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
 
@@ -36,17 +33,17 @@ public enum Utils {
     INSTENCE;
 
     
-    public static final Lock LOCK = new ReentrantLock();
+    private static final Lock LOCK = new ReentrantLock();
 
     @Subscribe(ignoreCancelled = false)
-    public void login(PlayerJoinEvent event) {
-        Player p = event.getEntity();
-        if (!Data.init().playermap.containsKey(p.getUniqueId())) {
-            Data.init().playermap.put(p.getUniqueId(), p.getName());
-        } else if (Data.init().playermap.get(p.getUniqueId()) != p.getName()) {
-            Data.init().playermap.put(p.getUniqueId(), p.getName());
-            if (Utils.isReported(p.getUniqueId())) {
-                Utils.updateusernameMYSQL(p.getUniqueId(), p.getName());
+    public void login(GameClientAuthEvent event) {
+    	GameProfile profile = event.getProfile();
+        if (!Data.init().playermap.containsKey(profile.getUniqueId())) {
+            Data.init().playermap.put(profile.getUniqueId(), profile.getName());
+        } else if (Data.init().playermap.get(profile.getUniqueId()) != profile.getName()) {
+            Data.init().playermap.put(profile.getUniqueId(), profile.getName());
+            if (Utils.isReported(profile.getUniqueId())) {
+                Utils.updateusernameMYSQL(profile.getUniqueId(), profile.getName());
             }
         }
     }
@@ -82,15 +79,18 @@ public enum Utils {
         else
             sender.sendMessage(Texts.of("player " + target + " is alredy reported with another UUID please look at the reports or add true"));
         LOCK.lock();
-        if (data.playermapr.containsKey(p)) {
-            isreported = true;
-            String s = data.playermapr.get(p);
-            data.playermapr.put(p, s + reporttype + "reporter: " + sender.getName() + " ;");
-        } else {
-            data.playermapr.put(p, reporttype + "reporter: " + sender.getName() + " ;");
-        }
-        savePlayer(p);
-        LOCK.unlock();
+		try {
+			if (data.playermapr.containsKey(p)) {
+	            isreported = true;
+	            String s = data.playermapr.get(p);
+	            data.playermapr.put(p, s + reporttype + "reporter: " + sender.getName() + " ;");
+	        } else {
+	            data.playermapr.put(p, reporttype + "reporter: " + sender.getName() + " ;");
+	        }
+	        savePlayer(p);
+		} finally {
+			LOCK.unlock();
+		}
         updateMYSQL(Constance.server.getPlayer(target).get(), isreported);
     }
 
@@ -100,27 +100,27 @@ public enum Utils {
         Map<UUID, String> map2 = init().playermapo;
         Map<UUID, String> map3 = init().playermapr;
         if (!isReported) {
-            IReport.getMYSQL().queryUpdate("INSERT INTO reports (`uuid`, `currentname`, `Report`, `username`) values ('" + uuid + "','" + map1.get(uuid) + "','" + map3.get(uuid) + "','" + map2.get(uuid) + "')");
+            Constance.getMYSQL().queryUpdate("INSERT INTO reports (`uuid`, `currentname`, `Report`, `username`) values ('" + uuid + "','" + map1.get(uuid) + "','" + map3.get(uuid) + "','" + map2.get(uuid) + "')");
         } else {
-            IReport.getMYSQL().queryUpdate("UPDATE Reports SET Report = '" + map3.get(uuid) + "' WHERE uuid = '" + uuid + "'");
+            Constance.getMYSQL().queryUpdate("UPDATE Reports SET Report = '" + map3.get(uuid) + "' WHERE uuid = '" + uuid + "'");
         }
     }
 
     public static void updateusernameMYSQL(UUID uniqueId, String name) {
-        IReport.getMYSQL().queryUpdate("UPDATE Reports SET currentname = '" + name + "' WHERE uuid = '" + uniqueId + "'");
+        Constance.getMYSQL().queryUpdate("UPDATE Reports SET currentname = '" + name + "' WHERE uuid = '" + uniqueId + "'");
     }
 
     public static void printStackTrace(Throwable t) {
-        IReport.LOGGER.error(t.toString());
+        Constance.LOGGER.error(t.toString());
         for (StackTraceElement Element : t.getStackTrace()) {
-            IReport.LOGGER.error("\tat " + Element.toString());
+            Constance.LOGGER.error("\tat " + Element.toString());
         }
         try {
             Throwable[] suprests = invokeIfAvalebule(Throwable.class, "getSuppressed", t);
             for (Throwable tb : suprests) {
-                IReport.LOGGER.error("\tSuppressed: " + tb.toString());
+                Constance.LOGGER.error("\tSuppressed: " + tb.toString());
                 for (StackTraceElement Element : tb.getStackTrace()) {
-                    IReport.LOGGER.error("\t \tat " + Element.toString());
+                    Constance.LOGGER.error("\t \tat " + Element.toString());
                 }
             }
         } catch (Exception e) {

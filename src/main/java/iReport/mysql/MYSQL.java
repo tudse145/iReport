@@ -1,6 +1,5 @@
 package iReport.mysql;
 
-import iReport.IReport;
 import iReport.util.Constance;
 import iReport.util.Utils;
 
@@ -97,7 +96,7 @@ public final class MYSQL {
             return rs;
         } catch (Exception e) {
             Utils.printStackTrace(e);
-            IReport.LOGGER.error("Failed to send update '" + query + "'.");
+            Constance.LOGGER.error("Failed to send update '" + query + "'.");
         } finally {
             if (!closeRespltset) {
                 this.closeRessources(null, st);

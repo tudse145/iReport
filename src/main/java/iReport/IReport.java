@@ -10,8 +10,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.UUID;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.event.Subscribe;
 import org.spongepowered.api.event.state.PreInitializationEvent;
@@ -27,7 +25,6 @@ import iReport.commands.Reports;
 import iReport.commands.greport;
 import iReport.commands.ireportc;
 import iReport.commands.sreport;
-import iReport.mysql.MYSQL;
 import iReport.util.Constance;
 import iReport.util.Data;
 import iReport.util.Utils;
@@ -36,25 +33,11 @@ import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
 
 @Plugin(id = "iReport", name = "iReport", version = "2.0.1-SNAPSHOT")
 public final class IReport {
-    public static final Logger LOGGER = LoggerFactory.getLogger("iReport");
-
     @Inject
     public IReport(Game game, @ConfigDir(sharedRoot = false) File configfolder) {
         Constance.game = game;
         Constance.server = game.getServer();
         Constance.configfolder = configfolder;
-    }
-
-    public static MYSQL getMYSQL() {
-        if (Constance.sql == null) {
-            try {
-                Constance.sql = new MYSQL();
-                Constance.sql.queryUpdate("CREATE TABLE IF NOT EXISTS reports (uuid VARCHAR(36) PRIMARY KEY, currentname VARCHAR(16), Report LONGTEXT, username VARCHAR(16))");
-            } catch (Exception e) {
-                Utils.printStackTrace(e);
-            }
-        }
-        return Constance.sql;
     }
 
     @Subscribe
@@ -67,7 +50,7 @@ public final class IReport {
         Constance.game.getCommandDispatcher().register(this, new Reports(), "reports");
         Constance.game.getCommandDispatcher().register(this, new sreport(), "sreport");
         Constance.game.getEventManager().register(this, Utils.INSTENCE);
-        getMYSQL();
+        Constance.getMYSQL();
         if (Constance.sql.isenable) {
             try {
                 loadSql();
