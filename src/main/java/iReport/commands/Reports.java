@@ -108,17 +108,9 @@ public final class Reports implements CommandCallable {
         if (source instanceof Human && args.length == 1 && args[0].equalsIgnoreCase("gui")) {
             CustomInventory inv = calculate(init().playermapo.size());
             for (UUID uuid : map2.keySet()) {
-                ItemStack stack = Constance.game.getRegistry().getItemBuilder().itemType(ItemTypes.SKULL).quantity(1).build();
+                ItemStack stack = Constance.game.getRegistry().createItemBuilder().itemType(ItemTypes.SKULL).quantity(1).build();
                 stack.offer(Keys.OWNED_BY_PROFILE, Constance.game.getRegistry().createGameProfile(uuid, map1.get(uuid)));
-                /*
-                 * LoreData ld = i.getOrCreate(LoreData.class).get();
-                 * ld.set(setLore(uuid)); i.offer(ld);
-                 */
-                LoreData loreData = stack.getOrCreate(LoreData.class).get();
-                final ListValue<Text> lore = loreData.lore();
-                lore.addAll(setLore(uuid));
-                loreData.set(lore);
-                stack.offer(loreData);
+                stack.offer(stack.getValue(Keys.ITEM_LORE).get().addAll(setLore(uuid)));
                 inv.offer(stack);
             }
             ((Human) source).openInventory(inv);
