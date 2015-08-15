@@ -10,8 +10,7 @@ import java.util.Set;
 import java.util.UUID;
 
 import org.spongepowered.api.data.key.Keys;
-import org.spongepowered.api.data.manipulator.mutable.item.LoreData;
-import org.spongepowered.api.data.value.mutable.ListValue;
+import org.spongepowered.api.data.type.SkullTypes;
 import org.spongepowered.api.entity.living.Human;
 import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.Inventories;
@@ -109,6 +108,7 @@ public final class Reports implements CommandCallable {
             CustomInventory inv = calculate(init().playermapo.size());
             for (UUID uuid : map2.keySet()) {
                 ItemStack stack = Constance.game.getRegistry().createItemBuilder().itemType(ItemTypes.SKULL).quantity(1).build();
+                stack.offer(Keys.SKULL_TYPE, SkullTypes.PLAYER);
                 stack.offer(Keys.OWNED_BY_PROFILE, Constance.game.getRegistry().createGameProfile(uuid, map1.get(uuid)));
                 stack.offer(stack.getValue(Keys.ITEM_LORE).get().addAll(setLore(uuid)));
                 inv.offer(stack);
