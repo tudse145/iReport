@@ -98,10 +98,10 @@ public final class MYSQL {
             Utils.printStackTrace(e);
             Constance.LOGGER.error("Failed to send update '" + query + "'.");
         } finally {
-            if (!closeRespltset) {
-                this.closeRessources(null, st);
-            } else {
+            if (closeRespltset) {
                 closeRessources(rs, st);
+            } else {
+                this.closeRessources(null, st);
             }
         }
         return null;

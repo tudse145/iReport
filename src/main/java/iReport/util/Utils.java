@@ -168,7 +168,7 @@ public enum Utils {
             count++;
         }
         try {
-            return (T) invoke.getDeclaredMethod(method, classes).invoke(instence, args);
+            return (T) invoke.getMethod(method, classes).invoke(instence, args);
         } catch (Exception e) {
             return null;
         }

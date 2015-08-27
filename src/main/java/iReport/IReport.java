@@ -75,7 +75,6 @@ public final class IReport {
     public void onDisable(ServerStoppingEvent event) {
         for (UUID uuid : Data.init().playermapo.keySet()) {
             Utils.savePlayer(uuid);
-            ;
         }
     }
 
