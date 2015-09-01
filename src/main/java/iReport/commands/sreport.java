@@ -1,11 +1,8 @@
 package iReport.commands;
 
-import iReport.util.Constance;
-import iReport.util.Utils;
-
 import java.util.List;
 
-import org.spongepowered.api.entity.player.Player;
+import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.Texts;
 import org.spongepowered.api.text.format.TextColors;
@@ -15,6 +12,9 @@ import org.spongepowered.api.util.command.CommandResult;
 import org.spongepowered.api.util.command.CommandSource;
 
 import com.google.common.base.Optional;
+
+import iReport.util.Constance;
+import iReport.util.Utils;
 
 public final class sreport implements CommandCallable {
 

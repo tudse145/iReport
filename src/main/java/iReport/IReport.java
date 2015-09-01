@@ -11,9 +11,9 @@ import java.util.Map.Entry;
 import java.util.UUID;
 
 import org.spongepowered.api.Game;
-import org.spongepowered.api.event.Subscribe;
-import org.spongepowered.api.event.state.PreInitializationEvent;
-import org.spongepowered.api.event.state.ServerStoppingEvent;
+import org.spongepowered.api.event.Listener;
+import org.spongepowered.api.event.game.state.GamePreInitializationEvent;
+import org.spongepowered.api.event.game.state.GameStartingServerEvent;
 import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.service.config.ConfigDir;
 
@@ -40,8 +40,8 @@ public final class IReport {
         Constance.configfolder = configfolder;
     }
 
-    @Subscribe
-    public void onEnable(PreInitializationEvent event) {
+    @Listener
+    public void onEnable(GamePreInitializationEvent event) {
         loadCfg();
         Constance.game.getCommandDispatcher().register(this, new Dreport(), "dreport");
         Constance.game.getCommandDispatcher().register(this, new greport(), "greport");
@@ -49,7 +49,7 @@ public final class IReport {
         Constance.game.getCommandDispatcher().register(this, new ireportc(), "ireport");
         Constance.game.getCommandDispatcher().register(this, new Reports(), "reports");
         Constance.game.getCommandDispatcher().register(this, new sreport(), "sreport");
-        Constance.game.getEventManager().register(this, Utils.INSTENCE);
+        Constance.game.getEventManager().registerListeners(this, Utils.INSTENCE);
         Constance.getMYSQL();
         if (Constance.sql.isenable) {
             try {
@@ -71,8 +71,8 @@ public final class IReport {
         }
     }
 
-    @Subscribe
-    public void onDisable(ServerStoppingEvent event) {
+    @Listener
+    public void onDisable(GameStartingServerEvent event) {
         for (UUID uuid : Data.init().playermapo.keySet()) {
             Utils.savePlayer(uuid);
         }

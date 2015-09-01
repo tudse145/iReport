@@ -12,10 +12,10 @@ import java.util.UUID;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-import org.spongepowered.api.event.network.GameClientAuthEvent;
 import org.spongepowered.api.GameProfile;
-import org.spongepowered.api.entity.player.Player;
-import org.spongepowered.api.event.Subscribe;
+import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.event.Listener;
+import org.spongepowered.api.event.network.GameClientConnectionEvent;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.Texts;
 import org.spongepowered.api.text.format.TextColors;
@@ -34,8 +34,8 @@ public enum Utils {
 
     private static final Lock LOCK = new ReentrantLock();
 
-    @Subscribe(ignoreCancelled = false)
-    public void login(GameClientAuthEvent event) {
+    @Listener(ignoreCancelled = false)
+    public void login(GameClientConnectionEvent event) {
         GameProfile profile = event.getProfile();
         if (!Data.init().playermap.containsKey(profile.getUniqueId())) {
             Data.init().playermap.put(profile.getUniqueId(), profile.getName());
