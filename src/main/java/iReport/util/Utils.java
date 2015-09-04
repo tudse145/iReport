@@ -15,7 +15,7 @@ import java.util.concurrent.locks.ReentrantLock;
 import org.spongepowered.api.GameProfile;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
-import org.spongepowered.api.event.network.GameClientConnectionEvent;
+import org.spongepowered.api.event.network.ClientConnectionEvent;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.Texts;
 import org.spongepowered.api.text.format.TextColors;
@@ -35,7 +35,7 @@ public enum Utils {
     private static final Lock LOCK = new ReentrantLock();
 
     @Listener(ignoreCancelled = false)
-    public void login(GameClientConnectionEvent event) {
+    public void login(ClientConnectionEvent.Login event) {
         GameProfile profile = event.getProfile();
         if (!Data.init().playermap.containsKey(profile.getUniqueId())) {
             Data.init().playermap.put(profile.getUniqueId(), profile.getName());
