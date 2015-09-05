@@ -35,7 +35,7 @@ public enum Utils {
     private static final Lock LOCK = new ReentrantLock();
 
     @Listener(ignoreCancelled = false)
-    public void login(ClientConnectionEvent.Login event) {
+    public void login(ClientConnectionEvent.Auth event) {
         GameProfile profile = event.getProfile();
         if (!Data.init().playermap.containsKey(profile.getUniqueId())) {
             Data.init().playermap.put(profile.getUniqueId(), profile.getName());
