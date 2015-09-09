@@ -18,7 +18,6 @@ import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.network.ClientConnectionEvent;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.Texts;
-import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.translation.ResourceBundleTranslation;
 import org.spongepowered.api.util.TextMessageException;
 import org.spongepowered.api.util.command.CommandException;
@@ -51,24 +50,23 @@ public enum Utils {
         return Data.init().playermapr.get(uniqueId) != null;
     }
 
-    public static String getxyz(String p, CommandSource source) throws CommandException {
+    public static String getxyz(String playername, CommandSource source) throws CommandException {
         try {
-            Player player = Constance.server.getPlayer(p).get();
+            Player player = Constance.server.getPlayer(playername).get();
             Vector3d loc = player.getLocation().getPosition();
             return String.valueOf("world " + player.getWorld().getName() + " x " + (int) loc.getX() + " y " + (int) loc.getY() + " z " + (int) loc.getZ());
         } catch (IllegalStateException e) {
-            throw new CommandException(Texts.builder(p + " is not online").color(TextColors.RED).build());
+            throw new CommandException(get("not.onlipse", playername));
         }
     }
 
-    public static void reportplayer(String target, String reporttype, CommandSource sender, boolean forcw) {
+    public static void reportplayer(String target, String reporttype, CommandSource sender, boolean forcw) throws CommandException {
         boolean isreported = false;
         UUID p = null;
         try {
             p = Constance.server.getPlayer(target).get().getUniqueId();
         } catch (IllegalStateException e) {
-            sender.sendMessage(Texts.builder(target + " is not online").color(TextColors.RED).build());
-            return;
+            throw new CommandException(get("not.onlipse", target));
         }
         Data data = Data.init();
         data.playermapo.put(p, target);
@@ -175,9 +173,9 @@ public enum Utils {
     }
 
     @SuppressWarnings("deprecation")
-    public static Text get(ResourceBundleTranslation key, Object... args) {
+    public static Text get(String key, Object... args) {
         try {
-            return Texts.legacy('&').from(key.get(Constance.locale, args));
+            return Texts.legacy('&').from(new ResourceBundleTranslation(key, Constance.LOOKUP_FUNC).get(Constance.locale, args));
         } catch (TextMessageException e) {
             return null;
         }

@@ -9,7 +9,6 @@ import org.slf4j.LoggerFactory;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.Server;
 import org.spongepowered.api.plugin.PluginContainer;
-import org.spongepowered.api.text.translation.ResourceBundleTranslation;
 
 import com.google.common.base.Function;
 
@@ -17,12 +16,11 @@ import iReport.mysql.MYSQL;
 
 public final class Constance {
 
-    private static final Function<Locale, ResourceBundle> LOOKUP_FUNC = new Function<Locale, ResourceBundle>() {
+    public static final Function<Locale, ResourceBundle> LOOKUP_FUNC = new Function<Locale, ResourceBundle>() {
         public ResourceBundle apply(Locale input) {
             return ResourceBundle.getBundle("iReport.lang", input);
         }
     };
-    public static final ResourceBundleTranslation GREPORT_SUCESS = new ResourceBundleTranslation("greport.sucess", LOOKUP_FUNC);
     public static MYSQL sql;
     public static Game game;
     public static Server server;

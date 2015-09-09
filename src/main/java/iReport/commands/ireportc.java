@@ -13,6 +13,8 @@ import org.spongepowered.api.util.command.CommandSource;
 import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
 
+import iReport.util.Utils;
+
 public final class ireportc implements CommandCallable {
 
     @Override
@@ -23,15 +25,15 @@ public final class ireportc implements CommandCallable {
     @Override
     public CommandResult process(CommandSource source, String arguments) throws CommandException {
         source.sendMessage(Texts.builder("==============================").color(TextColors.YELLOW).build());
-        source.sendMessage(Texts.builder("/greport - Report a griefer").color(TextColors.GREEN).build());
-        source.sendMessage(Texts.builder("/hreport - Report a hacker").color(TextColors.GREEN).build());
-        source.sendMessage(Texts.builder("/sreport - Report a swearer").color(TextColors.GREEN).build());
-        source.sendMessage(Texts.builder("/ireport - Show this help menu").color(TextColors.GREEN).build());
-        source.sendMessage(Texts.builder("/reports - Shows all reported players").color(TextColors.GREEN).build());
-        source.sendMessage(Texts.builder("/reports gui - Shows all reported players in a GUI").color(TextColors.GREEN).build());
-        source.sendMessage(Texts.builder("/dreport - Delete a report").color(TextColors.GREEN).build());
+        source.sendMessage(Utils.get("ireport.test1"));
+        source.sendMessage(Utils.get("ireport.test2"));
+        source.sendMessage(Utils.get("ireport.test3"));
+        source.sendMessage(Utils.get("ireport.test4"));
+        source.sendMessage(Utils.get("ireport.test5"));
+        source.sendMessage(Utils.get("ireport.test6"));
+        source.sendMessage(Utils.get("ireport.test7"));
         source.sendMessage(Texts.builder("==============================").color(TextColors.YELLOW).build());
-        source.sendMessage(Texts.builder("Created by tudse145 & heni123321").color(TextColors.BLUE).build());
+        source.sendMessage(Utils.get("ireport.test8", "tudse145 & heni123321"));
         return CommandResult.success();
     }
 
@@ -42,12 +44,12 @@ public final class ireportc implements CommandCallable {
 
     @Override
     public Optional<Text> getShortDescription(CommandSource source) {
-        return Optional.of((Text) Texts.of("Shows plugin help"));
+        return Optional.of(Utils.get("ireport.description"));
     }
 
     @Override
     public Optional<Text> getHelp(CommandSource source) {
-        return Optional.of((Text) Texts.of("Shows plugin help"));
+        return Optional.of(Utils.get("ireport.description"));
     }
 
     @Override

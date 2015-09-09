@@ -18,7 +18,6 @@ import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.custom.CustomInventory;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.Texts;
-import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.util.command.CommandCallable;
 import org.spongepowered.api.util.command.CommandException;
 import org.spongepowered.api.util.command.CommandResult;
@@ -29,6 +28,7 @@ import com.google.common.collect.Lists;
 
 import iReport.util.Constance;
 import iReport.util.TranslatableWrapper;
+import iReport.util.Utils;
 
 public final class Reports implements CommandCallable {
 
@@ -38,11 +38,11 @@ public final class Reports implements CommandCallable {
         Map<UUID, String> map2 = init().playermapo;
         Map<UUID, String> map3 = init().playermapr;
         list.add(Texts.of("UUID: " + uuid));
-        list.add(Texts.of("currentname: " + map1.get(uuid)));
+        list.add(Utils.get("reports.lore1", map1.get(uuid)));
         for (String string : map3.get(uuid).split(";")) {
             list.add(Texts.of(string));
         }
-        list.add(Texts.of("username: " + map2.get(uuid)));
+        list.add(Utils.get("reports.lore1", map2.get(uuid)));
         return list;
     }
 
@@ -98,7 +98,7 @@ public final class Reports implements CommandCallable {
     @Override
     public CommandResult process(CommandSource source, String arguments) throws CommandException {
         if (!testPermission(source)) {
-            throw new CommandException(Texts.of(TextColors.RED, "You don't have permission to use this command"));
+            throw new CommandException(Utils.get("permission.missing"));
         }
         String[] args = arguments.split(" ");
         Map<UUID, String> map1 = init().playermap;
@@ -128,11 +128,11 @@ public final class Reports implements CommandCallable {
                 }
                 return CommandResult.success();
             } catch (Exception e) {
-                throw new CommandException(Texts.builder("invalid UUID").color(TextColors.RED).build());
+                throw new CommandException(Utils.get("dreport.error"));
             }
         } else {
             if (map3.isEmpty()) {
-                source.sendMessage(Texts.builder("There is no reports").color(TextColors.RED).build());
+                source.sendMessage(Utils.get("dreport.error"));
                 return CommandResult.success();
             }
             for (Entry<UUID, String> entry : map3.entrySet()) {
@@ -151,12 +151,12 @@ public final class Reports implements CommandCallable {
 
     @Override
     public Optional<Text> getShortDescription(CommandSource source) {
-        return Optional.of((Text) Texts.of("Shows a list of reported players"));
+        return Optional.of(Utils.get("reports.description"));
     }
 
     @Override
     public Optional<Text> getHelp(CommandSource source) {
-        return Optional.of((Text) Texts.of("Shows a list of reported players"));
+        return Optional.of(Utils.get("reports.description"));
     }
 
     @Override

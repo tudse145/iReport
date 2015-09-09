@@ -2,6 +2,7 @@ package iReport.commands;
 
 import iReport.util.Constance;
 import iReport.util.Data;
+import iReport.util.Utils;
 import ninja.leaping.configurate.ConfigurationNode;
 import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
 
@@ -14,7 +15,6 @@ import java.util.UUID;
 
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.Texts;
-import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.util.command.CommandCallable;
 import org.spongepowered.api.util.command.CommandException;
 import org.spongepowered.api.util.command.CommandResult;
@@ -49,7 +49,7 @@ public final class Dreport implements CommandCallable {
     @Override
     public CommandResult process(CommandSource source, String arguments) throws CommandException {
         if (!testPermission(source)) {
-            throw new CommandException(Texts.of(TextColors.RED, "You don't have permission to use this command"));
+            throw new CommandException(Utils.get("permission.missing"));
         }
         String[] args = arguments.split(" ");
         Data data = Data.init();
@@ -62,26 +62,26 @@ public final class Dreport implements CommandCallable {
                 data.playermapo.clear();
                 data.playermapor.clear();
                 data.playermapr.clear();
-                source.sendMessage(Texts.builder("Successfully cleared reports").color(TextColors.GREEN).build());
+                source.sendMessage(Utils.get("dreport.sucess.all"));
                 return CommandResult.success();
             } else {
-                throw new CommandException(Texts.builder("You don't have permission").color(TextColors.RED).build());
+                throw new CommandException(Utils.get("permission.missing"));
             }
 
         }
         try {
             UUID uuid = UUID.fromString(args[0]);
-            String s = data.playermapo.get(uuid);
+            String playername = data.playermapo.get(uuid);
             data.playermapo.remove(uuid);
             data.playermapr.remove(uuid);
-            data.playermapor.remove(s);
+            data.playermapor.remove(playername);
             delete(uuid.toString());
-            source.sendMessage(Texts.builder("Successfully deleted " + s).color(TextColors.GREEN).build());
+            source.sendMessage(Utils.get("dreport.sucess.all", playername));
             Constance.getMYSQL().queryUpdate("DELETE FROM reports WHERE uuid = '" + UUID.fromString(args[0]) + "'");
+            return CommandResult.success();
         } catch (IllegalArgumentException e) {
-            throw new CommandException(Texts.builder("invalid UUID").color(TextColors.RED).build());
+            throw new CommandException(Utils.get("dreport.error"));
         }
-        return CommandResult.success();
     }
 
     @Override
@@ -91,12 +91,12 @@ public final class Dreport implements CommandCallable {
 
     @Override
     public Optional<Text> getShortDescription(CommandSource source) {
-        return Optional.of((Text) Texts.of("Deletes a report"));
+        return Optional.of(Utils.get("dreport.description"));
     }
 
     @Override
     public Optional<Text> getHelp(CommandSource source) {
-        return Optional.of((Text) Texts.of("Deletes a report"));
+        return Optional.of(Utils.get("dreport.description"));
     }
 
     @Override
