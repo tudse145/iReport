@@ -13,7 +13,7 @@ import java.util.UUID;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.game.state.GamePreInitializationEvent;
-import org.spongepowered.api.event.game.state.GameStartingServerEvent;
+import org.spongepowered.api.event.game.state.GameStoppingServerEvent;
 import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.service.config.ConfigDir;
 
@@ -72,7 +72,7 @@ public final class IReport {
     }
 
     @Listener
-    public void onDisable(GameStartingServerEvent event) {
+    public void onDisable(GameStoppingServerEvent event) {
         for (UUID uuid : Data.init().playermapo.keySet()) {
             Utils.savePlayer(uuid);
         }
