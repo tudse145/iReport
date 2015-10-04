@@ -58,7 +58,7 @@ public final class IReport {
                 try {
                     loadFile();
                 } catch (IOException e1) {
-                    Utils.invokeIfAvalebule(Throwable.class, "addSuppressed", e1, e, Throwable.class);
+                    e.addSuppressed(e1);
                     Utils.printStackTrace(e1);
                 }
             }
@@ -84,7 +84,7 @@ public final class IReport {
         ConfigurationNode config = cfgfile.load();
         Data data = Data.init();
         ConfigurationNode nodde = config.getNode("reports");
-        for (Entry<Object, ? extends ConfigurationNode> node : nodde.getChildrenMap().entrySet()) {
+        nodde.getChildrenMap().entrySet().parallelStream().forEach(node -> {
             UUID uuid = UUID.fromString((String) node.getKey());
             String currenttname = node.getValue().getNode("currenttname").getString();
             String reportedename = node.getValue().getNode("reportedename").getString();
@@ -93,7 +93,7 @@ public final class IReport {
             data.playermapo.put(uuid, reportedename);
             data.playermapr.put(uuid, reports);
             data.playermapor.put(reportedename, uuid);
-        }
+        });
     }
 
     private void loadSql() throws SQLException {

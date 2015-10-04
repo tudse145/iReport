@@ -1,6 +1,7 @@
 package iReport.commands;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
@@ -9,8 +10,6 @@ import org.spongepowered.api.util.command.CommandCallable;
 import org.spongepowered.api.util.command.CommandException;
 import org.spongepowered.api.util.command.CommandResult;
 import org.spongepowered.api.util.command.CommandSource;
-
-import com.google.common.base.Optional;
 
 import iReport.util.Constance;
 import iReport.util.Utils;
@@ -34,11 +33,7 @@ public final class greport implements CommandCallable {
             Utils.reportplayer(target, "gReport: " + Utils.getxyz(args[0], source) + " ", source, args.length > 1 ? Boolean.valueOf(args[1]) : false);
             source.sendMessage(Utils.get("greport.sucess", target));
             Text text = Utils.get("greport.notification", player, target);
-            for (Player p : Constance.server.getOnlinePlayers()) {
-                if (p.hasPermission("iReport.seereport") && p != source) {
-                    p.sendMessage(text);
-                }
-            }
+            Constance.server.getOnlinePlayers().parallelStream().filter(p -> p.hasPermission("iReport.seereport") && p != source).forEach(p -> p.sendMessage(text));
             return CommandResult.success();
         }
         throw new CommandException(Utils.get("not.enough.args"));

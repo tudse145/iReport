@@ -3,6 +3,7 @@ package iReport.util;
 import java.io.File;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import java.util.function.Function;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,17 +11,11 @@ import org.spongepowered.api.Game;
 import org.spongepowered.api.Server;
 import org.spongepowered.api.plugin.PluginContainer;
 
-import com.google.common.base.Function;
-
 import iReport.mysql.MYSQL;
 
 public final class Constance {
 
-    public static final Function<Locale, ResourceBundle> LOOKUP_FUNC = new Function<Locale, ResourceBundle>() {
-        public ResourceBundle apply(Locale input) {
-            return ResourceBundle.getBundle("iReport.lang", input);
-        }
-    };
+    public static final Function<Locale, ResourceBundle> LOOKUP_FUNC = input -> ResourceBundle.getBundle("iReport.lang", input);
     public static MYSQL sql;
     public static Game game;
     public static Server server;

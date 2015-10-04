@@ -6,8 +6,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.type.SkullTypes;
@@ -23,10 +26,10 @@ import org.spongepowered.api.util.command.CommandException;
 import org.spongepowered.api.util.command.CommandResult;
 import org.spongepowered.api.util.command.CommandSource;
 
-import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
 
 import iReport.util.Constance;
+import iReport.util.Data;
 import iReport.util.TranslatableWrapper;
 import iReport.util.Utils;
 
@@ -60,39 +63,26 @@ public final class Reports implements CommandCallable {
             return Lists.newArrayList();
         }
         String[] args = arguments.split(" ");
-        Set<UUID> set = init().playermapo.keySet();
-        List<String> list2 = new ArrayList<String>();
-        for (UUID uuid : set) {
-            list2.add(uuid.toString());
-        }
-        List<String> list = new ArrayList<String>();
-        if (args.length < 2 && !arguments.endsWith(" ")) {
+        if (args.length < 2) {
+            List<String> l = Lists.newArrayList();
             if ("uuid".startsWith(args[0].toLowerCase())) {
-                list.add("uuid");
+                l.add("uuid");
             }
             if ("usernameo".startsWith(args[0].toLowerCase())) {
-                list.add("usernameo");
+                l.add("usernameo");
             }
             if ("gui".startsWith(args[0].toLowerCase())) {
-                list.add("gui");
+                l.add("gui");
             }
-            return list;
+            return l;
         }
-        if (args[0].toLowerCase().equals("uuid")) {
-            for (String string : list2) {
-                if (string.toLowerCase().startsWith(args.length > 1 ? args[1] : "")) {
-                    list.add(string);
-                }
-            }
+        if (args[0].equalsIgnoreCase("uuid")) {
+            return Data.init().playermapo.keySet().parallelStream().map(UUID::toString).filter(s -> s.startsWith(args.length > 1 ? args[1] : "")).collect(Collectors.toList());
         }
-        if (args[0].toLowerCase().equals("usernameo")) {
-            for (String string : init().playermapo.values()) {
-                if (string.toLowerCase().startsWith(args.length > 1 ? args[1] : "")) {
-                    list.add(string);
-                }
-            }
+        if (args[0].equalsIgnoreCase("usernameo")) {
+            return Data.init().playermapo.values().parallelStream().filter(s -> s.startsWith(args.length > 1 ? args[1] : "")).collect(Collectors.toList());
         }
-        return list;
+        return Lists.newArrayList();
     }
 
     @Override
@@ -106,13 +96,13 @@ public final class Reports implements CommandCallable {
         Map<UUID, String> map3 = init().playermapr;
         if (source instanceof Human && args.length == 1 && args[0].equalsIgnoreCase("gui")) {
             CustomInventory inv = calculate(init().playermapo.size());
-            for (UUID uuid : map2.keySet()) {
+            map2.keySet().parallelStream().forEach(uuid -> {
                 ItemStack stack = Constance.game.getRegistry().createItemBuilder().itemType(ItemTypes.SKULL).quantity(1).build();
                 stack.offer(Keys.SKULL_TYPE, SkullTypes.PLAYER);
                 stack.offer(Keys.OWNED_BY_PROFILE, Constance.game.getRegistry().createGameProfile(uuid, map1.get(uuid)));
                 stack.offer(stack.getValue(Keys.ITEM_LORE).get().addAll(setLore(uuid)));
                 inv.offer(stack);
-            }
+            });
             ((Human) source).openInventory(inv);
             return CommandResult.success();
         }
@@ -135,11 +125,10 @@ public final class Reports implements CommandCallable {
                 source.sendMessage(Utils.get("dreport.error"));
                 return CommandResult.success();
             }
-            for (Entry<UUID, String> entry : map3.entrySet()) {
-                UUID u = entry.getKey();
+            map3.entrySet().stream().map(Entry::getKey).forEach(u -> {
                 source.sendMessage(setLore(u));
                 source.sendMessage(Texts.of(" "));
-            }
+            });
             return CommandResult.success();
         }
     }

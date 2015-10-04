@@ -113,8 +113,7 @@ public enum Utils {
             Constance.LOGGER.error("\tat " + Element.toString());
         }
         try {
-            Throwable[] suprests = invokeIfAvalebule(Throwable.class, "getSuppressed", t);
-            for (Throwable tb : suprests) {
+            for (Throwable tb : t.getSuppressed()) {
                 Constance.LOGGER.error("\tSuppressed: " + tb.toString());
                 for (StackTraceElement Element : tb.getStackTrace()) {
                     Constance.LOGGER.error("\t \tat " + Element.toString());
@@ -148,27 +147,6 @@ public enum Utils {
             cfgfile.save(config);
         } catch (IOException e) {
             printStackTrace(e);
-        }
-    }
-
-    @SuppressWarnings("unchecked")
-    public static <T> T invokeIfAvalebule(Class<?> invoke, String method, Object instence, Object... argsandclass) {
-        int count = 0;
-        Object[] args = new Object[argsandclass.length / 2];
-        Class<?>[] classes = new Class[argsandclass.length / 2];
-        for (int i = 1; i < argsandclass.length; i = i + 2) {
-            classes[count] = (Class<?>) argsandclass[i];
-            count++;
-        }
-        count = 0;
-        for (int i = 0; i < argsandclass.length; i = i + 2) {
-            args[count] = argsandclass[i];
-            count++;
-        }
-        try {
-            return (T) invoke.getMethod(method, classes).invoke(instence, args);
-        } catch (Exception e) {
-            return null;
         }
     }
 

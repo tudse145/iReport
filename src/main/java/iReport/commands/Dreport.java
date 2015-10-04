@@ -1,17 +1,13 @@
 package iReport.commands;
 
-import iReport.util.Constance;
-import iReport.util.Data;
-import iReport.util.Utils;
-import ninja.leaping.configurate.ConfigurationNode;
-import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.Texts;
@@ -20,8 +16,13 @@ import org.spongepowered.api.util.command.CommandException;
 import org.spongepowered.api.util.command.CommandResult;
 import org.spongepowered.api.util.command.CommandSource;
 
-import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
+
+import iReport.util.Constance;
+import iReport.util.Data;
+import iReport.util.Utils;
+import ninja.leaping.configurate.ConfigurationNode;
+import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
 
 public final class Dreport implements CommandCallable {
 
@@ -32,18 +33,7 @@ public final class Dreport implements CommandCallable {
         if (!testPermission(source)) {
             return Lists.newArrayList();
         }
-        Set<UUID> set = Data.init().playermapo.keySet();
-        List<String> list2 = new ArrayList<String>();
-        for (UUID uuid : set) {
-            list2.add(uuid.toString());
-        }
-        List<String> list = new ArrayList<String>();
-        for (String string : list2) {
-            if (string.startsWith(arguments.split(" ")[0])) {
-                list.add(string);
-            }
-        }
-        return list;
+        return Data.init().playermapo.keySet().parallelStream().map(UUID::toString).filter(s -> s.startsWith(arguments.split(" ")[0])).collect(Collectors.toList());
     }
 
     @Override
