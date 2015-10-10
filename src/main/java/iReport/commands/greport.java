@@ -3,7 +3,6 @@ package iReport.commands;
 import java.util.List;
 import java.util.Optional;
 
-import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.Texts;
 import org.spongepowered.api.util.command.CommandCallable;

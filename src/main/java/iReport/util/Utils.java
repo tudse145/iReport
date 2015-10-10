@@ -61,13 +61,13 @@ public enum Utils {
     }
 
     public static void reportplayer(String target, String reporttype, CommandSource sender, boolean forcw) throws CommandException {
-        boolean isreported = false;
         UUID p = null;
         try {
             p = Constance.server.getPlayer(target).get().getUniqueId();
         } catch (IllegalStateException e) {
             throw new CommandException(get("not.onlipse", target));
         }
+        boolean isreported = isReported(p);
         Data data = Data.init();
         data.playermapo.put(p, target);
         Object o = data.playermapor.get(target);
@@ -77,8 +77,7 @@ public enum Utils {
             sender.sendMessage(Texts.of("player " + target + " is alredy reported with another UUID please look at the reports or add true"));
         LOCK.lock();
         try {
-            if (data.playermapr.containsKey(p)) {
-                isreported = true;
+            if (isreported) {
                 String s = data.playermapr.get(p);
                 data.playermapr.put(p, s + reporttype + "reporter: " + sender.getName() + " ;");
             } else {
@@ -124,7 +123,7 @@ public enum Utils {
     }
 
     public static List<String> getPlayerNames() {
-        List<String> playerNames = new ArrayList<String>();
+        List<String> playerNames = new ArrayList<>();
         for (Player player : Constance.server.getOnlinePlayers()) {
             playerNames.add(player.getName());
         }
@@ -138,7 +137,7 @@ public enum Utils {
         try {
             config = cfgfile.load();
             ConfigurationNode node = config.getNode("reports");
-            Map<String, String> configDefaults = new HashMap<String, String>();
+            Map<String, String> configDefaults = new HashMap<>();
             ConfigurationNode node2 = node.getNode(uuid.toString());
             configDefaults.put("reportedename", Data.init().playermapo.get(uuid));
             configDefaults.put("currenttname", Data.init().playermap.get(uuid));

@@ -7,10 +7,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
-import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.type.SkullTypes;
@@ -36,7 +34,7 @@ import iReport.util.Utils;
 public final class Reports implements CommandCallable {
 
     private List<Text> setLore(UUID uuid) {
-        List<Text> list = new ArrayList<Text>();
+        List<Text> list = new ArrayList<>();
         Map<UUID, String> map1 = init().playermap;
         Map<UUID, String> map2 = init().playermapo;
         Map<UUID, String> map3 = init().playermapr;

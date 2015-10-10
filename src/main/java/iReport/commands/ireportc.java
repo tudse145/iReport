@@ -1,5 +1,7 @@
 package iReport.commands;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -11,15 +13,15 @@ import org.spongepowered.api.util.command.CommandException;
 import org.spongepowered.api.util.command.CommandResult;
 import org.spongepowered.api.util.command.CommandSource;
 
-import com.google.common.collect.Lists;
-
 import iReport.util.Utils;
 
 public final class ireportc implements CommandCallable {
 
+    private static final List<String> LIST = Collections.unmodifiableList(new ArrayList<>());
+    
     @Override
     public List<String> getSuggestions(CommandSource source, String arguments) throws CommandException {
-        return Lists.newArrayList();
+        return LIST;
     }
 
     @Override

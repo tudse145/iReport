@@ -7,7 +7,6 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.UUID;
 
 import org.spongepowered.api.Game;
@@ -126,7 +125,7 @@ public final class IReport {
             HoconConfigurationLoader cfgfile = HoconConfigurationLoader.builder().setFile(file).build();
             ConfigurationNode config = cfgfile.load();
             if (furstrun) {
-                Map<String, String> map = new HashMap<String, String>();
+                Map<String, String> map = new HashMap<>();
                 map.put("local", Locale.getDefault().toString());
                 config.setValue(map);
                 cfgfile.save(config);

@@ -2,10 +2,8 @@ package iReport.commands;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -26,7 +24,7 @@ import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
 
 public final class Dreport implements CommandCallable {
 
-    private static File file = new File(Constance.configfolder, "reports.cfg");
+    private static final File FILE = new File(Constance.configfolder, "reports.cfg");
 
     @Override
     public List<String> getSuggestions(CommandSource source, String arguments) throws CommandException {
@@ -45,9 +43,7 @@ public final class Dreport implements CommandCallable {
         Data data = Data.init();
         if (args[0].equals("*")) {
             if (source.hasPermission("ireport.dreport.all")) {
-                for (UUID uuid : data.playermapo.keySet()) {
-                    delete(uuid.toString());
-                }
+                data.playermapo.keySet().stream().map(UUID::toString).forEach(this::delete);
                 Constance.getMYSQL().queryUpdate("DELETE FROM reports");
                 data.playermapo.clear();
                 data.playermapor.clear();
@@ -95,7 +91,7 @@ public final class Dreport implements CommandCallable {
     }
 
     public void delete(String uuid) {
-        HoconConfigurationLoader cfgfile = HoconConfigurationLoader.builder().setFile(file).build();
+        HoconConfigurationLoader cfgfile = HoconConfigurationLoader.builder().setFile(FILE).build();
         try {
             ConfigurationNode config = cfgfile.load();
             config.getNode("reports").removeChild(uuid);

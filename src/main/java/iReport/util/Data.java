@@ -14,10 +14,10 @@ public final class Data implements Serializable {
     public static Data instens;
 
     public Data() {
-        playermap = new ConcurrentHashMap<UUID, String>();
-        playermapo = new ConcurrentHashMap<UUID, String>();
-        playermapr = new ConcurrentHashMap<UUID, String>();
-        playermapor = new ConcurrentHashMap<String, UUID>();
+        playermap = new ConcurrentHashMap<>();
+        playermapo = new ConcurrentHashMap<>();
+        playermapr = new ConcurrentHashMap<>();
+        playermapor = new ConcurrentHashMap<>();
     }
 
     public static Data init() {
