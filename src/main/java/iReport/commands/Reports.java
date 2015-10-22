@@ -97,7 +97,7 @@ public final class Reports implements CommandCallable {
             map2.keySet().parallelStream().forEach(uuid -> {
                 ItemStack stack = Constance.game.getRegistry().createItemBuilder().itemType(ItemTypes.SKULL).quantity(1).build();
                 stack.offer(Keys.SKULL_TYPE, SkullTypes.PLAYER);
-                stack.offer(Keys.OWNED_BY_PROFILE, Constance.game.getRegistry().createGameProfile(uuid, map1.get(uuid)));
+                stack.offer(Keys.REPRESENTED_PLAYER, Constance.game.getRegistry().createGameProfile(uuid, map1.get(uuid)));
                 stack.offer(stack.getValue(Keys.ITEM_LORE).get().addAll(setLore(uuid)));
                 inv.offer(stack);
             });
@@ -120,7 +120,7 @@ public final class Reports implements CommandCallable {
             }
         } else {
             if (map3.isEmpty()) {
-                source.sendMessage(Utils.get("dreport.error"));
+                source.sendMessage(Utils.get("reports.error"));
                 return CommandResult.success();
             }
             map3.entrySet().stream().map(Entry::getKey).forEach(u -> {

@@ -72,9 +72,7 @@ public final class IReport {
 
     @Listener
     public void onDisable(GameStoppingServerEvent event) {
-        for (UUID uuid : Data.init().playermapo.keySet()) {
-            Utils.savePlayer(uuid);
-        }
+        Data.init().playermapo.keySet().stream().forEach(Utils::savePlayer);
     }
 
     private void loadFile() throws IOException {

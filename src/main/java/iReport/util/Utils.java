@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.UUID;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -56,7 +57,7 @@ public enum Utils {
             Vector3d loc = player.getLocation().getPosition();
             return String.valueOf("world " + player.getWorld().getName() + " x " + (int) loc.getX() + " y " + (int) loc.getY() + " z " + (int) loc.getZ());
         } catch (IllegalStateException e) {
-            throw new CommandException(get("not.onlipse", playername));
+            throw new CommandException(get("not.online", playername));
         }
     }
 
@@ -64,8 +65,8 @@ public enum Utils {
         UUID p = null;
         try {
             p = Constance.server.getPlayer(target).get().getUniqueId();
-        } catch (IllegalStateException e) {
-            throw new CommandException(get("not.onlipse", target));
+        } catch (NoSuchElementException e) {
+            throw new CommandException(get("not.online", target));
         }
         boolean isreported = isReported(p);
         Data data = Data.init();
