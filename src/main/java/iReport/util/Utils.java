@@ -112,14 +112,11 @@ public enum Utils {
         for (StackTraceElement Element : t.getStackTrace()) {
             Constance.LOGGER.error("\tat " + Element.toString());
         }
-        try {
-            for (Throwable tb : t.getSuppressed()) {
-                Constance.LOGGER.error("\tSuppressed: " + tb.toString());
-                for (StackTraceElement Element : tb.getStackTrace()) {
-                    Constance.LOGGER.error("\t \tat " + Element.toString());
-                }
+        for (Throwable tb : t.getSuppressed()) {
+            Constance.LOGGER.error("\tSuppressed: " + tb.toString());
+            for (StackTraceElement Element : tb.getStackTrace()) {
+                Constance.LOGGER.error("\t \tat " + Element.toString());
             }
-        } catch (Exception e) {
         }
     }
 

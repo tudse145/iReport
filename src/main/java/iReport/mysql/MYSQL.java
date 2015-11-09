@@ -83,7 +83,7 @@ public final class MYSQL {
         queryUpdate(query, true);
     }
 
-    public ResultSet queryUpdate(String query, boolean closeRespltset) {
+    public ResultSet queryUpdate(String query, boolean closeResultset) {
         if (!isenable) {
             return null;
         }
@@ -97,7 +97,7 @@ public final class MYSQL {
             Utils.printStackTrace(e);
             Constance.LOGGER.error("Failed to send update '" + query + "'.");
         } finally {
-            if (closeRespltset) {
+            if (closeResultset) {
                 closeRessources(rs, st);
             } else {
                 this.closeRessources(null, st);

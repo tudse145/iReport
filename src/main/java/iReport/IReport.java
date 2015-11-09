@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
+import javax.inject.Inject;
 
 import org.spongepowered.api.Game;
 import org.spongepowered.api.event.Listener;
@@ -15,8 +16,7 @@ import org.spongepowered.api.event.game.state.GamePreInitializationEvent;
 import org.spongepowered.api.event.game.state.GameStoppingServerEvent;
 import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.service.config.ConfigDir;
-
-import com.google.inject.Inject;
+import org.spongepowered.api.service.user.UserStorage;
 
 import iReport.commands.Dreport;
 import iReport.commands.HReport;
@@ -27,6 +27,7 @@ import iReport.commands.sreport;
 import iReport.util.Constance;
 import iReport.util.Data;
 import iReport.util.Utils;
+
 import ninja.leaping.configurate.ConfigurationNode;
 import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
 
@@ -77,6 +78,10 @@ public final class IReport {
 
     private void loadFile() throws IOException {
         File file = new File(Constance.configfolder, "reports.cfg");
+        if (!file.exists()) {
+            file.getParentFile().mkdirs();
+            file.createNewFile();
+        }
         HoconConfigurationLoader cfgfile = HoconConfigurationLoader.builder().setFile(file).build();
         ConfigurationNode config = cfgfile.load();
         Data data = Data.init();

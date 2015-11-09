@@ -16,6 +16,7 @@ import org.spongepowered.api.entity.living.Human;
 import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.Inventories;
 import org.spongepowered.api.item.inventory.ItemStack;
+import org.spongepowered.api.item.inventory.ItemStackBuilder;
 import org.spongepowered.api.item.inventory.custom.CustomInventory;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.Texts;
@@ -95,7 +96,7 @@ public final class Reports implements CommandCallable {
         if (source instanceof Human && args.length == 1 && args[0].equalsIgnoreCase("gui")) {
             CustomInventory inv = calculate(init().playermapo.size());
             map2.keySet().parallelStream().forEach(uuid -> {
-                ItemStack stack = Constance.game.getRegistry().createItemBuilder().itemType(ItemTypes.SKULL).quantity(1).build();
+                ItemStack stack = Constance.game.getRegistry().createBuilder(ItemStackBuilder.class).itemType(ItemTypes.SKULL).quantity(1).build();
                 stack.offer(Keys.SKULL_TYPE, SkullTypes.PLAYER);
                 stack.offer(Keys.REPRESENTED_PLAYER, Constance.game.getRegistry().createGameProfile(uuid, map1.get(uuid)));
                 stack.offer(stack.getValue(Keys.ITEM_LORE).get().addAll(setLore(uuid)));
