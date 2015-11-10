@@ -1,6 +1,5 @@
 package iReport.commands;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
@@ -23,8 +22,6 @@ import ninja.leaping.configurate.ConfigurationNode;
 import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
 
 public final class Dreport implements CommandCallable {
-
-    private static final File FILE = new File(Constance.configfolder, "reports.cfg");
 
     @Override
     public List<String> getSuggestions(CommandSource source, String arguments) throws CommandException {
@@ -91,7 +88,7 @@ public final class Dreport implements CommandCallable {
     }
 
     public void delete(String uuid) {
-        HoconConfigurationLoader cfgfile = HoconConfigurationLoader.builder().setFile(FILE).build();
+        HoconConfigurationLoader cfgfile = HoconConfigurationLoader.builder().setPath(Constance.configpath).build();
         try {
             ConfigurationNode config = cfgfile.load();
             config.getNode("reports").removeChild(uuid);

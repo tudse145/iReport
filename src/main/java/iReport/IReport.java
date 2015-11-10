@@ -1,7 +1,8 @@
 package iReport;
 
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -34,10 +35,11 @@ import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
 @Plugin(id = "iReport", name = "iReport", version = "2.0.1-SNAPSHOT")
 public final class IReport {
     @Inject
-    public IReport(Game game, @ConfigDir(sharedRoot = false) File configfolder) {
+    public IReport(Game game, @ConfigDir(sharedRoot = false) Path configfolder) {
         Constance.game = game;
         Constance.server = game.getServer();
         Constance.configfolder = configfolder;
+        Constance.configpath = configfolder.resolve("reports.cfg");
     }
 
     @Listener
@@ -77,12 +79,7 @@ public final class IReport {
     }
 
     private void loadFile() throws IOException {
-        File file = new File(Constance.configfolder, "reports.cfg");
-        if (!file.exists()) {
-            file.getParentFile().mkdirs();
-            file.createNewFile();
-        }
-        HoconConfigurationLoader cfgfile = HoconConfigurationLoader.builder().setFile(file).build();
+        HoconConfigurationLoader cfgfile = HoconConfigurationLoader.builder().setPath(Constance.configpath).build();
         ConfigurationNode config = cfgfile.load();
         Data data = Data.init();
         ConfigurationNode nodde = config.getNode("reports");
@@ -115,17 +112,14 @@ public final class IReport {
     }
 
     private void loadCfg() {
-        if (!Constance.configfolder.exists()) {
-            Constance.configfolder.mkdirs();
-        }
-        File file = new File(Constance.configfolder, "config.cfg");
         try {
             boolean furstrun = false;
-            if (!file.exists()) {
-                file.createNewFile();
+            if (!Files.exists(Constance.configpath)) {
+                Files.createDirectory(Constance.configfolder);
+                Files.createFile(Constance.configpath);
                 furstrun = true;
             }
-            HoconConfigurationLoader cfgfile = HoconConfigurationLoader.builder().setFile(file).build();
+            HoconConfigurationLoader cfgfile = HoconConfigurationLoader.builder().setPath(Constance.configpath).build();
             ConfigurationNode config = cfgfile.load();
             if (furstrun) {
                 Map<String, String> map = new HashMap<>();

@@ -2,8 +2,8 @@ package iReport.util;
 
 import static iReport.util.Data.init;
 
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -129,8 +129,8 @@ public enum Utils {
     }
 
     public static void savePlayer(UUID uuid) {
-        File file = new File(Constance.configfolder, "reports.cfg");
-        HoconConfigurationLoader cfgfile = HoconConfigurationLoader.builder().setFile(file).build();
+        Path file = Constance.configfolder.resolve("reports.cfg");
+        HoconConfigurationLoader cfgfile = HoconConfigurationLoader.builder().setPath(file).build();
         ConfigurationNode config;
         try {
             config = cfgfile.load();

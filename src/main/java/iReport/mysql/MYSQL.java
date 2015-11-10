@@ -3,7 +3,8 @@ package iReport.mysql;
 import iReport.util.Constance;
 import iReport.util.Utils;
 
-import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -32,15 +33,15 @@ public final class MYSQL {
     private DataSource ds;
 
     public MYSQL() throws Exception {
-        File file = new File(Constance.configfolder, "database.cfg");
+        Path file = Constance.configfolder.resolve("database.cfg");
 
         boolean furstrun = false;
         String db = "database.";
-        if (!file.exists()) {
-            file.createNewFile();
+        if (!Files.exists(file)) {
+            Files.createFile(file);
             furstrun = true;
         }
-        HoconConfigurationLoader cfgfile = HoconConfigurationLoader.builder().setFile(file).build();
+        HoconConfigurationLoader cfgfile = HoconConfigurationLoader.builder().setPath(file).build();
         ConfigurationNode config = cfgfile.load();
         ConfigurationNode node = config.getNode(db);
         if (furstrun) {

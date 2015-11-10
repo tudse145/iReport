@@ -1,6 +1,6 @@
 package iReport.util;
 
-import java.io.File;
+import java.nio.file.Path;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.function.Function;
@@ -20,9 +20,10 @@ public final class Constance {
     public static Game game;
     public static Server server;
     public static PluginContainer controler;
-    public static File configfolder;
+    public static Path configfolder;
     public static Locale locale;
     public static final Logger LOGGER = LoggerFactory.getLogger("iReport");
+    public static Path configpath;
 
     private Constance() {
     }
