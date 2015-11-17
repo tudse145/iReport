@@ -14,12 +14,11 @@ import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.type.SkullTypes;
 import org.spongepowered.api.entity.living.Human;
 import org.spongepowered.api.item.ItemTypes;
-import org.spongepowered.api.item.inventory.Inventories;
 import org.spongepowered.api.item.inventory.ItemStack;
-import org.spongepowered.api.item.inventory.ItemStackBuilder;
 import org.spongepowered.api.item.inventory.custom.CustomInventory;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.Texts;
+import org.spongepowered.api.text.translation.FixedTranslation;
 import org.spongepowered.api.util.command.CommandCallable;
 import org.spongepowered.api.util.command.CommandException;
 import org.spongepowered.api.util.command.CommandResult;
@@ -29,7 +28,6 @@ import com.google.common.collect.Lists;
 
 import iReport.util.Constance;
 import iReport.util.Data;
-import iReport.util.TranslatableWrapper;
 import iReport.util.Utils;
 
 public final class Reports implements CommandCallable {
@@ -49,11 +47,11 @@ public final class Reports implements CommandCallable {
     }
 
     private CustomInventory calculate(int size) {
-        TranslatableWrapper t = new TranslatableWrapper("reports");
+        CustomInventory.Builder builder = Constance.game.getRegistry().createBuilder(CustomInventory.Builder.class);
         if (size % 9 == 0) {
-            return Inventories.customInventoryBuilder().name(t).size(size).build();
+            return builder.name(new FixedTranslation("reports")).size(size).build();
         }
-        return Inventories.customInventoryBuilder().name(t).size(size + Math.abs(size % 9 - 9)).build();
+        return builder.name(new FixedTranslation("reports")).size(size + Math.abs(size % 9 - 9)).build();
     }
 
     @Override
@@ -96,7 +94,7 @@ public final class Reports implements CommandCallable {
         if (source instanceof Human && args.length == 1 && args[0].equalsIgnoreCase("gui")) {
             CustomInventory inv = calculate(init().playermapo.size());
             map2.keySet().parallelStream().forEach(uuid -> {
-                ItemStack stack = Constance.game.getRegistry().createBuilder(ItemStackBuilder.class).itemType(ItemTypes.SKULL).quantity(1).build();
+                ItemStack stack = Constance.game.getRegistry().createBuilder(ItemStack.Builder.class).itemType(ItemTypes.SKULL).quantity(1).build();
                 stack.offer(Keys.SKULL_TYPE, SkullTypes.PLAYER);
                 stack.offer(Keys.REPRESENTED_PLAYER, Constance.game.getRegistry().createGameProfile(uuid, map1.get(uuid)));
                 stack.offer(stack.getValue(Keys.ITEM_LORE).get().addAll(setLore(uuid)));
