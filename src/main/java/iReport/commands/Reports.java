@@ -107,11 +107,11 @@ public final class Reports implements CommandCallable {
             try {
                 if (args[0].equalsIgnoreCase("uuid")) {
                     UUID u = UUID.fromString(args[1]);
-                    source.sendMessage(setLore(u));
+                    source.sendMessages(setLore(u));
                 }
                 if (args[0].equalsIgnoreCase("usernameo")) {
                     UUID u = init().playermapor.get(args[1]);
-                    source.sendMessage(setLore(u));
+                    source.sendMessages(setLore(u));
                 }
                 return CommandResult.success();
             } catch (Exception e) {
@@ -123,7 +123,7 @@ public final class Reports implements CommandCallable {
                 return CommandResult.success();
             }
             map3.entrySet().stream().map(Entry::getKey).forEach(u -> {
-                source.sendMessage(setLore(u));
+                source.sendMessages(setLore(u));
                 source.sendMessage(Texts.of(" "));
             });
             return CommandResult.success();
