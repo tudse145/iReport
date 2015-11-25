@@ -97,7 +97,7 @@ public final class Reports implements CommandCallable {
                 ItemStack stack = Constance.game.getRegistry().createBuilder(ItemStack.Builder.class).itemType(ItemTypes.SKULL).quantity(1).build();
                 stack.offer(Keys.SKULL_TYPE, SkullTypes.PLAYER);
                 stack.offer(Keys.REPRESENTED_PLAYER, Constance.game.getRegistry().createGameProfile(uuid, map1.get(uuid)));
-                stack.offer(stack.getValue(Keys.ITEM_LORE).get().addAll(setLore(uuid)));
+                stack.offer(Keys.ITEM_LORE, setLore(uuid));
                 inv.offer(stack);
             });
             ((Human) source).openInventory(inv);
