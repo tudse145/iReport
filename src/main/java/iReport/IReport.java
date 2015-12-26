@@ -9,15 +9,14 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
+
 import javax.inject.Inject;
 
-import org.spongepowered.api.Game;
+import org.spongepowered.api.config.ConfigDir;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.game.state.GamePreInitializationEvent;
 import org.spongepowered.api.event.game.state.GameStoppingServerEvent;
 import org.spongepowered.api.plugin.Plugin;
-import org.spongepowered.api.service.config.ConfigDir;
-import org.spongepowered.api.service.user.UserStorage;
 
 import iReport.commands.Dreport;
 import iReport.commands.HReport;
@@ -27,17 +26,15 @@ import iReport.commands.ireportc;
 import iReport.commands.sreport;
 import iReport.util.Constance;
 import iReport.util.Data;
+import iReport.util.Tuple;
 import iReport.util.Utils;
-
 import ninja.leaping.configurate.ConfigurationNode;
 import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
 
 @Plugin(id = "iReport", name = "iReport", version = "2.0.1-SNAPSHOT")
 public final class IReport {
     @Inject
-    public IReport(Game game, @ConfigDir(sharedRoot = false) Path configfolder) {
-        Constance.game = game;
-        Constance.server = game.getServer();
+    public IReport(@ConfigDir(sharedRoot = false) Path configfolder) {
         Constance.configfolder = configfolder;
         Constance.configpath = configfolder.resolve("reports.cfg");
     }
@@ -45,15 +42,14 @@ public final class IReport {
     @Listener
     public void onEnable(GamePreInitializationEvent event) {
         loadCfg();
-        Constance.game.getCommandDispatcher().register(this, new Dreport(), "dreport");
-        Constance.game.getCommandDispatcher().register(this, new greport(), "greport");
-        Constance.game.getCommandDispatcher().register(this, new HReport(), "hreport");
-        Constance.game.getCommandDispatcher().register(this, new ireportc(), "ireport");
-        Constance.game.getCommandDispatcher().register(this, new Reports(), "reports");
-        Constance.game.getCommandDispatcher().register(this, new sreport(), "sreport");
+        Constance.game.getCommandManager().register(this, new Dreport(), "dreport");
+        Constance.game.getCommandManager().register(this, new greport(), "greport");
+        Constance.game.getCommandManager().register(this, new HReport(), "hreport");
+        Constance.game.getCommandManager().register(this, new ireportc(), "ireport");
+        Constance.game.getCommandManager().register(this, new Reports(), "reports");
+        Constance.game.getCommandManager().register(this, new sreport(), "sreport");
         Constance.game.getEventManager().registerListeners(this, Utils.INSTENCE);
-        Constance.getMYSQL();
-        if (Constance.sql.isenable) {
+        if (Constance.getMYSQL().isenabled) {
             try {
                 loadSql();
             } catch (SQLException e) {
@@ -96,7 +92,11 @@ public final class IReport {
     }
 
     private void loadSql() throws SQLException {
-        ResultSet resultSet = Constance.sql.queryUpdate("select * from reports", false);
+        Tuple<ResultSet,String> tuple = Constance.getMYSQL().queryUpdate("select * from reports", false);
+        if (tuple.getFirst() == null) {
+            throw new SQLException(tuple.getSecond().split("\n")[1]);
+        }
+        ResultSet resultSet = tuple.getFirst();
         Data data = Data.init();
         while (resultSet.next()) {
             UUID uuid = UUID.fromString(resultSet.getString("uuid"));
@@ -114,20 +114,22 @@ public final class IReport {
     private void loadCfg() {
         try {
             boolean furstrun = false;
-            if (!Files.exists(Constance.configpath)) {
+            if (Files.notExists(Constance.configfolder)) {
                 Files.createDirectory(Constance.configfolder);
-                Files.createFile(Constance.configpath);
+            }
+            if (Files.notExists(Constance.configfolder.resolve("config.cfg"))) {
+                Files.createFile(Constance.configfolder.resolve("config.cfg"));
                 furstrun = true;
             }
-            HoconConfigurationLoader cfgfile = HoconConfigurationLoader.builder().setPath(Constance.configpath).build();
+            HoconConfigurationLoader cfgfile = HoconConfigurationLoader.builder().setPath(Constance.configfolder.resolve("config.cfg")).build();
             ConfigurationNode config = cfgfile.load();
             if (furstrun) {
                 Map<String, String> map = new HashMap<>();
-                map.put("local", Locale.getDefault().toString());
+                map.put("Locale", Locale.getDefault().toString());
                 config.setValue(map);
                 cfgfile.save(config);
             }
-            Constance.locale = new Locale(config.getNode("local").getString());
+            Constance.locale = new Locale(config.getNode("Locale").getString());
         } catch (IOException e) {
             Utils.printStackTrace(e);
         }

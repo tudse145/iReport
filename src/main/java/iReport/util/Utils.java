@@ -13,16 +13,17 @@ import java.util.UUID;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-import org.spongepowered.api.GameProfile;
+import org.spongepowered.api.command.CommandException;
+import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
+import org.spongepowered.api.event.filter.cause.First;
 import org.spongepowered.api.event.network.ClientConnectionEvent;
+import org.spongepowered.api.profile.GameProfile;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.Texts;
 import org.spongepowered.api.text.translation.ResourceBundleTranslation;
 import org.spongepowered.api.util.TextMessageException;
-import org.spongepowered.api.util.command.CommandException;
-import org.spongepowered.api.util.command.CommandSource;
 
 import com.flowpowered.math.vector.Vector3d;
 
@@ -34,9 +35,8 @@ public enum Utils {
 
     private static final Lock LOCK = new ReentrantLock();
 
-    @Listener(ignoreCancelled = false)
-    public void login(ClientConnectionEvent.Auth event) {
-        GameProfile profile = event.getProfile();
+    @Listener
+    public void login(ClientConnectionEvent.Auth event, @First GameProfile profile) {
         if (!Data.init().playermap.containsKey(profile.getUniqueId())) {
             Data.init().playermap.put(profile.getUniqueId(), profile.getName());
         } else if (Data.init().playermap.get(profile.getUniqueId()) != profile.getName()) {
@@ -55,7 +55,7 @@ public enum Utils {
         try {
             Player player = Constance.server.getPlayer(playername).get();
             Vector3d loc = player.getLocation().getPosition();
-            return String.valueOf("world " + player.getWorld().getName() + " x " + (int) loc.getX() + " y " + (int) loc.getY() + " z " + (int) loc.getZ());
+            return String.valueOf("world " + player.getWorld().getUniqueId() + " x " + (int) loc.getX() + " y " + (int) loc.getY() + " z " + (int) loc.getZ());
         } catch (IllegalStateException e) {
             throw new CommandException(get("not.online", playername));
         }
@@ -69,6 +69,7 @@ public enum Utils {
             throw new CommandException(get("not.online", target));
         }
         boolean isreported = isReported(p);
+        updateMYSQL(Constance.server.getPlayer(target).get(), isreported);
         Data data = Data.init();
         data.playermapo.put(p, target);
         Object o = data.playermapor.get(target);
@@ -88,18 +89,23 @@ public enum Utils {
         } finally {
             LOCK.unlock();
         }
-        updateMYSQL(Constance.server.getPlayer(target).get(), isreported);
     }
 
-    public static void updateMYSQL(Player player, boolean isReported) {
+    public static void updateMYSQL(Player player, boolean isReported) throws CommandException {
         UUID uuid = player.getUniqueId();
         Map<UUID, String> map1 = init().playermap;
         Map<UUID, String> map2 = init().playermapo;
         Map<UUID, String> map3 = init().playermapr;
         if (!isReported) {
-            Constance.getMYSQL().queryUpdate("INSERT INTO reports (`uuid`, `currentname`, `Report`, `username`) values ('" + uuid + "','" + map1.get(uuid) + "','" + map3.get(uuid) + "','" + map2.get(uuid) + "')");
+            String error = Constance.getMYSQL().queryUpdate("INSERT INTO reports (`uuid`, `currentname`, `Report`, `username`) values ('" + uuid + "','" + map1.get(uuid) + "','" + map3.get(uuid) + "','" + map2.get(uuid) + "')");
+            if (error != null) {
+                throw new CommandException(Texts.of(error));
+            }
         } else {
-            Constance.getMYSQL().queryUpdate("UPDATE Reports SET Report = '" + map3.get(uuid) + "' WHERE uuid = '" + uuid + "'");
+            String error = Constance.getMYSQL().queryUpdate("UPDATE Reports SET Report = '" + map3.get(uuid) + "' WHERE uuid = '" + uuid + "'");
+            if (error != null) {
+                throw new CommandException(Texts.of(error));
+            }
         }
     }
 

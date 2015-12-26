@@ -9,7 +9,12 @@ import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
+import org.spongepowered.api.command.CommandCallable;
+import org.spongepowered.api.command.CommandException;
+import org.spongepowered.api.command.CommandResult;
+import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.type.SkullTypes;
 import org.spongepowered.api.entity.living.Human;
@@ -19,10 +24,6 @@ import org.spongepowered.api.item.inventory.custom.CustomInventory;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.Texts;
 import org.spongepowered.api.text.translation.FixedTranslation;
-import org.spongepowered.api.util.command.CommandCallable;
-import org.spongepowered.api.util.command.CommandException;
-import org.spongepowered.api.util.command.CommandResult;
-import org.spongepowered.api.util.command.CommandSource;
 
 import com.google.common.collect.Lists;
 
@@ -40,10 +41,21 @@ public final class Reports implements CommandCallable {
         list.add(Texts.of("UUID: " + uuid));
         list.add(Utils.get("reports.lore1", map1.get(uuid)));
         for (String string : map3.get(uuid).split(";")) {
-            list.add(Texts.of(string));
+            list.add(Texts.of(a(string)));
         }
         list.add(Utils.get("reports.lore1", map2.get(uuid)));
         return list;
+    }
+    
+    private static String a(String report) {
+        if (!report.startsWith("gReport: ")) {
+            return report;
+        }
+        String tmp = report.substring(9);
+        tmp = tmp.substring(0, tmp.lastIndexOf(" reporter:"));
+        String[] data = tmp.split(" ");
+        data[1] = Constance.server.getWorld(UUID.fromString(data[1])).get().getName();
+        return "gReport: " + Stream.of(data).collect(Collectors.joining(" "));
     }
 
     private CustomInventory calculate(int size) {

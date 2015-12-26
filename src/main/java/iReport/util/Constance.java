@@ -9,17 +9,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.Server;
-import org.spongepowered.api.plugin.PluginContainer;
+import org.spongepowered.api.Sponge;
 
 import iReport.mysql.MYSQL;
 
 public final class Constance {
 
     public static final Function<Locale, ResourceBundle> LOOKUP_FUNC = input -> ResourceBundle.getBundle("iReport.lang", input);
-    public static MYSQL sql;
-    public static Game game;
-    public static Server server;
-    public static PluginContainer controler;
+    private static MYSQL sql;
+    public static final Game game = Sponge.getGame();
+    public static final Server server = game.getServer();
     public static Path configfolder;
     public static Locale locale;
     public static final Logger LOGGER = LoggerFactory.getLogger("iReport");

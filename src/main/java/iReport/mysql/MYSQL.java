@@ -1,6 +1,7 @@
 package iReport.mysql;
 
 import iReport.util.Constance;
+import iReport.util.Tuple;
 import iReport.util.Utils;
 
 import java.nio.file.Files;
@@ -23,7 +24,7 @@ import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
 
 public final class MYSQL {
 
-    public final boolean isenable;
+    public final boolean isenabled;
     private final String host;
     private final int port;
     private final String user;
@@ -56,7 +57,7 @@ public final class MYSQL {
             node.setValue(configDefaults);
             cfgfile.save(config);
         }
-        isenable = node.getNode("enable").getBoolean();
+        isenabled = node.getNode("enable").getBoolean();
         this.host = node.getNode("host").getString();
         this.port = node.getNode("port").getInt();
         this.user = node.getNode("user").getString();
@@ -64,60 +65,44 @@ public final class MYSQL {
         this.database = node.getNode("database").getString();
         this.prodocol = node.getNode("prodocol").getString();
         Optional<SqlService> provide = Constance.game.getServiceManager().provide(SqlService.class);
-        if (provide.isPresent() && isenable) {
-            try {
-                ds = provide.get().getDataSource("jdbc:" + this.prodocol + "://" + this.host + ":" + this.port + "/" + this.database);
-            } catch (Exception e) {
-            }
+        if (provide.isPresent() && isenabled) {
+            ds = provide.get().getDataSource("jdbc:" + this.prodocol + "://" + this.host + ":" + this.port + "/" + this.database);
         }
     }
 
-    public Connection oppenConnection() throws Exception {
-        if (ds != null) {
-            return ds.getConnection(this.user, this.password);
-        } else {
-            return DriverManager.getConnection("jdbc:" + this.prodocol + "://" + this.host + ":" + this.port + "/" + this.database, this.user, this.password);
-        }
+    public Connection oppenConnection() throws SQLException {
+        return ds.getConnection(this.user, this.password);
     }
 
-    public void queryUpdate(String query) {
-        queryUpdate(query, true);
-    }
-
-    public ResultSet queryUpdate(String query, boolean closeResultset) {
-        if (!isenable) {
+    public String queryUpdate(String query) {
+        if (!isenabled) {
             return null;
         }
-        PreparedStatement st = null;
-        ResultSet rs = null;
-        try {
-            st = oppenConnection().prepareStatement(query);
-            rs = st.executeQuery();
-            return rs;
-        } catch (Exception e) {
-            Utils.printStackTrace(e);
-            Constance.LOGGER.error("Failed to send update '" + query + "'.");
-        } finally {
-            if (closeResultset) {
-                closeRessources(rs, st);
-            } else {
-                this.closeRessources(null, st);
-            }
-        }
-        return null;
+        return queryUpdate(query, true).getSecond();
     }
 
-    public void closeRessources(ResultSet rs, PreparedStatement st) {
+    public Tuple<ResultSet, String> queryUpdate(String query, boolean closeResultset) {
+        if (!isenabled) {
+            return null;
+        }
+        ResultSet rs = null;
+        try (PreparedStatement st = oppenConnection().prepareStatement(query)){
+            rs = st.executeQuery();
+            return Tuple.of(rs, null);
+        } catch (SQLException e) {
+            //Utils.printStackTrace(e);
+            return Tuple.of(null, "Failed to send update '" + query + "'.\n" + e.getMessage());
+        } finally {
+            if (closeResultset) {
+                closeRessources(rs);
+            }
+        }
+    }
+
+    public void closeRessources(ResultSet rs) {
         if (rs != null) {
             try {
                 rs.close();
-            } catch (SQLException e) {
-                Utils.printStackTrace(e);
-            }
-        }
-        if (st != null) {
-            try {
-                st.close();
             } catch (SQLException e) {
                 Utils.printStackTrace(e);
             }
