@@ -92,7 +92,7 @@ public final class IReport {
     }
 
     private void loadSql() throws SQLException {
-        Tuple<ResultSet,String> tuple = Constance.getMYSQL().queryUpdate("select * from reports", false);
+        Tuple<ResultSet, String> tuple = Constance.getMYSQL().queryUpdate("select * from reports", false);
         if (tuple.getFirst() == null) {
             throw new SQLException(tuple.getSecond().split("\n")[1]);
         }

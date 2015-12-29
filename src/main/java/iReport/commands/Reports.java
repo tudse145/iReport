@@ -46,7 +46,7 @@ public final class Reports implements CommandCallable {
         list.add(Utils.get("reports.lore1", map2.get(uuid)));
         return list;
     }
-    
+
     private static String a(String report) {
         if (!report.startsWith("gReport: ")) {
             return report;

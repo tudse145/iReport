@@ -7,7 +7,6 @@ import iReport.util.Utils;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -86,11 +85,10 @@ public final class MYSQL {
             return null;
         }
         ResultSet rs = null;
-        try (PreparedStatement st = oppenConnection().prepareStatement(query)){
+        try (PreparedStatement st = oppenConnection().prepareStatement(query)) {
             rs = st.executeQuery();
             return Tuple.of(rs, null);
         } catch (SQLException e) {
-            //Utils.printStackTrace(e);
             return Tuple.of(null, "Failed to send update '" + query + "'.\n" + e.getMessage());
         } finally {
             if (closeResultset) {

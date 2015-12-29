@@ -42,16 +42,24 @@ public final class greport implements CommandCallable {
         if (!testPermission(source)) {
             throw new CommandException(Utils.get("permission.missing"));
         }
+        if (args[0].equalsIgnoreCase("tp") && args.length == 2 && source.hasPermission("ireport.greport.tp")) {
+            List<String> list = getLocationFromUuid(UUID.fromString(args[1])).stream().map(l -> 
+                String.format("World %s x %s y %s z %s", l.getExtent().getName(), l.getX(), l.getY(), l.getZ())
+                ).sorted().collect(Collectors.toList());
+            for (int i = 0; i < list.size(); i++) {
+                source.sendMessage(Texts.of(i + 1 + " " + list.get(i)));
+            }
+        }
         if (args[0].equalsIgnoreCase("tp") && source instanceof Player && args.length == 3 && source.hasPermission("ireport.greport.tp")) {
             Player player = (Player) source;
             try {
-                Location<World> loc = getLocationFromUuid(UUID.fromString(args[1]), Integer.parseInt(args[2]));
+                Location<World> loc = getLocationFromUuid(UUID.fromString(args[1])).get(1 + Integer.parseInt(args[2]));
                 player.setLocation(loc);
                 return CommandResult.success();
             } catch (NumberFormatException e) {
                 throw new CommandException(Texts.of("Argument 3 is not a valid number"));
             }
-            
+
         }
         if (args.length > 0 && !args[0].isEmpty()) {
             String player = source.getName();
@@ -65,17 +73,15 @@ public final class greport implements CommandCallable {
         throw new CommandException(Utils.get("not.enough.args"));
     }
 
-    private Location<World> getLocationFromUuid(UUID playerUuid, int id) {
-        id--;
+    private List<Location<World>> getLocationFromUuid(UUID playerUuid) {
         Stream<String> report = Stream.of(Data.init().playermapr.get(playerUuid).split(";"));
-        List<Location<World>> list = report.filter(s -> s.startsWith("gReport: ")).map(s -> {
+        return report.filter(s -> s.startsWith("gReport: ")).sorted().map(s -> {
             String tmp = s.substring(9);
             tmp = tmp.substring(0, tmp.lastIndexOf(" reporter:"));
             String[] data = tmp.split(" ");
-            return new Location<World>(Constance.server.getWorld(UUID.fromString(data[1])).get(), new Vector3d(Double.parseDouble(data[3]), 
+            return new Location<World>(Constance.server.getWorld(UUID.fromString(data[1])).get(), new Vector3d(Double.parseDouble(data[3]),
                     Double.parseDouble(data[5]), Double.parseDouble(data[7])));
         }).collect(Collectors.toList());
-        return list.get(id);
     }
 
     @Override

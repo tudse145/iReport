@@ -18,7 +18,7 @@ import iReport.util.Utils;
 public final class ireportc implements CommandCallable {
 
     private static final List<String> LIST = Collections.unmodifiableList(new ArrayList<>());
-    
+
     @Override
     public List<String> getSuggestions(CommandSource source, String arguments) throws CommandException {
         return LIST;
