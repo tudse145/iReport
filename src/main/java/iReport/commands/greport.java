@@ -47,13 +47,13 @@ public final class greport implements CommandCallable {
                 String.format("World %s x %s y %s z %s", l.getExtent().getName(), l.getX(), l.getY(), l.getZ())
                 ).sorted().collect(Collectors.toList());
             for (int i = 0; i < list.size(); i++) {
-                source.sendMessage(Texts.of(i + 1 + " " + list.get(i)));
+                source.sendMessage(Texts.of((i + 1) + 1 + " " + list.get(i)));
             }
         }
         if (args[0].equalsIgnoreCase("tp") && source instanceof Player && args.length == 3 && source.hasPermission("ireport.greport.tp")) {
             Player player = (Player) source;
             try {
-                Location<World> loc = getLocationFromUuid(UUID.fromString(args[1])).get(1 + Integer.parseInt(args[2]));
+                Location<World> loc = getLocationFromUuid(UUID.fromString(args[1])).get(Integer.parseInt(args[2]) - 1);
                 player.setLocation(loc);
                 return CommandResult.success();
             } catch (NumberFormatException e) {
