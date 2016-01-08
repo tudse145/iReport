@@ -11,7 +11,6 @@ import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.text.Text;
-import org.spongepowered.api.text.Texts;
 
 import com.google.common.collect.Lists;
 
@@ -84,7 +83,7 @@ public final class Dreport implements CommandCallable {
 
     @Override
     public Text getUsage(CommandSource source) {
-        return Texts.of("<UUID>");
+        return Text.of("<UUID>");
     }
 
     public void delete(String uuid) {

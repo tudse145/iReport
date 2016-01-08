@@ -54,6 +54,7 @@ public final class IReport {
                 loadSql();
             } catch (SQLException e) {
                 try {
+                    Constance.LOGGER.error("SQL load failed, trying local file" + e.getMessage());
                     loadFile();
                 } catch (IOException e1) {
                     e.addSuppressed(e1);

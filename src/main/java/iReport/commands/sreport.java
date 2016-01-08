@@ -8,7 +8,6 @@ import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.text.Text;
-import org.spongepowered.api.text.Texts;
 
 import iReport.util.Constance;
 import iReport.util.Utils;
@@ -55,6 +54,6 @@ public final class sreport implements CommandCallable {
 
     @Override
     public Text getUsage(CommandSource source) {
-        return Texts.of("<name>");
+        return Text.of("<name>");
     }
 }

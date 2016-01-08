@@ -10,7 +10,6 @@ import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.text.Text;
-import org.spongepowered.api.text.Texts;
 import org.spongepowered.api.text.format.TextColors;
 
 import iReport.util.Utils;
@@ -26,7 +25,7 @@ public final class ireportc implements CommandCallable {
 
     @Override
     public CommandResult process(CommandSource source, String arguments) throws CommandException {
-        source.sendMessage(Texts.builder("==============================").color(TextColors.YELLOW).build());
+        source.sendMessage(Text.builder("==============================").color(TextColors.YELLOW).build());
         source.sendMessage(Utils.get("ireport.test1"));
         source.sendMessage(Utils.get("ireport.test2"));
         source.sendMessage(Utils.get("ireport.test3"));
@@ -34,7 +33,7 @@ public final class ireportc implements CommandCallable {
         source.sendMessage(Utils.get("ireport.test5"));
         source.sendMessage(Utils.get("ireport.test6"));
         source.sendMessage(Utils.get("ireport.test7"));
-        source.sendMessage(Texts.builder("==============================").color(TextColors.YELLOW).build());
+        source.sendMessage(Text.builder("==============================").color(TextColors.YELLOW).build());
         source.sendMessage(Utils.get("ireport.test8", "tudse145 & heni123321"));
         return CommandResult.success();
     }
@@ -56,6 +55,6 @@ public final class ireportc implements CommandCallable {
 
     @Override
     public Text getUsage(CommandSource source) {
-        return Texts.of("");
+        return Text.of("");
     }
 }

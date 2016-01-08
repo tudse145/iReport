@@ -12,7 +12,6 @@ import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
-import org.spongepowered.api.text.Texts;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
@@ -47,7 +46,7 @@ public final class greport implements CommandCallable {
                 String.format("World %s x %s y %s z %s", l.getExtent().getName(), l.getX(), l.getY(), l.getZ())
                 ).sorted().collect(Collectors.toList());
             for (int i = 0; i < list.size(); i++) {
-                source.sendMessage(Texts.of((i + 1) + 1 + " " + list.get(i)));
+                source.sendMessage(Text.of((i + 1) + 1 + " " + list.get(i)));
             }
         }
         if (args[0].equalsIgnoreCase("tp") && source instanceof Player && args.length == 3 && source.hasPermission("ireport.greport.tp")) {
@@ -57,7 +56,7 @@ public final class greport implements CommandCallable {
                 player.setLocation(loc);
                 return CommandResult.success();
             } catch (NumberFormatException e) {
-                throw new CommandException(Texts.of("Argument 3 is not a valid number"));
+                throw new CommandException(Text.of("Argument 3 is not a valid number"));
             }
 
         }
@@ -101,7 +100,7 @@ public final class greport implements CommandCallable {
 
     @Override
     public Text getUsage(CommandSource source) {
-        return Texts.of("<name>");
+        return Text.of("<name>");
     }
 
 }

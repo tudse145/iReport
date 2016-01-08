@@ -21,9 +21,8 @@ import org.spongepowered.api.event.filter.cause.First;
 import org.spongepowered.api.event.network.ClientConnectionEvent;
 import org.spongepowered.api.profile.GameProfile;
 import org.spongepowered.api.text.Text;
-import org.spongepowered.api.text.Texts;
+import org.spongepowered.api.text.serializer.TextSerializers;
 import org.spongepowered.api.text.translation.ResourceBundleTranslation;
-import org.spongepowered.api.util.TextMessageException;
 
 import com.flowpowered.math.vector.Vector3d;
 
@@ -76,7 +75,7 @@ public enum Utils {
         if (!data.playermapor.containsKey(target) && o == null ? true : o.equals(p) || forcw)
             data.playermapor.put(target, p);
         else
-            sender.sendMessage(Texts.of("player " + target + " is alredy reported with another UUID please look at the reports or add true"));
+            sender.sendMessage(Text.of("player " + target + " is alredy reported with another UUID please look at the reports or add true"));
         LOCK.lock();
         try {
             if (isreported) {
@@ -99,12 +98,12 @@ public enum Utils {
         if (!isReported) {
             String error = Constance.getMYSQL().queryUpdate("INSERT INTO reports (`uuid`, `currentname`, `Report`, `username`) values ('" + uuid + "','" + map1.get(uuid) + "','" + map3.get(uuid) + "','" + map2.get(uuid) + "')");
             if (error != null) {
-                throw new CommandException(Texts.of(error));
+                throw new CommandException(Text.of(error));
             }
         } else {
             String error = Constance.getMYSQL().queryUpdate("UPDATE Reports SET Report = '" + map3.get(uuid) + "' WHERE uuid = '" + uuid + "'");
             if (error != null) {
-                throw new CommandException(Texts.of(error));
+                throw new CommandException(Text.of(error));
             }
         }
     }
@@ -153,12 +152,7 @@ public enum Utils {
         }
     }
 
-    @SuppressWarnings("deprecation")
     public static Text get(String key, Object... args) {
-        try {
-            return Texts.legacy('&').from(new ResourceBundleTranslation(key, Constance.LOOKUP_FUNC).get(Constance.locale, args));
-        } catch (TextMessageException e) {
-            return null;
-        }
+        return TextSerializers.FORMATTING_CODE.deserialize(new ResourceBundleTranslation(key, Constance.LOOKUP_FUNC).get(Constance.locale, args));
     }
 }
