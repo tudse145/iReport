@@ -3,6 +3,9 @@ package iReport.util;
 import static iReport.util.Data.init;
 
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.io.Writer;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -113,15 +116,8 @@ public enum Utils {
     }
 
     public static void printStackTrace(Throwable t) {
-        Constance.LOGGER.error(t.toString());
-        for (StackTraceElement Element : t.getStackTrace()) {
-            Constance.LOGGER.error("\tat " + Element.toString());
-        }
-        for (Throwable tb : t.getSuppressed()) {
-            Constance.LOGGER.error("\tSuppressed: " + tb.toString());
-            for (StackTraceElement Element : tb.getStackTrace()) {
-                Constance.LOGGER.error("\t \tat " + Element.toString());
-            }
+        for (String line : collectStackTraces(t).split(System.getProperty("line.separator"))) {
+            Constance.LOGGER.error(line);
         }
     }
 
@@ -154,5 +150,13 @@ public enum Utils {
 
     public static Text get(String key, Object... args) {
         return TextSerializers.FORMATTING_CODE.deserialize(new ResourceBundleTranslation(key, Constance.LOOKUP_FUNC).get(Constance.locale, args));
+    }
+    
+    private static String collectStackTraces(Throwable throwable) {
+        Writer writer = new StringWriter(1024);
+        PrintWriter printWriter = new PrintWriter(writer);
+        throwable.printStackTrace(printWriter);
+        printWriter.write(System.getProperty("line.separator"));
+        return writer.toString();
     }
 }
