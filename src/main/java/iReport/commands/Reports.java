@@ -17,9 +17,7 @@ import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.type.SkullTypes;
-import org.spongepowered.api.entity.ArmorEquipable;
 import org.spongepowered.api.entity.living.Humanoid;
-import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.custom.CustomInventory;
@@ -42,13 +40,13 @@ public final class Reports implements CommandCallable {
         list.add(Text.of("UUID: " + uuid));
         list.add(Utils.get("reports.lore2", map1.get(uuid)));
         for (String string : map3.get(uuid).split(";")) {
-            list.add(Text.of(a(string)));
+            list.add(Text.of(replaceWorldUuid(string)));
         }
         list.add(Utils.get("reports.lore1", map2.get(uuid)));
         return list;
     }
 
-    private static String a(String report) {
+    private static String replaceWorldUuid(String report) {
         if (!report.startsWith("gReport: ")) {
             return report;
         }

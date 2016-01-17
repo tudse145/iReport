@@ -23,7 +23,7 @@ import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
 
 public final class MYSQL {
 
-    public final boolean isenabled;
+    private final boolean enabled;
     private final String host;
     private final int port;
     private final String user;
@@ -56,7 +56,7 @@ public final class MYSQL {
             node.setValue(configDefaults);
             cfgfile.save(config);
         }
-        isenabled = node.getNode("enable").getBoolean();
+        enabled = node.getNode("enable").getBoolean();
         this.host = node.getNode("host").getString();
         this.port = node.getNode("port").getInt();
         this.user = node.getNode("user").getString();
@@ -64,7 +64,7 @@ public final class MYSQL {
         this.database = node.getNode("database").getString();
         this.prodocol = node.getNode("prodocol").getString();
         Optional<SqlService> provide = Constance.game.getServiceManager().provide(SqlService.class);
-        if (provide.isPresent() && isenabled) {
+        if (provide.isPresent() && enabled) {
             ds = provide.get().getDataSource("jdbc:" + this.prodocol + "://" + this.host + ":" + this.port + "/" + this.database);
         }
     }
@@ -74,14 +74,14 @@ public final class MYSQL {
     }
 
     public String queryUpdate(String query) {
-        if (!isenabled) {
+        if (!enabled) {
             return null;
         }
         return queryUpdate(query, true).getSecond();
     }
 
     public Tuple<ResultSet, String> queryUpdate(String query, boolean closeResultset) {
-        if (!isenabled) {
+        if (!enabled) {
             return null;
         }
         ResultSet rs = null;
@@ -106,4 +106,9 @@ public final class MYSQL {
             }
         }
     }
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+    
 }

@@ -49,7 +49,7 @@ public final class IReport {
         Constance.game.getCommandManager().register(this, new Reports(), "reports");
         Constance.game.getCommandManager().register(this, new sreport(), "sreport");
         Constance.game.getEventManager().registerListeners(this, Utils.INSTENCE);
-        if (Constance.getMYSQL().isenabled) {
+        if (Constance.getMYSQL().isEnabled()) {
             try {
                 loadSql();
             } catch (SQLException e) {
@@ -122,13 +122,13 @@ public final class IReport {
                 Files.createFile(Constance.configfolder.resolve("config.cfg"));
                 furstrun = true;
             }
-            HoconConfigurationLoader cfgfile = HoconConfigurationLoader.builder().setPath(Constance.configfolder.resolve("config.cfg")).build();
-            ConfigurationNode config = cfgfile.load();
+            HoconConfigurationLoader cfgFile = HoconConfigurationLoader.builder().setPath(Constance.configfolder.resolve("config.cfg")).build();
+            ConfigurationNode config = cfgFile.load();
             if (furstrun) {
                 Map<String, String> map = new HashMap<>();
                 map.put("Locale", Locale.getDefault().toString());
                 config.setValue(map);
-                cfgfile.save(config);
+                cfgFile.save(config);
             }
             Constance.locale = new Locale(config.getNode("Locale").getString());
         } catch (IOException e) {
