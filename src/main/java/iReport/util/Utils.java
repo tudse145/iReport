@@ -7,14 +7,14 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.stream.Collectors;
 
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandSource;
@@ -64,30 +64,31 @@ public enum Utils {
     }
 
     public static void reportplayer(String target, String reporttype, CommandSource sender, boolean forcw) throws CommandException {
-        UUID p = null;
-        try {
-            p = Constance.server.getPlayer(target).get().getUniqueId();
-        } catch (NoSuchElementException e) {
+        UUID playeruuid = null;
+        Optional<Player> player = Constance.server.getPlayer(target);
+        if (player.isPresent()) {
+            playeruuid = player.get().getUniqueId();
+        } else {
             throw new CommandException(get("not.online", target));
         }
-        boolean isreported = isReported(p);
+        boolean isreported = isReported(playeruuid);
         updateMYSQL(Constance.server.getPlayer(target).get(), isreported);
         Data data = Data.init();
-        data.playermapo.put(p, target);
+        data.playermapo.put(playeruuid, target);
         Object o = data.playermapor.get(target);
-        if (!data.playermapor.containsKey(target) && o == null ? true : o.equals(p) || forcw)
-            data.playermapor.put(target, p);
+        if (!data.playermapor.containsKey(target) && o == null ? true : o.equals(playeruuid) || forcw)
+            data.playermapor.put(target, playeruuid);
         else
             sender.sendMessage(Text.of("player " + target + " is alredy reported with another UUID please look at the reports or add true"));
         LOCK.lock();
         try {
             if (isreported) {
-                String s = data.playermapr.get(p);
-                data.playermapr.put(p, s + reporttype + "reporter: " + sender.getName() + " ;");
+                String s = data.playermapr.get(playeruuid);
+                data.playermapr.put(playeruuid, s + reporttype + "reporter: " + sender.getName() + " ;");
             } else {
-                data.playermapr.put(p, reporttype + "reporter: " + sender.getName() + " ;");
+                data.playermapr.put(playeruuid, reporttype + "reporter: " + sender.getName() + " ;");
             }
-            savePlayer(p);
+            savePlayer(playeruuid);
         } finally {
             LOCK.unlock();
         }
@@ -122,11 +123,7 @@ public enum Utils {
     }
 
     public static List<String> getPlayerNames() {
-        List<String> playerNames = new ArrayList<>();
-        for (Player player : Constance.server.getOnlinePlayers()) {
-            playerNames.add(player.getName());
-        }
-        return playerNames;
+        return Constance.server.getOnlinePlayers().stream().map(Player::getName).collect(Collectors.toList());
     }
 
     public static void savePlayer(UUID uuid) {
