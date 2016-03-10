@@ -33,8 +33,10 @@ import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
 
 @Plugin(id = "iReport", name = "iReport", version = "2.0.1-SNAPSHOT")
 public final class IReport {
+
     @Inject
     public IReport(@ConfigDir(sharedRoot = false) Path configfolder) {
+        Constance.instence = this;
         Constance.configfolder = configfolder;
         Constance.configpath = configfolder.resolve("reports.cfg");
     }

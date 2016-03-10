@@ -11,6 +11,7 @@ import org.spongepowered.api.Game;
 import org.spongepowered.api.Server;
 import org.spongepowered.api.Sponge;
 
+import iReport.IReport;
 import iReport.mysql.MYSQL;
 
 public final class Constance {
@@ -23,6 +24,7 @@ public final class Constance {
     public static Locale locale;
     public static final Logger LOGGER = LoggerFactory.getLogger("iReport");
     public static Path configpath;
+    public static IReport instence;
 
     private Constance() {
     }

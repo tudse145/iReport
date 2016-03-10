@@ -40,11 +40,11 @@ public enum Utils {
     @Listener
     public void login(ClientConnectionEvent.Auth event, @First GameProfile profile) {
         if (!Data.init().playermap.containsKey(profile.getUniqueId())) {
-            Data.init().playermap.put(profile.getUniqueId(), profile.getName());
-        } else if (Data.init().playermap.get(profile.getUniqueId()) != profile.getName()) {
-            Data.init().playermap.put(profile.getUniqueId(), profile.getName());
+            Data.init().playermap.put(profile.getUniqueId(), profile.getName().get());
+        } else if (Data.init().playermap.get(profile.getUniqueId()) != profile.getName().get()) {
+            Data.init().playermap.put(profile.getUniqueId(), profile.getName().get());
             if (Utils.isReported(profile.getUniqueId())) {
-                Utils.updateusernameMYSQL(profile.getUniqueId(), profile.getName());
+                Utils.updateusernameMYSQL(profile.getUniqueId(), profile.getName().get());
             }
         }
     }

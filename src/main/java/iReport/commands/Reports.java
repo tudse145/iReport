@@ -17,10 +17,13 @@ import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.type.SkullTypes;
-import org.spongepowered.api.entity.living.Humanoid;
+import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.event.cause.Cause;
+import org.spongepowered.api.event.cause.NamedCause;
 import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.custom.CustomInventory;
+import org.spongepowered.api.profile.GameProfile;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.translation.FixedTranslation;
 
@@ -102,16 +105,16 @@ public final class Reports implements CommandCallable {
         Map<UUID, String> map1 = init().playermap;
         Map<UUID, String> map2 = init().playermapo;
         Map<UUID, String> map3 = init().playermapr;
-        if (source instanceof Humanoid && arguments.equalsIgnoreCase("gui")) {
+        if (source instanceof Player && arguments.equalsIgnoreCase("gui")) {
             CustomInventory inv = calculate(init().playermapo.size());
             map2.keySet().parallelStream().forEach(uuid -> {
                 ItemStack stack = Constance.game.getRegistry().createBuilder(ItemStack.Builder.class).itemType(ItemTypes.SKULL).quantity(1).build();
                 stack.offer(Keys.SKULL_TYPE, SkullTypes.PLAYER);
-                stack.offer(Keys.REPRESENTED_PLAYER, Constance.game.getRegistry().createGameProfile(uuid, map1.get(uuid)));
+                stack.offer(Keys.REPRESENTED_PLAYER, GameProfile.of(uuid, map1.get(uuid)));
                 stack.offer(Keys.ITEM_LORE, setLore(uuid));
                 inv.offer(stack);
             });
-            ((Humanoid) source).openInventory(inv);
+            ((Player) source).openInventory(inv, Cause.of(NamedCause.of("iReport", Constance.instence)));
             return CommandResult.success();
         }
         if (args.length == 2) {
