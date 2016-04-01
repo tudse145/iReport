@@ -47,17 +47,17 @@ public class MYSQL {
         this.host = cfg.getString(db + "host");
         this.port = cfg.getInt(db + "port");
         this.user = cfg.getString(db + "user");
-        this.password = cfg.getString(db + "passsword");
+        this.password = cfg.getString(db + "password");
         this.database = cfg.getString(db + "database");
         this.debug = cfg.getBoolean(db + "debug");
         if (isenable) {
-            this.oppenConnection();
+            this.openConnection();
         }
     }
 
-    public Connection oppenConnection() throws Exception {
+    public Connection openConnection() throws Exception {
         Class.forName("com.mysql.jdbc.Driver");
-        conn = DriverManager.getConnection("jdbc:mysql://" + this.host + ":" + this.port + "/" + this.database, this.user, this.password);
+        conn = DriverManager.getConnection("jdbc:mysql://" + this.host + ":" + this.port + "/" + this.database +"?user=" + this.user + "&password=" + this.password);
         return conn;
     }
 
