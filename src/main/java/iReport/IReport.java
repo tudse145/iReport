@@ -31,7 +31,7 @@ import iReport.util.Utils;
 import ninja.leaping.configurate.ConfigurationNode;
 import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
 
-@Plugin(id = "iReport", name = "iReport", version = "2.0.1-SNAPSHOT")
+@Plugin(id = "ireport", name = "iReport", version = "2.0.1-SNAPSHOT", description = "Reporting plugin for Sponge", authors = {"tudse145", "heni123321"})
 public final class IReport {
 
     @Inject

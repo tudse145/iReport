@@ -12,12 +12,12 @@ import org.spongepowered.api.Server;
 import org.spongepowered.api.Sponge;
 
 import iReport.IReport;
-import iReport.mysql.MYSQL;
+import iReport.mysql.Mysql;
 
 public final class Constance {
 
     public static final Function<Locale, ResourceBundle> LOOKUP_FUNC = input -> ResourceBundle.getBundle("iReport.lang", input);
-    private static MYSQL sql;
+    private static Mysql sql;
     public static final Game game = Sponge.getGame();
     public static final Server server = game.getServer();
     public static Path configfolder;
@@ -29,10 +29,10 @@ public final class Constance {
     private Constance() {
     }
 
-    public static MYSQL getMYSQL() {
+    public static Mysql getMYSQL() {
         if (sql == null) {
             try {
-                sql = new MYSQL();
+                sql = new Mysql();
                 sql.queryUpdate("CREATE TABLE IF NOT EXISTS reports (uuid VARCHAR(36) PRIMARY KEY, currentname VARCHAR(16), Report LONGTEXT, username VARCHAR(16))");
             } catch (Exception e) {
                 Utils.printStackTrace(e);
