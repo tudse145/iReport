@@ -12,9 +12,11 @@ import java.util.UUID;
 
 import javax.inject.Inject;
 
+import org.spongepowered.api.Sponge;
 import org.spongepowered.api.config.ConfigDir;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.game.state.GamePreInitializationEvent;
+import org.spongepowered.api.event.game.state.GameStartingServerEvent;
 import org.spongepowered.api.event.game.state.GameStoppingServerEvent;
 import org.spongepowered.api.plugin.Plugin;
 
@@ -72,9 +74,16 @@ public final class IReport {
         }
     }
 
+
+    @Listener
+    public void onServerStart(GameStartingServerEvent event) {
+        Constance.server = Sponge.getServer();
+    }
+
     @Listener
     public void onDisable(GameStoppingServerEvent event) {
         Data.init().playermapo.keySet().stream().forEach(Utils::savePlayer);
+        Constance.server = null;
     }
 
     private void loadFile() throws IOException {

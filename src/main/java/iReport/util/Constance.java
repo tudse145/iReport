@@ -19,7 +19,7 @@ public final class Constance {
     public static final Function<Locale, ResourceBundle> LOOKUP_FUNC = input -> ResourceBundle.getBundle("iReport.lang", input);
     private static Mysql sql;
     public static final Game game = Sponge.getGame();
-    public static final Server server = game.getServer();
+    public static Server server;
     public static Path configfolder;
     public static Locale locale;
     public static final Logger LOGGER = LoggerFactory.getLogger("iReport");

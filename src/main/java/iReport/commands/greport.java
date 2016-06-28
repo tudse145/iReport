@@ -6,6 +6,8 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import javax.annotation.Nullable;
+
 import org.spongepowered.api.command.CommandCallable;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
@@ -24,7 +26,7 @@ import iReport.util.Utils;
 public final class greport implements CommandCallable {
 
     @Override
-    public List<String> getSuggestions(CommandSource source, String arguments) throws CommandException {
+    public List<String> getSuggestions(CommandSource source, String arguments, @Nullable  Location<World> targetPosition) throws CommandException {
         String[] args = arguments.split(" ");
         if (args[0].equalsIgnoreCase("tp")) {
             return Data.init().playermapo.keySet().parallelStream().filter(uuid -> {
@@ -89,7 +91,7 @@ public final class greport implements CommandCallable {
     }
 
     @Override
-    public Optional<? extends Text> getShortDescription(CommandSource source) {
+    public Optional<Text> getShortDescription(CommandSource source) {
         return Optional.of(Utils.get("greport.description"));
     }
 
