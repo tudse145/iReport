@@ -4,6 +4,7 @@ import iReport.util.Constance;
 import iReport.util.Tuple;
 import iReport.util.Utils;
 
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.sql.Connection;
@@ -23,17 +24,17 @@ import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
 
 public final class Mysql {
 
-    private final boolean enabled;
-    private final String user;
-    private final String password;
+    private boolean enabled;
+    private String user;
+    private String password;
     private String jdbcUrl;
     private DataSource ds;
 
     public Mysql() throws Exception {
-        Path file = Constance.configfolder.resolve("database.cfg");
         boolean furstrun = false;
         String db = "database.";
-        if (!Files.exists(file)) {
+        Path file = Constance.dbPath;
+        if (!Files.exists(file )) {
             Files.createFile(file);
             furstrun = true;
         }
@@ -49,6 +50,21 @@ public final class Mysql {
             node.setValue(configDefaults);
             cfgfile.save(config);
         }
+        enabled = node.getNode("enable").getBoolean();
+        this.user = node.getNode("user").getString();
+        this.password = node.getNode("password").getString();
+        this.jdbcUrl = node.getNode("jdbc-url").getString();
+        Optional<SqlService> provide = Constance.game.getServiceManager().provide(SqlService.class);
+        if (provide.isPresent() && enabled) {
+            ds = provide.get().getDataSource(jdbcUrl);
+        }
+    }
+
+    public void reload(Path file) throws IOException, SQLException {
+        String db = "database.";
+        HoconConfigurationLoader cfgfile = HoconConfigurationLoader.builder().setPath(file).build();
+        ConfigurationNode config = cfgfile.load();
+        ConfigurationNode node = config.getNode(db);
         enabled = node.getNode("enable").getBoolean();
         this.user = node.getNode("user").getString();
         this.password = node.getNode("password").getString();

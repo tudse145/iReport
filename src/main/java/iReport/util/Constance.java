@@ -25,6 +25,7 @@ public final class Constance {
     public static final Logger LOGGER = LoggerFactory.getLogger("iReport");
     public static Path configpath;
     public static IReport instence;
+    public static Path dbPath;
 
     private Constance() {
     }
@@ -39,5 +40,9 @@ public final class Constance {
             }
         }
         return sql;
+    }
+    
+    public static void setServer() {
+       server = game.getServer(); 
     }
 }

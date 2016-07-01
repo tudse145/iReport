@@ -8,7 +8,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
+import static java.util.stream.Collectors.*;
 import java.util.stream.Stream;
 
 import javax.annotation.Nullable;
@@ -27,7 +27,7 @@ import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.custom.CustomInventory;
 import org.spongepowered.api.profile.GameProfile;
 import org.spongepowered.api.text.Text;
-import org.spongepowered.api.text.translation.FixedTranslation;
+import org.spongepowered.api.text.translation.ResourceBundleTranslation;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
@@ -61,19 +61,19 @@ public final class Reports implements CommandCallable {
         tmp = tmp.substring(0, tmp.lastIndexOf(" reporter:"));
         String[] data = tmp.split(" ");
         data[1] = Constance.server.getWorld(UUID.fromString(data[1])).get().getName();
-        return "gReport: " + Stream.of(data).collect(Collectors.joining(" "));
+        return "gReport: " + Stream.of(data).collect(joining(" "));
     }
 
     private CustomInventory calculate(int size) {
         CustomInventory.Builder builder = Constance.game.getRegistry().createBuilder(CustomInventory.Builder.class);
         if (size % 9 == 0) {
-            return builder.name(new FixedTranslation("reports")).size(size).build();
+            return builder.name(new ResourceBundleTranslation("reports", Constance.LOOKUP_FUNC)).size(size).build();
         }
-        return builder.name(new FixedTranslation("reports")).size(size + Math.abs(size % 9 - 9)).build();
+        return builder.name(new ResourceBundleTranslation("reports", Constance.LOOKUP_FUNC)).size(size + Math.abs(size % 9 - 9)).build();
     }
 
     @Override
-    public List<String> getSuggestions(CommandSource source, String arguments, @Nullable  Location<World> targetPosition) throws CommandException {
+    public List<String> getSuggestions(CommandSource source, String arguments, Location<World> targetPosition) throws CommandException {
         if (!testPermission(source)) {
             return Lists.newArrayList();
         }
@@ -92,10 +92,10 @@ public final class Reports implements CommandCallable {
             return l;
         }
         if (args[0].equalsIgnoreCase("uuid")) {
-            return Data.init().playermapo.keySet().parallelStream().map(UUID::toString).filter(s -> s.startsWith(args.length > 1 ? args[1] : "")).collect(Collectors.toList());
+            return Data.init().playermapo.keySet().parallelStream().map(UUID::toString).filter(s -> s.startsWith(args.length > 1 ? args[1] : "")).collect(toList());
         }
         if (args[0].equalsIgnoreCase("usernameo")) {
-            return Data.init().playermapo.values().parallelStream().filter(s -> s.startsWith(args.length > 1 ? args[1] : "")).collect(Collectors.toList());
+            return Data.init().playermapo.values().parallelStream().filter(s -> s.startsWith(args.length > 1 ? args[1] : "")).collect(toList());
         }
         return Lists.newArrayList();
     }

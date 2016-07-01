@@ -15,6 +15,7 @@ import javax.inject.Inject;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.config.ConfigDir;
 import org.spongepowered.api.event.Listener;
+import org.spongepowered.api.event.game.GameReloadEvent;
 import org.spongepowered.api.event.game.state.GamePreInitializationEvent;
 import org.spongepowered.api.event.game.state.GameStartingServerEvent;
 import org.spongepowered.api.event.game.state.GameStoppingServerEvent;
@@ -41,6 +42,7 @@ public final class IReport {
         Constance.instence = this;
         Constance.configfolder = configfolder;
         Constance.configpath = configfolder.resolve("reports.cfg");
+        Constance.dbPath = Constance.configfolder.resolve("database.cfg");
     }
 
     @Listener
@@ -62,7 +64,7 @@ public final class IReport {
                     loadFile();
                 } catch (IOException e1) {
                     e.addSuppressed(e1);
-                    Utils.printStackTrace(e1);
+                    Utils.printStackTrace(e);
                 }
             }
         } else {
@@ -81,9 +83,44 @@ public final class IReport {
     }
 
     @Listener
+    public void serverStart(GameStartingServerEvent event) {
+        Constance.setServer();
+    }
+
+    @Listener
     public void onDisable(GameStoppingServerEvent event) {
         Data.init().playermapo.keySet().stream().forEach(Utils::savePlayer);
         Constance.server = null;
+    }
+    
+    @Listener
+    public void reload(GameReloadEvent event) {
+        loadCfg();
+        try {
+            Constance.getMYSQL().reload(Constance.dbPath);
+        } catch (IOException | SQLException e2) {
+            e2.printStackTrace();
+        }
+        Data.init().playermapo.keySet().stream().forEach(Utils::savePlayer);
+        if (Constance.getMYSQL().isEnabled()) {
+            try {
+                loadSql();
+            } catch (SQLException e) {
+                try {
+                    Constance.LOGGER.error("SQL load failed, trying local file" + e.getMessage());
+                    loadFile();
+                } catch (IOException e1) {
+                    e.addSuppressed(e1);
+                    Utils.printStackTrace(e);
+                }
+            }
+        } else {
+            try {
+                loadFile();
+            } catch (Exception e) {
+                Utils.printStackTrace(e);
+            }
+        }
     }
 
     private void loadFile() throws IOException {
