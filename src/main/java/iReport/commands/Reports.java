@@ -1,3 +1,4 @@
+
 package iReport.commands;
 
 import static iReport.util.Data.init;
@@ -23,8 +24,10 @@ import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.cause.Cause;
 import org.spongepowered.api.event.cause.NamedCause;
 import org.spongepowered.api.item.ItemTypes;
+import org.spongepowered.api.item.inventory.Inventory;
+import org.spongepowered.api.item.inventory.InventoryArchetype;
 import org.spongepowered.api.item.inventory.ItemStack;
-import org.spongepowered.api.item.inventory.custom.CustomInventory;
+import org.spongepowered.api.item.inventory.property.InventoryDimension;
 import org.spongepowered.api.profile.GameProfile;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.translation.ResourceBundleTranslation;
@@ -64,12 +67,13 @@ public final class Reports implements CommandCallable {
         return "gReport: " + Stream.of(data).collect(joining(" "));
     }
 
-    private CustomInventory calculate(int size) {
-        CustomInventory.Builder builder = Constance.game.getRegistry().createBuilder(CustomInventory.Builder.class);
-        if (size % 9 == 0) {
-            return builder.name(new ResourceBundleTranslation("reports", Constance.LOOKUP_FUNC)).size(size).build();
-        }
-        return builder.name(new ResourceBundleTranslation("reports", Constance.LOOKUP_FUNC)).size(size + Math.abs(size % 9 - 9)).build();
+    private Inventory calculate(int size) {
+    	Inventory.Builder builder = Constance.game.getRegistry().createBuilder(Inventory.Builder.class);
+    	return builder.of(InventoryArchetype.builder().title(new ResourceBundleTranslation("reports", Constance.LOOKUP_FUNC)).property(new InventoryDimension(9, (size / 9) + 1)).build("ireport", "ireport")).build(Constance.instence);
+//        if (size % 9 == 0) {
+//            return builder.name(new ResourceBundleTranslation("reports", Constance.LOOKUP_FUNC)).size(size).build();
+//        }
+//        return builder.name(new ResourceBundleTranslation("reports", Constance.LOOKUP_FUNC)).size(size + Math.abs(size % 9 - 9)).build();
     }
 
     @Override
@@ -110,7 +114,7 @@ public final class Reports implements CommandCallable {
         Map<UUID, String> map2 = init().playermapo;
         Map<UUID, String> map3 = init().playermapr;
         if (source instanceof Player && arguments.equalsIgnoreCase("gui")) {
-            CustomInventory inv = calculate(init().playermapo.size());
+        	Inventory inv = calculate(init().playermapo.size());
             map2.keySet().parallelStream().forEach(uuid -> {
                 ItemStack stack = Constance.game.getRegistry().createBuilder(ItemStack.Builder.class).itemType(ItemTypes.SKULL).quantity(1).build();
                 stack.offer(Keys.SKULL_TYPE, SkullTypes.PLAYER);
@@ -140,7 +144,7 @@ public final class Reports implements CommandCallable {
                 source.sendMessage(Utils.get("reports.error"));
                 return CommandResult.success();
             }
-            map3.entrySet().stream().map(Entry::getKey).forEach(u -> {
+            map3.keySet().forEach(u -> {
                 source.sendMessages(setLore(u));
                 source.sendMessage(Text.of(" "));
             });
