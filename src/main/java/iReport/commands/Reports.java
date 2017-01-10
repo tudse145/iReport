@@ -6,13 +6,10 @@ import static iReport.util.Data.init;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.UUID;
 import static java.util.stream.Collectors.*;
 import java.util.stream.Stream;
-
-import javax.annotation.Nullable;
 
 import org.spongepowered.api.command.CommandCallable;
 import org.spongepowered.api.command.CommandException;
@@ -63,17 +60,17 @@ public final class Reports implements CommandCallable {
         String tmp = report.substring(9);
         tmp = tmp.substring(0, tmp.lastIndexOf(" reporter:"));
         String[] data = tmp.split(" ");
-        data[1] = Constance.server.getWorld(UUID.fromString(data[1])).get().getName();
+        Optional<World> world = Constance.server.getWorld(UUID.fromString(data[1]));
+        if (!world.isPresent()) {
+			return report;
+		}
+		data[1] = world.get().getName();
         return "gReport: " + Stream.of(data).collect(joining(" "));
     }
 
     private Inventory calculate(int size) {
     	Inventory.Builder builder = Constance.game.getRegistry().createBuilder(Inventory.Builder.class);
     	return builder.of(InventoryArchetype.builder().title(new ResourceBundleTranslation("reports", Constance.LOOKUP_FUNC)).property(new InventoryDimension(9, (size / 9) + 1)).build("ireport", "ireport")).build(Constance.instence);
-//        if (size % 9 == 0) {
-//            return builder.name(new ResourceBundleTranslation("reports", Constance.LOOKUP_FUNC)).size(size).build();
-//        }
-//        return builder.name(new ResourceBundleTranslation("reports", Constance.LOOKUP_FUNC)).size(size + Math.abs(size % 9 - 9)).build();
     }
 
     @Override
