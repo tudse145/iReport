@@ -93,7 +93,7 @@ public final class IReport {
         try {
             Constance.getMYSQL().reload(Constance.dbPath);
         } catch (IOException | SQLException e2) {
-            e2.printStackTrace();
+            Utils.printStackTrace(e2);
         }
         Data.init().playermapo.keySet().stream().forEach(Utils::savePlayer);
         if (Constance.getMYSQL().isEnabled()) {
