@@ -83,7 +83,7 @@ public final class IReport {
 
     @Listener
     public void onDisable(GameStoppingServerEvent event) {
-        Data.init().playermapo.keySet().stream().forEach(Utils::savePlayer);
+        Data.init().playermapo.keySet().forEach(Utils::savePlayer);
         Constance.server = null;
     }
     
