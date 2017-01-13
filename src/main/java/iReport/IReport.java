@@ -78,11 +78,6 @@ public final class IReport {
 
     @Listener
     public void onServerStart(GameStartingServerEvent event) {
-        Constance.server = Sponge.getServer();
-    }
-
-    @Listener
-    public void serverStart(GameStartingServerEvent event) {
         Constance.setServer();
     }
 
