@@ -29,7 +29,6 @@ import iReport.commands.ireportc;
 import iReport.commands.sreport;
 import iReport.util.Constance;
 import iReport.util.Data;
-import iReport.util.Tuple;
 import iReport.util.Utils;
 import ninja.leaping.configurate.ConfigurationNode;
 import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
@@ -42,19 +41,19 @@ public final class IReport {
         Constance.instence = this;
         Constance.configfolder = configfolder;
         Constance.configpath = configfolder.resolve("reports.cfg");
-        Constance.dbPath = Constance.configfolder.resolve("database.cfg");
+        Constance.dbPath = configfolder.resolve("database.cfg");
     }
 
     @Listener
     public void onEnable(GamePreInitializationEvent event) {
         loadCfg();
-        Constance.game.getCommandManager().register(this, new Dreport(), "dreport");
-        Constance.game.getCommandManager().register(this, new greport(), "greport");
-        Constance.game.getCommandManager().register(this, new HReport(), "hreport");
-        Constance.game.getCommandManager().register(this, new ireportc(), "ireport");
-        Constance.game.getCommandManager().register(this, new Reports(), "reports");
-        Constance.game.getCommandManager().register(this, new sreport(), "sreport");
-        Constance.game.getEventManager().registerListeners(this, Utils.INSTENCE);
+        Constance.GAME.getCommandManager().register(this, new Dreport(), "dreport");
+        Constance.GAME.getCommandManager().register(this, new greport(), "greport");
+        Constance.GAME.getCommandManager().register(this, new HReport(), "hreport");
+        Constance.GAME.getCommandManager().register(this, new ireportc(), "ireport");
+        Constance.GAME.getCommandManager().register(this, new Reports(), "reports");
+        Constance.GAME.getCommandManager().register(this, new sreport(), "sreport");
+        Constance.GAME.getEventManager().registerListeners(this, Utils.INSTENCE);
         if (Constance.getMYSQL().isEnabled()) {
             try {
                 loadSql();
@@ -141,11 +140,7 @@ public final class IReport {
     }
 
     private void loadSql() throws SQLException {
-        Tuple<ResultSet, String> tuple = Constance.getMYSQL().queryUpdate("select * from reports", false);
-        if (tuple.getFirst() == null) {
-            throw new SQLException(tuple.getSecond().split("\n")[1]);
-        }
-        ResultSet resultSet = tuple.getFirst();
+        ResultSet resultSet = Constance.getMYSQL().queryUpdate("select * from reports", false);
         Data data = Data.init();
         while (resultSet.next()) {
             UUID uuid = UUID.fromString(resultSet.getString("uuid"));

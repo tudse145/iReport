@@ -7,6 +7,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.nio.file.Path;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -76,10 +77,11 @@ public enum Utils {
         Data data = Data.init();
         data.playermapo.put(playeruuid, target);
         Object o = data.playermapor.get(target);
-        if (!data.playermapor.containsKey(target) && o == null ? true : o.equals(playeruuid) || forcw)
+        if (!data.playermapor.containsKey(target) && o == null ? true : o.equals(playeruuid) || forcw) {
             data.playermapor.put(target, playeruuid);
-        else
-            sender.sendMessage(Text.of("player " + target + " is alredy reported with another UUID please look at the reports or add true"));
+        } else {
+            throw new CommandException(Text.of("player " + target + " is alredy reported with another UUID please look at the reports or add true"));
+        }
         LOCK.lock();
         try {
             if (isreported) {
@@ -100,20 +102,26 @@ public enum Utils {
         Map<UUID, String> map2 = init().playermapo;
         Map<UUID, String> map3 = init().playermapr;
         if (!isReported) {
-            String error = Constance.getMYSQL().queryUpdate("INSERT INTO reports (`uuid`, `currentname`, `Report`, `username`) values ('" + uuid + "','" + map1.get(uuid) + "','" + map3.get(uuid) + "','" + map2.get(uuid) + "')");
-            if (error != null) {
-                throw new CommandException(Text.of(error));
-            }
+            try {
+				Constance.getMYSQL().queryUpdate("INSERT INTO reports (`uuid`, `currentname`, `Report`, `username`) values ('" + uuid + "','" + map1.get(uuid) + "','" + map3.get(uuid) + "','" + map2.get(uuid) + "')");
+			} catch (SQLException e) {
+				throw new CommandException(Text.of(e.getMessage()), e);
+			}
         } else {
-            String error = Constance.getMYSQL().queryUpdate("UPDATE Reports SET Report = '" + map3.get(uuid) + "' WHERE uuid = '" + uuid + "'");
-            if (error != null) {
-                throw new CommandException(Text.of(error));
-            }
+            try {
+				Constance.getMYSQL().queryUpdate("UPDATE Reports SET Report = '" + map3.get(uuid) + "' WHERE uuid = '" + uuid + "'");
+			} catch (SQLException e) {
+				throw new CommandException(Text.of(e.getMessage()), e);
+			}
         }
     }
 
     public static void updateusernameMYSQL(UUID uniqueId, String name) {
-        Constance.getMYSQL().queryUpdate("UPDATE Reports SET currentname = '" + name + "' WHERE uuid = '" + uniqueId + "'");
+        try {
+			Constance.getMYSQL().queryUpdate("UPDATE Reports SET currentname = '" + name + "' WHERE uuid = '" + uniqueId + "'");
+		} catch (SQLException e) {
+			printStackTrace(e);
+		}
     }
 
     public static void printStackTrace(Throwable t) {

@@ -1,7 +1,6 @@
 package iReport.mysql;
 
 import iReport.util.Constance;
-import iReport.util.Tuple;
 import iReport.util.Utils;
 
 import java.io.IOException;
@@ -54,7 +53,7 @@ public final class Mysql {
         this.user = node.getNode("user").getString();
         this.password = node.getNode("password").getString();
         this.jdbcUrl = node.getNode("jdbc-url").getString();
-        Optional<SqlService> provide = Constance.game.getServiceManager().provide(SqlService.class);
+        Optional<SqlService> provide = Constance.GAME.getServiceManager().provide(SqlService.class);
         if (provide.isPresent() && enabled) {
             ds = provide.get().getDataSource(jdbcUrl);
         }
@@ -69,7 +68,7 @@ public final class Mysql {
         this.user = node.getNode("user").getString();
         this.password = node.getNode("password").getString();
         this.jdbcUrl = node.getNode("jdbc-url").getString();
-        Optional<SqlService> provide = Constance.game.getServiceManager().provide(SqlService.class);
+        Optional<SqlService> provide = Constance.GAME.getServiceManager().provide(SqlService.class);
         if (provide.isPresent() && enabled) {
             ds = provide.get().getDataSource(jdbcUrl);
         }
@@ -79,23 +78,23 @@ public final class Mysql {
         return ds.getConnection(this.user, this.password);
     }
 
-    public String queryUpdate(String query) {
+    public void queryUpdate(String query) throws SQLException {
         if (!enabled) {
-            return null;
+            return;
         }
-        return queryUpdate(query, true).getSecond();
+        queryUpdate(query, true);
     }
 
-    public Tuple<ResultSet, String> queryUpdate(String query, boolean closeResultset) {
+    public ResultSet queryUpdate(String query, boolean closeResultset) throws SQLException {
         if (!enabled) {
             return null;
         }
         ResultSet rs = null;
         try (PreparedStatement st = openConnection().prepareStatement(query)) {
             rs = st.executeQuery();
-            return Tuple.of(rs, null);
+            return rs;
         } catch (SQLException e) {
-            return Tuple.of(null, "Failed to send update '" + query + "'.\n" + e.getMessage());
+            throw new SQLException("Failed to send update '" + query + "'.\n" + e.getMessage());
         } finally {
             if (closeResultset) {
                 closeRessources(rs);

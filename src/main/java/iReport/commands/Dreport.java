@@ -1,6 +1,7 @@
 package iReport.commands;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -44,7 +45,11 @@ public final class Dreport implements CommandCallable {
         if (args[0].equals("*")) {
             if (source.hasPermission("ireport.dreport.all")) {
                 data.playermapo.keySet().stream().map(UUID::toString).forEach(this::delete);
-                Constance.getMYSQL().queryUpdate("DELETE FROM reports");
+                try {
+					Constance.getMYSQL().queryUpdate("DELETE FROM reports");
+				} catch (SQLException e) {
+					throw new CommandException(Text.of(e.getMessage()), e);
+				}
                 data.playermapo.clear();
                 data.playermapor.clear();
                 data.playermapr.clear();
@@ -67,7 +72,9 @@ public final class Dreport implements CommandCallable {
             return CommandResult.success();
         } catch (IllegalArgumentException e) {
             throw new CommandException(Utils.get("dreport.error"));
-        }
+        } catch (SQLException e) {
+			throw new CommandException(Text.of(e.getMessage()), e);
+		}
     }
 
     @Override
