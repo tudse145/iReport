@@ -12,7 +12,6 @@ import java.util.UUID;
 
 import javax.inject.Inject;
 
-import org.spongepowered.api.Sponge;
 import org.spongepowered.api.config.ConfigDir;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.game.GameReloadEvent;
@@ -95,7 +94,7 @@ public final class IReport {
         } catch (IOException | SQLException e2) {
             Utils.printStackTrace(e2);
         }
-        Data.init().playermapo.keySet().stream().forEach(Utils::savePlayer);
+        Data.init().playermapo.keySet().forEach(Utils::savePlayer);
         if (Constance.getMYSQL().isEnabled()) {
             try {
                 loadSql();
@@ -122,7 +121,7 @@ public final class IReport {
         ConfigurationNode config = cfgfile.load();
         Data data = Data.init();
         ConfigurationNode nodde = config.getNode("reports");
-        nodde.getChildrenMap().entrySet().parallelStream().forEach(node -> {
+        nodde.getChildrenMap().entrySet().forEach(node -> {
             UUID uuid = UUID.fromString((String) node.getKey());
             String currenttname = node.getValue().getNode("currenttname").getString();
             String reportedename = node.getValue().getNode("reportedename").getString();

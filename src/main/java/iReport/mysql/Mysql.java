@@ -1,13 +1,11 @@
 package iReport.mysql;
 
 import iReport.util.Constance;
-import iReport.util.Utils;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -89,26 +87,10 @@ public final class Mysql {
         if (!enabled) {
             return null;
         }
-        ResultSet rs = null;
-        try (PreparedStatement st = openConnection().prepareStatement(query)) {
-            rs = st.executeQuery();
+        try (ResultSet rs = openConnection().prepareStatement(query).executeQuery()) {
             return rs;
         } catch (SQLException e) {
             throw new SQLException("Failed to send update '" + query + "'.\n" + e.getMessage());
-        } finally {
-            if (closeResultset) {
-                closeRessources(rs);
-            }
-        }
-    }
-
-    private void closeRessources(ResultSet rs) {
-        if (rs != null) {
-            try {
-                rs.close();
-            } catch (SQLException e) {
-                Utils.printStackTrace(e);
-            }
         }
     }
 
