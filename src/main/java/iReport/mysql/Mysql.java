@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -24,7 +25,6 @@ public final class Mysql {
     private boolean enabled;
     private String user;
     private String password;
-    private String jdbcUrl;
     private DataSource ds;
 
     public Mysql() throws Exception {
@@ -47,13 +47,13 @@ public final class Mysql {
             node.setValue(configDefaults);
             cfgfile.save(config);
         }
-        enabled = node.getNode("enable").getBoolean();
+        this.enabled = node.getNode("enable").getBoolean();
         this.user = node.getNode("user").getString();
         this.password = node.getNode("password").getString();
-        this.jdbcUrl = node.getNode("jdbc-url").getString();
+        String jdbcUrl = node.getNode("jdbc-url").getString();
         Optional<SqlService> provide = Constance.GAME.getServiceManager().provide(SqlService.class);
         if (provide.isPresent() && enabled) {
-            ds = provide.get().getDataSource(jdbcUrl);
+            ds = provide.get().getDataSource(Constance.instence, jdbcUrl + "?user=" + user + "&password=" + password);
         }
     }
 
@@ -62,10 +62,10 @@ public final class Mysql {
         HoconConfigurationLoader cfgfile = HoconConfigurationLoader.builder().setPath(file).build();
         ConfigurationNode config = cfgfile.load();
         ConfigurationNode node = config.getNode(db);
-        enabled = node.getNode("enable").getBoolean();
+        this.enabled = node.getNode("enable").getBoolean();
         this.user = node.getNode("user").getString();
         this.password = node.getNode("password").getString();
-        this.jdbcUrl = node.getNode("jdbc-url").getString();
+        String jdbcUrl = node.getNode("jdbc-url").getString();
         Optional<SqlService> provide = Constance.GAME.getServiceManager().provide(SqlService.class);
         if (provide.isPresent() && enabled) {
             ds = provide.get().getDataSource(jdbcUrl);
@@ -73,7 +73,7 @@ public final class Mysql {
     }
 
     private Connection openConnection() throws SQLException {
-        return ds.getConnection(this.user, this.password);
+        return ds.getConnection();
     }
 
     public void queryUpdate(String query) throws SQLException {
@@ -83,6 +83,20 @@ public final class Mysql {
         queryUpdate(query, true);
     }
 
+    public void queryUpdate(String query, String... objects) throws SQLException {
+        if (!enabled) {
+            return;
+        }
+        try (PreparedStatement ps = openConnection().prepareStatement(query)){
+        	for (int i = 0; i < objects.length; i++) {
+    			ps.setString(i + 1, objects[i]);
+    		}
+        	ps.executeUpdate();
+		} catch (SQLException e) {
+            throw new SQLException("Failed to send update '" + query + "'.\n" + e.getMessage());
+        }
+    }
+    
     public ResultSet queryUpdate(String query, boolean closeResultset) throws SQLException {
         if (!enabled) {
             return null;
@@ -90,7 +104,7 @@ public final class Mysql {
         try (ResultSet rs = openConnection().prepareStatement(query).executeQuery()) {
             return rs;
         } catch (SQLException e) {
-            throw new SQLException("Failed to send update '" + query + "'.\n" + e.getMessage());
+            throw new SQLException("Failed to send update '" + query + "'.\n" + e.getMessage(), e);
         }
     }
 

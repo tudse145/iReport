@@ -88,13 +88,14 @@ public final class IReport {
     
     @Listener
     public void reload(GameReloadEvent event) {
+        Data.init().playermapo.keySet().forEach(Utils::savePlayer);
+        Constance.setServer();
         loadCfg();
         try {
             Constance.getMYSQL().reload(Constance.dbPath);
         } catch (IOException | SQLException e2) {
             Utils.printStackTrace(e2);
         }
-        Data.init().playermapo.keySet().forEach(Utils::savePlayer);
         if (Constance.getMYSQL().isEnabled()) {
             try {
                 loadSql();
@@ -134,19 +135,21 @@ public final class IReport {
     }
 
     private void loadSql() throws SQLException {
-        ResultSet resultSet = Constance.getMYSQL().queryUpdate("select * from reports", false);
-        Data data = Data.init();
-        while (resultSet.next()) {
-            UUID uuid = UUID.fromString(resultSet.getString("uuid"));
-            String currenttname = resultSet.getString("currentname");
-            String reportedename = resultSet.getString("Report");
-            String reports = resultSet.getString("username");
-            data.playermap.put(uuid, currenttname);
-            data.playermapo.put(uuid, reportedename);
-            data.playermapr.put(uuid, reports);
-            data.playermapor.put(reportedename, uuid);
-        }
-        resultSet.close();
+    	try (ResultSet resultSet = Constance.getMYSQL().queryUpdate("select * from reports", false)){
+            Data data = Data.init();
+            while (resultSet.next()) {
+                UUID uuid = UUID.fromString(resultSet.getString("uuid"));
+                String currenttname = resultSet.getString("currentname");
+                String reportedename = resultSet.getString("Report");
+                String reports = resultSet.getString("username");
+                data.playermap.put(uuid, currenttname);
+                data.playermapo.put(uuid, reportedename);
+                data.playermapr.put(uuid, reports);
+                data.playermapor.put(reportedename, uuid);
+            }
+		}catch (SQLException e) {
+			throw e;
+		}
     }
 
     private void loadCfg() {

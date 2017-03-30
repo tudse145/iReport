@@ -73,7 +73,6 @@ public enum Utils {
             throw new CommandException(get("not.online", target));
         }
         boolean isreported = isReported(playeruuid);
-        updateMYSQL(Constance.server.getPlayer(target).get(), isreported);
         Data data = Data.init();
         data.playermapo.put(playeruuid, target);
         Object o = data.playermapor.get(target);
@@ -94,6 +93,7 @@ public enum Utils {
         } finally {
             LOCK.unlock();
         }
+        updateMYSQL(Constance.server.getPlayer(target).get(), isreported);
     }
 
     public static void updateMYSQL(Player player, boolean isReported) throws CommandException {
@@ -103,13 +103,13 @@ public enum Utils {
         Map<UUID, String> map3 = init().playermapr;
         if (!isReported) {
             try {
-				Constance.getMYSQL().queryUpdate("INSERT INTO reports (`uuid`, `currentname`, `Report`, `username`) values ('" + uuid + "','" + map1.get(uuid) + "','" + map3.get(uuid) + "','" + map2.get(uuid) + "')");
+				Constance.getMYSQL().queryUpdate("INSERT INTO reports (`uuid`, `currentname`, `Report`, `username`) values (?,?,?,?)", uuid.toString(), map1.get(uuid), map3.get(uuid), map2.get(uuid));
 			} catch (SQLException e) {
 				throw new CommandException(Text.of(e.getMessage()), e);
 			}
         } else {
             try {
-				Constance.getMYSQL().queryUpdate("UPDATE Reports SET Report = '" + map3.get(uuid) + "' WHERE uuid = '" + uuid + "'");
+				Constance.getMYSQL().queryUpdate("UPDATE Reports SET Report = ? WHERE uuid = ?", map3.get(uuid), uuid.toString());
 			} catch (SQLException e) {
 				throw new CommandException(Text.of(e.getMessage()), e);
 			}
@@ -118,7 +118,7 @@ public enum Utils {
 
     public static void updateusernameMYSQL(UUID uniqueId, String name) {
         try {
-			Constance.getMYSQL().queryUpdate("UPDATE Reports SET currentname = '" + name + "' WHERE uuid = '" + uniqueId + "'");
+			Constance.getMYSQL().queryUpdate("UPDATE Reports SET currentname = ? WHERE uuid = ?", name, uniqueId.toString());
 		} catch (SQLException e) {
 			printStackTrace(e);
 		}
@@ -137,9 +137,8 @@ public enum Utils {
     public static void savePlayer(UUID uuid) {
         Path file = Constance.configfolder.resolve("reports.cfg");
         HoconConfigurationLoader cfgfile = HoconConfigurationLoader.builder().setPath(file).build();
-        ConfigurationNode config;
         try {
-            config = cfgfile.load();
+        	ConfigurationNode config = cfgfile.load();
             ConfigurationNode node = config.getNode("reports");
             Map<String, String> configDefaults = new HashMap<>();
             ConfigurationNode node2 = node.getNode(uuid.toString());
