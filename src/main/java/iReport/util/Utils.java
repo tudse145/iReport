@@ -66,12 +66,7 @@ public enum Utils {
 
     public static void reportplayer(String target, String reporttype, CommandSource sender, boolean forcw) throws CommandException {
         UUID playeruuid = null;
-        Optional<Player> player = Constance.server.getPlayer(target);
-        if (player.isPresent()) {
-            playeruuid = player.get().getUniqueId();
-        } else {
-            throw new CommandException(get("not.online", target));
-        }
+        Player player = Constance.server.getPlayer(target).orElseThrow(() -> new CommandException(get("not.online", target)));
         boolean isreported = isReported(playeruuid);
         Data data = Data.init();
         data.playermapo.put(playeruuid, target);
@@ -93,7 +88,7 @@ public enum Utils {
         } finally {
             LOCK.unlock();
         }
-        updateMYSQL(Constance.server.getPlayer(target).get(), isreported);
+        updateMYSQL(player, isreported);
     }
 
     public static void updateMYSQL(Player player, boolean isReported) throws CommandException {
