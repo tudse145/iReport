@@ -67,8 +67,8 @@ public final class Mysql {
         this.password = node.getNode("password").getString();
         String jdbcUrl = node.getNode("jdbc-url").getString();
         Optional<SqlService> provide = Constance.GAME.getServiceManager().provide(SqlService.class);
-        if (provide.isPresent() && enabled) {
-            ds = provide.get().getDataSource(jdbcUrl);
+        if (enabled) {
+            ds = provide.orElseThrow(() -> new RuntimeException("SqlService not fount")).getDataSource(jdbcUrl);
         }
     }
 
@@ -101,11 +101,17 @@ public final class Mysql {
         if (!enabled) {
             return null;
         }
-        try (ResultSet rs = openConnection().prepareStatement(query).executeQuery()) {
+        ResultSet rs = null;
+        try {
+        	rs = openConnection().prepareStatement(query).executeQuery();
             return rs;
         } catch (SQLException e) {
             throw new SQLException("Failed to send update '" + query + "'.\n" + e.getMessage(), e);
-        }
+        } finally {
+        	if (closeResultset && rs != null) {
+				rs.close();
+			}
+		}
     }
 
     public boolean isEnabled() {

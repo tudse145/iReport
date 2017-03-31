@@ -123,7 +123,7 @@ public final class IReport {
         Data data = Data.init();
         ConfigurationNode nodde = config.getNode("reports");
         nodde.getChildrenMap().entrySet().forEach(node -> {
-            UUID uuid = UUID.fromString((String) node.getKey());
+            UUID uuid = UUID.fromString(node.getKey().toString());
             String currenttname = node.getValue().getNode("currenttname").getString();
             String reportedename = node.getValue().getNode("reportedename").getString();
             String reports = node.getValue().getNode("reports").getString();
@@ -135,7 +135,7 @@ public final class IReport {
     }
 
     private void loadSql() throws SQLException {
-    	try (ResultSet resultSet = Constance.getMYSQL().queryUpdate("select * from reports", false)){
+    	try (ResultSet resultSet = Constance.getMYSQL().queryUpdate("select * from reports", false)) {
             Data data = Data.init();
             while (resultSet.next()) {
                 UUID uuid = UUID.fromString(resultSet.getString("uuid"));
@@ -147,7 +147,7 @@ public final class IReport {
                 data.playermapr.put(uuid, reports);
                 data.playermapor.put(reportedename, uuid);
             }
-		}catch (SQLException e) {
+		} catch (SQLException e) {
 			throw e;
 		}
     }
