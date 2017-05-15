@@ -12,6 +12,7 @@ import java.util.UUID;
 
 import javax.inject.Inject;
 
+import org.slf4j.Logger;
 import org.spongepowered.api.config.ConfigDir;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.game.GameReloadEvent;
@@ -36,9 +37,10 @@ import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
 public final class IReport {
 
     @Inject
-    public IReport(@ConfigDir(sharedRoot = false) Path configfolder) {
+    public IReport(@ConfigDir(sharedRoot = false) Path configfolder, Logger logger) {
         Constance.instence = this;
         Constance.configfolder = configfolder;
+        Constance.LOGGER = logger;
         Constance.configpath = configfolder.resolve("reports.cfg");
         Constance.dbPath = configfolder.resolve("database.cfg");
     }
@@ -92,7 +94,7 @@ public final class IReport {
         Constance.setServer();
         loadCfg();
         try {
-            Constance.getMYSQL().reload(Constance.dbPath);
+            Constance.getMYSQL().reload(Constance.dbPath, Constance.enable_sql);
         } catch (IOException | SQLException e2) {
             Utils.printStackTrace(e2);
         }
@@ -101,7 +103,7 @@ public final class IReport {
                 loadSql();
             } catch (SQLException e) {
                 try {
-                    Constance.LOGGER.error("SQL load failed, trying local file" + e.getMessage());
+                    Constance.LOGGER.error("SQL load failed, trying local file", e);
                     loadFile();
                 } catch (IOException e1) {
                     e.addSuppressed(e1);
@@ -147,8 +149,6 @@ public final class IReport {
                 data.playermapr.put(uuid, reports);
                 data.playermapor.put(reportedename, uuid);
             }
-		} catch (SQLException e) {
-			throw e;
 		}
     }
 
@@ -167,10 +167,12 @@ public final class IReport {
             if (furstrun) {
                 Map<String, String> map = new HashMap<>();
                 map.put("Locale", Locale.getDefault().toString());
+                map.put("enable_sql", "false");
                 config.setValue(map);
                 cfgFile.save(config);
             }
             Constance.locale = new Locale(config.getNode("Locale").getString());
+            Constance.enable_sql = config.getNode("enable_sql").getBoolean();
         } catch (IOException e) {
             Utils.printStackTrace(e);
         }

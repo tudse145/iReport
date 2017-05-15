@@ -22,10 +22,11 @@ public final class Constance {
     public static Server server;
     public static Path configfolder;
     public static Locale locale;
-    public static final Logger LOGGER = LoggerFactory.getLogger("iReport");
+    public static Logger LOGGER;
     public static Path configpath;
     public static IReport instence;
     public static Path dbPath;
+	public static boolean enable_sql;
 
     private Constance() {
     }
@@ -33,7 +34,7 @@ public final class Constance {
     public static Mysql getMYSQL() {
         if (sql == null) {
             try {
-                sql = new Mysql();
+                sql = new Mysql(enable_sql);
                 sql.queryUpdate("CREATE TABLE IF NOT EXISTS reports (uuid VARCHAR(36) PRIMARY KEY, currentname VARCHAR(16), Report LONGTEXT, username VARCHAR(16))");
             } catch (Exception e) {
                 Utils.printStackTrace(e);
