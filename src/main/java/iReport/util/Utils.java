@@ -65,8 +65,9 @@ public enum Utils {
     }
 
     public static void reportplayer(String target, String reporttype, CommandSource sender, boolean forcw) throws CommandException {
-        UUID playeruuid = null;
+       
         Player player = Constance.server.getPlayer(target).orElseThrow(() -> new CommandException(get("not.online", target)));
+        UUID playeruuid = player.getUniqueId();
         boolean isreported = isReported(playeruuid);
         Data data = Data.init();
         data.playermapo.put(playeruuid, target);
