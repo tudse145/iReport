@@ -1,4 +1,4 @@
-package iReport.commands;
+package ireport.commands;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -19,9 +19,9 @@ import org.spongepowered.api.world.World;
 
 import com.google.common.collect.Lists;
 
-import iReport.util.Constance;
-import iReport.util.Data;
-import iReport.util.Utils;
+import ireport.util.Constance;
+import ireport.util.Data;
+import ireport.util.Utils;
 import ninja.leaping.configurate.ConfigurationNode;
 import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
 
@@ -32,7 +32,7 @@ public final class Dreport implements CommandCallable {
         if (!testPermission(source)) {
             return Lists.newArrayList();
         }
-        return Data.init().playermapo.keySet().parallelStream().map(UUID::toString).filter(s -> s.startsWith(arguments.split(" ")[0])).collect(Collectors.toList());
+        return Data.init().getPlayermapo().keySet().parallelStream().map(UUID::toString).filter(s -> s.startsWith(arguments.split(" ")[0])).collect(Collectors.toList());
     }
 
     @Override
@@ -44,15 +44,15 @@ public final class Dreport implements CommandCallable {
         Data data = Data.init();
         if (args[0].equals("*")) {
             if (source.hasPermission("ireport.dreport.all")) {
-                data.playermapo.keySet().stream().map(UUID::toString).forEach(this::delete);
+                data.getPlayermapo().keySet().stream().map(UUID::toString).forEach(this::delete);
                 try {
 					Constance.getMYSQL().queryUpdate("DELETE FROM reports");
 				} catch (SQLException e) {
 					throw new CommandException(Text.of(e.getMessage()), e);
 				}
-                data.playermapo.clear();
-                data.playermapor.clear();
-                data.playermapr.clear();
+                data.getPlayermapo().clear();
+                data.getPlayermapor().clear();
+                data.getPlayermapr().clear();
                 source.sendMessage(Utils.get("dreport.sucess.all"));
                 return CommandResult.success();
             } else {
@@ -62,10 +62,10 @@ public final class Dreport implements CommandCallable {
         }
         try {
             UUID uuid = UUID.fromString(args[0]);
-            String playername = data.playermapo.get(uuid);
-            data.playermapo.remove(uuid);
-            data.playermapr.remove(uuid);
-            data.playermapor.remove(playername);
+            String playername = data.getPlayermapo().get(uuid);
+            data.getPlayermapo().remove(uuid);
+            data.getPlayermapr().remove(uuid);
+            data.getPlayermapor().remove(playername);
             delete(uuid.toString());
             source.sendMessage(Utils.get("dreport.sucess.all", playername));
             Constance.getMYSQL().queryUpdate("DELETE FROM reports WHERE uuid = '" + UUID.fromString(args[0]) + "'");

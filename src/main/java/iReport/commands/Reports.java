@@ -1,13 +1,12 @@
-
-package iReport.commands;
-
-import static iReport.util.Data.init;
+package ireport.commands;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
+
+import static ireport.util.Data.init;
 import static java.util.stream.Collectors.*;
 import java.util.stream.Stream;
 
@@ -19,7 +18,6 @@ import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.type.SkullTypes;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.cause.Cause;
-import org.spongepowered.api.event.cause.NamedCause;
 import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.api.item.inventory.InventoryArchetype;
@@ -33,17 +31,17 @@ import org.spongepowered.api.world.World;
 
 import com.google.common.collect.Lists;
 
-import iReport.util.Constance;
-import iReport.util.Data;
-import iReport.util.Utils;
+import ireport.util.Constance;
+import ireport.util.Data;
+import ireport.util.Utils;
 
 public final class Reports implements CommandCallable {
 
     private List<Text> setLore(UUID uuid) {
         List<Text> list = new ArrayList<>();
-        Map<UUID, String> map1 = init().playermap;
-        Map<UUID, String> map2 = init().playermapo;
-        Map<UUID, String> map3 = init().playermapr;
+        Map<UUID, String> map1 = init().getPlayermap();
+        Map<UUID, String> map2 = init().getPlayermapo();
+        Map<UUID, String> map3 = init().getPlayermapr();
         list.add(Text.of("UUID: " + uuid));
         list.add(Utils.get("reports.lore2", map1.get(uuid)));
         for (String string : map3.get(uuid).split(";")) {
@@ -70,7 +68,7 @@ public final class Reports implements CommandCallable {
 
     private Inventory calculate(int size) {
     	Inventory.Builder builder = Constance.GAME.getRegistry().createBuilder(Inventory.Builder.class);
-    	return builder.of(InventoryArchetype.builder().title(new ResourceBundleTranslation("reports", Constance.LOOKUP_FUNC)).property(new InventoryDimension(9, (size / 9) + 1)).build("ireport", "ireport")).build(Constance.instence);
+    	return builder.of(InventoryArchetype.builder().title(new ResourceBundleTranslation("reports", Constance.LOOKUP_FUNC)).property(new InventoryDimension(9, (size / 9) + 1)).build("iReport", "iReport")).build(Constance.instence);
     }
 
     @Override
@@ -93,10 +91,10 @@ public final class Reports implements CommandCallable {
             return l;
         }
         if (args[0].equalsIgnoreCase("uuid")) {
-            return Data.init().playermapo.keySet().parallelStream().map(UUID::toString).filter(s -> s.startsWith(args.length > 1 ? args[1] : "")).collect(toList());
+            return Data.init().getPlayermapo().keySet().parallelStream().map(UUID::toString).filter(s -> s.startsWith(args.length > 1 ? args[1] : "")).collect(toList());
         }
         if (args[0].equalsIgnoreCase("usernameo")) {
-            return Data.init().playermapo.values().parallelStream().filter(s -> s.startsWith(args.length > 1 ? args[1] : "")).collect(toList());
+            return Data.init().getPlayermapo().values().parallelStream().filter(s -> s.startsWith(args.length > 1 ? args[1] : "")).collect(toList());
         }
         return Lists.newArrayList();
     }
@@ -107,11 +105,11 @@ public final class Reports implements CommandCallable {
             throw new CommandException(Utils.get("permission.missing"));
         }
         String[] args = arguments.split(" ");
-        Map<UUID, String> map1 = init().playermap;
-        Map<UUID, String> map2 = init().playermapo;
-        Map<UUID, String> map3 = init().playermapr;
+        Map<UUID, String> map1 = init().getPlayermap();
+        Map<UUID, String> map2 = init().getPlayermapo();
+        Map<UUID, String> map3 = init().getPlayermapr();
         if (source instanceof Player && arguments.equalsIgnoreCase("gui")) {
-        	Inventory inv = calculate(init().playermapo.size());
+        	Inventory inv = calculate(init().getPlayermapo().size());
             map2.keySet().parallelStream().forEach(uuid -> {
                 ItemStack stack = Constance.GAME.getRegistry().createBuilder(ItemStack.Builder.class).itemType(ItemTypes.SKULL).quantity(1).build();
                 stack.offer(Keys.SKULL_TYPE, SkullTypes.PLAYER);
@@ -119,7 +117,7 @@ public final class Reports implements CommandCallable {
                 stack.offer(Keys.ITEM_LORE, setLore(uuid));
                 inv.offer(stack);
             });
-            ((Player) source).openInventory(inv, Cause.of(NamedCause.of("iReport", Constance.instence)));
+            ((Player) source).openInventory(inv);
             return CommandResult.success();
         }
         if (args.length == 2) {
@@ -129,7 +127,7 @@ public final class Reports implements CommandCallable {
                     source.sendMessages(setLore(u));
                 }
                 if (args[0].equalsIgnoreCase("usernameo")) {
-                    UUID u = init().playermapor.get(args[1]);
+                    UUID u = init().getPlayermapor().get(args[1]);
                     source.sendMessages(setLore(u));
                 }
                 return CommandResult.success();
@@ -151,7 +149,7 @@ public final class Reports implements CommandCallable {
 
     @Override
     public boolean testPermission(CommandSource source) {
-        return source.hasPermission("ireport.reports");
+        return source.hasPermission("iReport.reports");
     }
 
     @Override

@@ -1,4 +1,4 @@
-package iReport.commands;
+package ireport.commands;
 
 import java.util.List;
 import java.util.Optional;
@@ -19,9 +19,9 @@ import org.spongepowered.api.world.World;
 
 import com.flowpowered.math.vector.Vector3d;
 
-import iReport.util.Constance;
-import iReport.util.Data;
-import iReport.util.Utils;
+import ireport.util.Constance;
+import ireport.util.Data;
+import ireport.util.Utils;
 
 public final class greport implements CommandCallable {
 
@@ -29,8 +29,8 @@ public final class greport implements CommandCallable {
     public List<String> getSuggestions(CommandSource source, String arguments, @Nullable  Location<World> targetPosition) throws CommandException {
         String[] args = arguments.split(" ");
         if (args[0].equalsIgnoreCase("tp")) {
-            return Data.init().playermapo.keySet().parallelStream().filter(uuid -> {
-                String s = Data.init().playermapr.get(uuid);
+            return Data.init().getPlayermapo().keySet().parallelStream().filter(uuid -> {
+                String s = Data.init().getPlayermapr().get(uuid);
                 return s.contains("gReport: ");
             }).map(UUID::toString).filter(s -> s.startsWith(args.length > 1 ? args[1] : "")).collect(Collectors.toList());
         }
@@ -43,7 +43,7 @@ public final class greport implements CommandCallable {
         if (!testPermission(source)) {
             throw new CommandException(Utils.get("permission.missing"));
         }
-        if (args[0].equalsIgnoreCase("tp") && args.length == 2 && source.hasPermission("ireport.greport.tp")) {
+        if (args[0].equalsIgnoreCase("tp") && args.length == 2 && source.hasPermission("iReport.greport.tp")) {
             List<String> list = getLocationFromUuid(UUID.fromString(args[1])).stream().map(l -> 
                 String.format("World %s x %s y %s z %s", l.getExtent().getName(), l.getX(), l.getY(), l.getZ())
                 ).sorted().collect(Collectors.toList());
@@ -51,7 +51,7 @@ public final class greport implements CommandCallable {
                 source.sendMessage(Text.of((i + 1) + 1 + " " + list.get(i)));
             }
         }
-        if (args[0].equalsIgnoreCase("tp") && source instanceof Player && args.length == 3 && source.hasPermission("ireport.greport.tp")) {
+        if (args[0].equalsIgnoreCase("tp") && source instanceof Player && args.length == 3 && source.hasPermission("iReport.greport.tp")) {
             Player player = (Player) source;
             try {
                 Location<World> loc = getLocationFromUuid(UUID.fromString(args[1])).get(Integer.parseInt(args[2]) - 1);
@@ -75,7 +75,7 @@ public final class greport implements CommandCallable {
     }
 
     private List<Location<World>> getLocationFromUuid(UUID playerUuid) {
-        Stream<String> report = Stream.of(Data.init().playermapr.get(playerUuid).split(";"));
+        Stream<String> report = Stream.of(Data.init().getPlayermapr().get(playerUuid).split(";"));
         return report.filter(s -> s.startsWith("gReport: ")).sorted().map(s -> {
             String tmp = s.substring(9);
             tmp = tmp.substring(0, tmp.lastIndexOf(" reporter:"));
@@ -87,7 +87,7 @@ public final class greport implements CommandCallable {
 
     @Override
     public boolean testPermission(CommandSource source) {
-        return source.hasPermission("ireport.greport");
+        return source.hasPermission("iReport.greport");
     }
 
     @Override

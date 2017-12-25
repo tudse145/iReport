@@ -1,4 +1,4 @@
-package iReport;
+package ireport;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -21,23 +21,23 @@ import org.spongepowered.api.event.game.state.GameStartingServerEvent;
 import org.spongepowered.api.event.game.state.GameStoppingServerEvent;
 import org.spongepowered.api.plugin.Plugin;
 
-import iReport.commands.Dreport;
-import iReport.commands.HReport;
-import iReport.commands.Reports;
-import iReport.commands.greport;
-import iReport.commands.ireportc;
-import iReport.commands.sreport;
-import iReport.util.Constance;
-import iReport.util.Data;
-import iReport.util.Utils;
+import ireport.commands.Dreport;
+import ireport.commands.HReport;
+import ireport.commands.Reports;
+import ireport.commands.greport;
+import ireport.commands.iReportc;
+import ireport.commands.sreport;
+import ireport.util.Constance;
+import ireport.util.Data;
+import ireport.util.Utils;
 import ninja.leaping.configurate.ConfigurationNode;
 import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
 
-@Plugin(id = "ireport", name = "iReport", version = "2.0.1-SNAPSHOT", description = "Reporting plugin for Sponge", authors = {"tudse145", "heni123321"})
-public final class IReport {
+@Plugin(id = "ireport", name = "ireport", version = "2.0.1-SNAPSHOT", description = "Reporting plugin for Sponge", authors = {"tudse145", "heni123321"})
+public final class ireport {
 
     @Inject
-    public IReport(@ConfigDir(sharedRoot = false) Path configfolder, Logger logger) {
+    public ireport(@ConfigDir(sharedRoot = false) Path configfolder, Logger logger) {
         Constance.instence = this;
         Constance.configfolder = configfolder;
         Constance.LOGGER = logger;
@@ -51,7 +51,7 @@ public final class IReport {
         Constance.GAME.getCommandManager().register(this, new Dreport(), "dreport");
         Constance.GAME.getCommandManager().register(this, new greport(), "greport");
         Constance.GAME.getCommandManager().register(this, new HReport(), "hreport");
-        Constance.GAME.getCommandManager().register(this, new ireportc(), "ireport");
+        Constance.GAME.getCommandManager().register(this, new iReportc(), "ireport");
         Constance.GAME.getCommandManager().register(this, new Reports(), "reports");
         Constance.GAME.getCommandManager().register(this, new sreport(), "sreport");
         Constance.GAME.getEventManager().registerListeners(this, Utils.INSTENCE);
@@ -84,13 +84,13 @@ public final class IReport {
 
     @Listener
     public void onDisable(GameStoppingServerEvent event) {
-        Data.init().playermapo.keySet().forEach(Utils::savePlayer);
+        Data.init().getPlayermapo().keySet().forEach(Utils::savePlayer);
         Constance.server = null;
     }
     
     @Listener
     public void reload(GameReloadEvent event) {
-        Data.init().playermapo.keySet().forEach(Utils::savePlayer);
+        Data.init().getPlayermapo().keySet().forEach(Utils::savePlayer);
         Constance.setServer();
         loadCfg();
         try {
@@ -129,10 +129,10 @@ public final class IReport {
             String currenttname = node.getValue().getNode("currenttname").getString();
             String reportedename = node.getValue().getNode("reportedename").getString();
             String reports = node.getValue().getNode("reports").getString();
-            data.playermap.put(uuid, currenttname);
-            data.playermapo.put(uuid, reportedename);
-            data.playermapr.put(uuid, reports);
-            data.playermapor.put(reportedename, uuid);
+            data.getPlayermap().put(uuid, currenttname);
+            data.getPlayermapo().put(uuid, reportedename);
+            data.getPlayermapr().put(uuid, reports);
+            data.getPlayermapor().put(reportedename, uuid);
         });
     }
 
@@ -144,10 +144,10 @@ public final class IReport {
                 String currenttname = resultSet.getString("currentname");
                 String reportedename = resultSet.getString("Report");
                 String reports = resultSet.getString("username");
-                data.playermap.put(uuid, currenttname);
-                data.playermapo.put(uuid, reportedename);
-                data.playermapr.put(uuid, reports);
-                data.playermapor.put(reportedename, uuid);
+                data.getPlayermap().put(uuid, currenttname);
+                data.getPlayermapo().put(uuid, reportedename);
+                data.getPlayermapr().put(uuid, reports);
+                data.getPlayermapor().put(reportedename, uuid);
             }
 		}
     }

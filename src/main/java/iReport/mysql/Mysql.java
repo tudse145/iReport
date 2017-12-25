@@ -1,6 +1,4 @@
-package iReport.mysql;
-
-import iReport.util.Constance;
+package ireport.mysql;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -14,6 +12,8 @@ import javax.sql.DataSource;
 
 import org.spongepowered.api.service.sql.SqlService;
 
+import ireport.util.Constance;
+
 public final class Mysql {
 
     private boolean enabled;
@@ -23,11 +23,11 @@ public final class Mysql {
         this.enabled = enabled;
 		Optional<SqlService> provide = Constance.GAME.getServiceManager().provide(SqlService.class);
         if (provide.isPresent() && enabled) {
-        	Optional<String> jdbcUrl = provide.get().getConnectionUrlFromAlias("ireport");
+        	Optional<String> jdbcUrl = provide.get().getConnectionUrlFromAlias("iReport");
         	if (jdbcUrl.isPresent()) {
 				ds = provide.get().getDataSource(Constance.instence, jdbcUrl.get());
 			} else {
-				Constance.LOGGER.error("ireport jdbc url not fount in sponge global.conf");
+				Constance.LOGGER.error("iReport jdbc url not fount in sponge global.conf");
 				this.enabled = false;
 			}
         }
@@ -36,11 +36,11 @@ public final class Mysql {
     public void reload(Path file, boolean enabled) throws IOException, SQLException {
     	 Optional<SqlService> provide = Constance.GAME.getServiceManager().provide(SqlService.class);
          if (provide.isPresent() && enabled) {
-         	Optional<String> jdbcUrl = provide.get().getConnectionUrlFromAlias("ireport");
+         	Optional<String> jdbcUrl = provide.get().getConnectionUrlFromAlias("iReport");
          	if (jdbcUrl.isPresent()) {
  				ds = provide.get().getDataSource(Constance.instence, jdbcUrl.get());
  			} else {
- 				Constance.LOGGER.error("ireport jdbc url not fount in sponge global.conf");
+ 				Constance.LOGGER.error("iReport jdbc url not fount in sponge global.conf");
 				this.enabled = false;
  			}
          }

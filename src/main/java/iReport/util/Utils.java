@@ -1,6 +1,6 @@
-package iReport.util;
+package ireport.util;
 
-import static iReport.util.Data.init;
+import static ireport.util.Data.init;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -40,26 +40,31 @@ public enum Utils {
 
     @Listener
     public void login(ClientConnectionEvent.Auth event, @First GameProfile profile) {
-        if (!Data.init().playermap.containsKey(profile.getUniqueId())) {
-            Data.init().playermap.put(profile.getUniqueId(), profile.getName().get());
-        } else if (Data.init().playermap.get(profile.getUniqueId()) != profile.getName().get()) {
-            Data.init().playermap.put(profile.getUniqueId(), profile.getName().get());
+        Optional<String> name = profile.getName();
+        if (!name.isPresent()) {
+			return;
+		}
+		if (!Data.init().getPlayermap().containsKey(profile.getUniqueId())) {
+            Data.init().getPlayermap().put(profile.getUniqueId(), name.get());
+        } else if (Data.init().getPlayermap().get(profile.getUniqueId()) != name.get()) {
+            Data.init().getPlayermap().put(profile.getUniqueId(), name.get());
             if (Utils.isReported(profile.getUniqueId())) {
-                Utils.updateusernameMYSQL(profile.getUniqueId(), profile.getName().get());
+                Utils.updateusernameMYSQL(profile.getUniqueId(), name.get());
             }
         }
     }
 
     public static boolean isReported(UUID uniqueId) {
-        return Data.init().playermapr.get(uniqueId) != null;
+        return Data.init().getPlayermapr().get(uniqueId) != null;
     }
 
     public static String getxyz(String playername, CommandSource source) throws CommandException {
-        try {
-            Player player = Constance.server.getPlayer(playername).get();
+        Optional<Player> optionalplayer = Constance.server.getPlayer(playername);
+        if (optionalplayer.isPresent()) {
+			Player player = optionalplayer.get();
             Vector3d loc = player.getLocation().getPosition();
             return String.valueOf("world " + player.getWorld().getUniqueId() + " x " + (int) loc.getX() + " y " + (int) loc.getY() + " z " + (int) loc.getZ());
-        } catch (IllegalStateException e) {
+        } else {
             throw new CommandException(get("not.online", playername));
         }
     }
@@ -70,20 +75,20 @@ public enum Utils {
         UUID playeruuid = player.getUniqueId();
         boolean isreported = isReported(playeruuid);
         Data data = Data.init();
-        data.playermapo.put(playeruuid, target);
-        Object o = data.playermapor.get(target);
-        if (!data.playermapor.containsKey(target) && o == null ? true : o.equals(playeruuid) || forcw) {
-            data.playermapor.put(target, playeruuid);
+        data.getPlayermapo().put(playeruuid, target);
+        Object o = data.getPlayermapor().get(target);
+        if (!data.getPlayermapor().containsKey(target) && o == null ? true : o.equals(playeruuid) || forcw) {
+            data.getPlayermapor().put(target, playeruuid);
         } else {
             throw new CommandException(Text.of("player " + target + " is alredy reported with another UUID please look at the reports or add true"));
         }
         LOCK.lock();
         try {
             if (isreported) {
-                String s = data.playermapr.get(playeruuid);
-                data.playermapr.put(playeruuid, s + reporttype + "reporter: " + sender.getName() + " ;");
+                String s = data.getPlayermapr().get(playeruuid);
+                data.getPlayermapr().put(playeruuid, s + reporttype + "reporter: " + sender.getName() + " ;");
             } else {
-                data.playermapr.put(playeruuid, reporttype + "reporter: " + sender.getName() + " ;");
+                data.getPlayermapr().put(playeruuid, reporttype + "reporter: " + sender.getName() + " ;");
             }
             savePlayer(playeruuid);
         } finally {
@@ -94,9 +99,9 @@ public enum Utils {
 
     public static void updateMYSQL(Player player, boolean isReported) throws CommandException {
         UUID uuid = player.getUniqueId();
-        Map<UUID, String> map1 = init().playermap;
-        Map<UUID, String> map2 = init().playermapo;
-        Map<UUID, String> map3 = init().playermapr;
+        Map<UUID, String> map1 = init().getPlayermap();
+        Map<UUID, String> map2 = init().getPlayermapo();
+        Map<UUID, String> map3 = init().getPlayermapr();
         if (!isReported) {
             try {
 				Constance.getMYSQL().queryUpdate("INSERT INTO reports (`uuid`, `currentname`, `Report`, `username`) values (?,?,?,?)", uuid.toString(), map1.get(uuid), map3.get(uuid), map2.get(uuid));
@@ -138,9 +143,9 @@ public enum Utils {
             ConfigurationNode node = config.getNode("reports");
             Map<String, String> configDefaults = new HashMap<>();
             ConfigurationNode node2 = node.getNode(uuid.toString());
-            configDefaults.put("reportedename", Data.init().playermapo.get(uuid));
-            configDefaults.put("currenttname", Data.init().playermap.get(uuid));
-            configDefaults.put("reports", Data.init().playermapr.get(uuid));
+            configDefaults.put("reportedename", Data.init().getPlayermapo().get(uuid));
+            configDefaults.put("currenttname", Data.init().getPlayermap().get(uuid));
+            configDefaults.put("reports", Data.init().getPlayermapr().get(uuid));
             node2.setValue(configDefaults);
             cfgfile.save(config);
         } catch (IOException e) {

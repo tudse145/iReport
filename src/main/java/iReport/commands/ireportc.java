@@ -1,4 +1,4 @@
-package iReport.commands;
+package ireport.commands;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -16,9 +16,9 @@ import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
-import iReport.util.Utils;
+import ireport.util.Utils;
 
-public final class ireportc implements CommandCallable {
+public final class iReportc implements CommandCallable {
 
     private static final List<String> LIST = Collections.unmodifiableList(new ArrayList<>());
 
@@ -30,15 +30,15 @@ public final class ireportc implements CommandCallable {
     @Override
     public CommandResult process(CommandSource source, String arguments) throws CommandException {
         source.sendMessage(Text.builder("==============================").color(TextColors.YELLOW).build());
-        source.sendMessage(Utils.get("ireport.test1"));
-        source.sendMessage(Utils.get("ireport.test2"));
-        source.sendMessage(Utils.get("ireport.test3"));
-        source.sendMessage(Utils.get("ireport.test4"));
-        source.sendMessage(Utils.get("ireport.test5"));
-        source.sendMessage(Utils.get("ireport.test6"));
-        source.sendMessage(Utils.get("ireport.test7"));
+        source.sendMessage(Utils.get("iReport.test1"));
+        source.sendMessage(Utils.get("iReport.test2"));
+        source.sendMessage(Utils.get("iReport.test3"));
+        source.sendMessage(Utils.get("iReport.test4"));
+        source.sendMessage(Utils.get("iReport.test5"));
+        source.sendMessage(Utils.get("iReport.test6"));
+        source.sendMessage(Utils.get("iReport.test7"));
         source.sendMessage(Text.builder("==============================").color(TextColors.YELLOW).build());
-        source.sendMessage(Utils.get("ireport.test8", "tudse145 & heni123321"));
+        source.sendMessage(Utils.get("iReport.test8", "tudse145 & heni123321"));
         return CommandResult.success();
     }
 
@@ -49,12 +49,12 @@ public final class ireportc implements CommandCallable {
 
     @Override
     public Optional<Text> getShortDescription(CommandSource source) {
-        return Optional.of(Utils.get("ireport.description"));
+        return Optional.of(Utils.get("iReport.description"));
     }
 
     @Override
     public Optional<Text> getHelp(CommandSource source) {
-        return Optional.of(Utils.get("ireport.description"));
+        return Optional.of(Utils.get("iReport.description"));
     }
 
     @Override

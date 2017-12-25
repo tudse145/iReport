@@ -1,4 +1,4 @@
-package iReport.commands;
+package ireport.commands;
 
 import java.util.List;
 import java.util.Optional;
@@ -13,8 +13,8 @@ import org.spongepowered.api.text.Text;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
-import iReport.util.Constance;
-import iReport.util.Utils;
+import ireport.util.Constance;
+import ireport.util.Utils;
 
 public final class sreport implements CommandCallable {
 
@@ -43,7 +43,7 @@ public final class sreport implements CommandCallable {
 
     @Override
     public boolean testPermission(CommandSource source) {
-        return source.hasPermission("ireport.sreport");
+        return source.hasPermission("iReport.sreport");
     }
 
     @Override

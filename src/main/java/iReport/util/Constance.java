@@ -1,4 +1,4 @@
-package iReport.util;
+package ireport.util;
 
 import java.nio.file.Path;
 import java.util.Locale;
@@ -11,8 +11,8 @@ import org.spongepowered.api.Game;
 import org.spongepowered.api.Server;
 import org.spongepowered.api.Sponge;
 
-import iReport.IReport;
-import iReport.mysql.Mysql;
+import ireport.ireport;
+import ireport.mysql.Mysql;
 
 public final class Constance {
 
@@ -24,7 +24,7 @@ public final class Constance {
     public static Locale locale;
     public static Logger LOGGER;
     public static Path configpath;
-    public static IReport instence;
+    public static ireport instence;
     public static Path dbPath;
 	public static boolean enable_sql;
 
