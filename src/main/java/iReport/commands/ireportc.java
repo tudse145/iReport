@@ -30,15 +30,15 @@ public final class iReportc implements CommandCallable {
     @Override
     public CommandResult process(CommandSource source, String arguments) throws CommandException {
         source.sendMessage(Text.builder("==============================").color(TextColors.YELLOW).build());
-        source.sendMessage(Utils.get("iReport.test1"));
-        source.sendMessage(Utils.get("iReport.test2"));
-        source.sendMessage(Utils.get("iReport.test3"));
-        source.sendMessage(Utils.get("iReport.test4"));
-        source.sendMessage(Utils.get("iReport.test5"));
-        source.sendMessage(Utils.get("iReport.test6"));
-        source.sendMessage(Utils.get("iReport.test7"));
+        source.sendMessage(Utils.get("ireport.text1"));
+        source.sendMessage(Utils.get("ireport.text2"));
+        source.sendMessage(Utils.get("ireport.text3"));
+        source.sendMessage(Utils.get("ireport.text4"));
+        source.sendMessage(Utils.get("ireport.text5"));
+        source.sendMessage(Utils.get("ireport.text6"));
+        source.sendMessage(Utils.get("ireport.text7"));
         source.sendMessage(Text.builder("==============================").color(TextColors.YELLOW).build());
-        source.sendMessage(Utils.get("iReport.test8", "tudse145 & heni123321"));
+        source.sendMessage(Utils.get("ireport.text8", "tudse145 & heni123321"));
         return CommandResult.success();
     }
 

@@ -15,7 +15,7 @@ import ireport.mysql.Mysql;
 
 public final class Constance {
 
-    public static final Function<Locale, ResourceBundle> LOOKUP_FUNC = input -> ResourceBundle.getBundle("iReport.lang", input);
+    public static final Function<Locale, ResourceBundle> LOOKUP_FUNC = input -> ResourceBundle.getBundle("ireport.lang", input);
     private static Mysql sql;
     public static final Game GAME = Sponge.getGame();
     public static Server server;

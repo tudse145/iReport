@@ -50,6 +50,7 @@ public final class greport implements CommandCallable {
             for (int i = 0; i < list.size(); i++) {
                 source.sendMessage(Text.of((i + 1) + 1 + " " + list.get(i)));
             }
+            return CommandResult.success();
         }
         if (args[0].equalsIgnoreCase("tp") && source instanceof Player && args.length == 3 && source.hasPermission("iReport.greport.tp")) {
             Player player = (Player) source;
