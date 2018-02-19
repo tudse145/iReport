@@ -24,8 +24,8 @@ public final class Constance {
     public static Logger LOGGER;
     public static Path configpath;
     public static ireport instence;
-    public static Path dbPath;
 	public static boolean enable_sql;
+    public static String databasenamme;
 
     private Constance() {
     }
@@ -33,7 +33,7 @@ public final class Constance {
     public static Mysql getMYSQL() {
         if (sql == null) {
             try {
-                sql = new Mysql(enable_sql);
+                sql = new Mysql(enable_sql, databasenamme);
                 sql.queryUpdate("CREATE TABLE IF NOT EXISTS reports (uuid VARCHAR(36) PRIMARY KEY, currentname VARCHAR(16), Report LONGTEXT, username VARCHAR(16))");
             } catch (Exception e) {
                 Utils.printStackTrace(e);

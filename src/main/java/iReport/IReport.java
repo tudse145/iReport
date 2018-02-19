@@ -42,7 +42,6 @@ public final class ireport {
         Constance.configfolder = configfolder;
         Constance.LOGGER = logger;
         Constance.configpath = configfolder.resolve("reports.cfg");
-        Constance.dbPath = configfolder.resolve("database.cfg");
     }
 
     @Listener
@@ -94,7 +93,7 @@ public final class ireport {
         Constance.setServer();
         loadCfg();
         try {
-            Constance.getMYSQL().reload(Constance.dbPath, Constance.enable_sql);
+            Constance.getMYSQL().reload(Constance.enable_sql, Constance.databasenamme);
         } catch (IOException | SQLException e2) {
             Utils.printStackTrace(e2);
         }
@@ -168,11 +167,13 @@ public final class ireport {
                 Map<String, String> map = new HashMap<>();
                 map.put("Locale", Locale.getDefault().toString());
                 map.put("enable_sql", "false");
+                map.put("database_name", "ireport");
                 config.setValue(map);
                 cfgFile.save(config);
             }
             Constance.locale = new Locale(config.getNode("Locale").getString());
             Constance.enable_sql = config.getNode("enable_sql").getBoolean();
+            Constance.databasenamme = config.getNode("database_name").getString();
         } catch (IOException e) {
             Utils.printStackTrace(e);
         }
