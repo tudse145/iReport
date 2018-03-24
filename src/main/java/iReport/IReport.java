@@ -24,9 +24,9 @@ import org.spongepowered.api.plugin.Plugin;
 import ireport.commands.Dreport;
 import ireport.commands.HReport;
 import ireport.commands.Reports;
-import ireport.commands.greport;
-import ireport.commands.iReportc;
-import ireport.commands.sreport;
+import ireport.commands.Sreport;
+import ireport.commands.Greport;
+import ireport.commands.Ireportc;
 import ireport.util.Constance;
 import ireport.util.Data;
 import ireport.util.Utils;
@@ -48,11 +48,11 @@ public final class ireport {
     public void onEnable(GamePreInitializationEvent event) {
         loadCfg();
         Constance.GAME.getCommandManager().register(this, new Dreport(), "dreport");
-        Constance.GAME.getCommandManager().register(this, new greport(), "greport");
+        Constance.GAME.getCommandManager().register(this, new Greport(), "Greport");
         Constance.GAME.getCommandManager().register(this, new HReport(), "hreport");
-        Constance.GAME.getCommandManager().register(this, new iReportc(), "ireport");
+        Constance.GAME.getCommandManager().register(this, new Ireportc(), "ireport");
         Constance.GAME.getCommandManager().register(this, new Reports(), "reports");
-        Constance.GAME.getCommandManager().register(this, new sreport(), "sreport");
+        Constance.GAME.getCommandManager().register(this, new Sreport(), "sreport");
         Constance.GAME.getEventManager().registerListeners(this, Utils.INSTENCE);
         if (Constance.getMYSQL().isEnabled()) {
             try {
@@ -94,7 +94,7 @@ public final class ireport {
         loadCfg();
         try {
             Constance.getMYSQL().reload(Constance.enable_sql, Constance.databasenamme);
-        } catch (IOException | SQLException e2) {
+        } catch (SQLException e2) {
             Utils.printStackTrace(e2);
         }
         if (Constance.getMYSQL().isEnabled()) {

@@ -18,7 +18,7 @@ import org.spongepowered.api.world.World;
 
 import ireport.util.Utils;
 
-public final class iReportc implements CommandCallable {
+public final class Ireportc implements CommandCallable {
 
     private static final List<String> LIST = Collections.unmodifiableList(new ArrayList<>());
 

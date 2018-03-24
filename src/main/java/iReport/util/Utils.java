@@ -58,7 +58,7 @@ public enum Utils {
         return Data.init().getPlayermapr().get(uniqueId) != null;
     }
 
-    public static String getxyz(String playername, CommandSource source) throws CommandException {
+    public static String getxyz(String playername) throws CommandException {
         Optional<Player> optionalplayer = Constance.server.getPlayer(playername);
         if (optionalplayer.isPresent()) {
 			Player player = optionalplayer.get();

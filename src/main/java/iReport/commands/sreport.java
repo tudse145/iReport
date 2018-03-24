@@ -16,7 +16,7 @@ import org.spongepowered.api.world.World;
 import ireport.util.Constance;
 import ireport.util.Utils;
 
-public final class sreport implements CommandCallable {
+public final class Sreport implements CommandCallable {
 
     @Override
     public List<String> getSuggestions(CommandSource source, String arguments, @Nullable  Location<World> targetPosition) throws CommandException {
@@ -33,7 +33,7 @@ public final class sreport implements CommandCallable {
             String player = source.getName();
             String target = args[0];
             Utils.reportplayer(target, "sReport: ", source, args.length > 1 ? Boolean.valueOf(args[1]) : false);
-            source.sendMessage(Utils.get("greport.sucess", target));
+            source.sendMessage(Utils.get("Greport.sucess", target));
             Text text = Utils.get("sreport.notification", player, target);
             Constance.server.getOnlinePlayers().parallelStream().filter(p -> p.hasPermission("iReport.seereport") && p != source).forEach(p -> p.sendMessage(text));
             return CommandResult.success();
@@ -48,7 +48,7 @@ public final class sreport implements CommandCallable {
 
     @Override
     public Optional<Text> getShortDescription(CommandSource source) {
-        return Optional.of(Utils.get("sreport.description"));
+        return getHelp(source);
     }
 
     @Override

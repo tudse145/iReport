@@ -1,6 +1,5 @@
 package ireport.mysql;
 
-import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -18,11 +17,11 @@ public final class Mysql {
     private boolean enabled;
     private DataSource ds;
 
-    public Mysql(boolean enabled, String databasenamme) throws Exception {
+    public Mysql(boolean enabled, String databasenamme) throws SQLException {
         init(enabled, databasenamme);
     }
 
-    public void reload(boolean enabled, String databasenamme) throws IOException, SQLException {
+    public void reload(boolean enabled, String databasenamme) throws SQLException {
         init(enabled, databasenamme);
     }
 

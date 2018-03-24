@@ -23,7 +23,7 @@ import ireport.util.Constance;
 import ireport.util.Data;
 import ireport.util.Utils;
 
-public final class greport implements CommandCallable {
+public final class Greport implements CommandCallable {
 
     @Override
     public List<String> getSuggestions(CommandSource source, String arguments, @Nullable  Location<World> targetPosition) throws CommandException {
@@ -66,9 +66,9 @@ public final class greport implements CommandCallable {
         if (args.length > 0 && !args[0].isEmpty()) {
             String player = source.getName();
             String target = args[0];
-            Utils.reportplayer(target, "gReport: " + Utils.getxyz(args[0], source) + " ", source, args.length > 1 ? Boolean.valueOf(args[1]) : false);
-            source.sendMessage(Utils.get("greport.sucess", target));
-            Text text = Utils.get("greport.notification", player, target);
+            Utils.reportplayer(target, "gReport: " + Utils.getxyz(args[0]) + " ", source, args.length > 1 ? Boolean.valueOf(args[1]) : false);
+            source.sendMessage(Utils.get("Greport.sucess", target));
+            Text text = Utils.get("Greport.notification", player, target);
             Constance.server.getOnlinePlayers().parallelStream().filter(p -> p.hasPermission("iReport.seereport") && p != source).forEach(p -> p.sendMessage(text));
             return CommandResult.success();
         }
@@ -81,7 +81,7 @@ public final class greport implements CommandCallable {
             String tmp = s.substring(9);
             tmp = tmp.substring(0, tmp.lastIndexOf(" reporter:"));
             String[] data = tmp.split(" ");
-            return new Location<World>(Constance.server.getWorld(UUID.fromString(data[1])).get(), new Vector3d(Double.parseDouble(data[3]),
+            return new Location<>(Constance.server.getWorld(UUID.fromString(data[1])).get(), new Vector3d(Double.parseDouble(data[3]),
                     Double.parseDouble(data[5]), Double.parseDouble(data[7])));
         }).collect(Collectors.toList());
     }
@@ -93,12 +93,12 @@ public final class greport implements CommandCallable {
 
     @Override
     public Optional<Text> getShortDescription(CommandSource source) {
-        return Optional.of(Utils.get("greport.description"));
+        return getHelp(source);
     }
 
     @Override
     public Optional<Text> getHelp(CommandSource source) {
-        return Optional.of(Utils.get("greport.description"));
+        return Optional.of(Utils.get("Greport.description"));
     }
 
     @Override

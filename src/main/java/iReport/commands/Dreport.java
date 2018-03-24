@@ -104,6 +104,7 @@ public final class Dreport implements CommandCallable {
             config.getNode("reports").removeChild(uuid);
             cfgfile.save(config);
         } catch (IOException e) {
+        	Constance.LOGGER.error("Faild to load config", e);
         }
     }
 }

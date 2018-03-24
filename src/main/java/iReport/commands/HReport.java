@@ -33,7 +33,7 @@ public final class HReport implements CommandCallable {
             String player = source.getName();
             String target = args[0];
             Utils.reportplayer(target, "hReport: " + args[1] + " ", source, args.length > 2 ? Boolean.valueOf(args[1]) : false);
-            source.sendMessage(Utils.get("greport.sucess", target));
+            source.sendMessage(Utils.get("Greport.sucess", target));
             Text text = Utils.get("hreport.notification", player, target, args[1]);
             Constance.server.getOnlinePlayers().parallelStream().filter(p -> p.hasPermission("iReport.seereport") && p != source).forEach(p -> p.sendMessage(text));
             return CommandResult.success();

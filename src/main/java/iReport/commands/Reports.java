@@ -77,17 +77,7 @@ public final class Reports implements CommandCallable {
         }
         String[] args = arguments.split(" ");
         if (args.length == 1) {
-            List<String> l = Lists.newArrayList();
-            if ("uuid".startsWith(args[0].toLowerCase())) {
-                l.add("uuid");
-            }
-            if ("usernameo".startsWith(args[0].toLowerCase())) {
-                l.add("usernameo");
-            }
-            if ("gui".startsWith(args[0].toLowerCase())) {
-                l.add("gui");
-            }
-            return l;
+            return subCommands(args);
         }
         if (args[0].equalsIgnoreCase("uuid")) {
             return Data.init().getPlayermapo().keySet().parallelStream().map(UUID::toString).filter(s -> s.startsWith(args.length > 1 ? args[1] : "")).collect(toList());
@@ -97,6 +87,20 @@ public final class Reports implements CommandCallable {
         }
         return Lists.newArrayList();
     }
+
+	private List<String> subCommands(String[] args) {
+		List<String> l = Lists.newArrayList();
+		if ("uuid".startsWith(args[0].toLowerCase())) {
+		    l.add("uuid");
+		}
+		if ("usernameo".startsWith(args[0].toLowerCase())) {
+		    l.add("usernameo");
+		}
+		if ("gui".startsWith(args[0].toLowerCase())) {
+		    l.add("gui");
+		}
+		return l;
+	}
 
     @Override
     public CommandResult process(CommandSource source, String arguments) throws CommandException {
