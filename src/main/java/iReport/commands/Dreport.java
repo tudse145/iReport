@@ -79,7 +79,7 @@ public final class Dreport implements CommandCallable {
 
     @Override
     public boolean testPermission(CommandSource source) {
-        return source.hasPermission("ireport.dreport");
+        return source.hasPermission("ireport.dreport.use");
     }
 
     @Override
