@@ -67,7 +67,7 @@ public final class Greport implements CommandCallable {
             String player = source.getName();
             String target = args[0];
             Utils.reportplayer(target, "gReport: " + Utils.getxyz(args[0]) + " ", source, args.length > 1 ? Boolean.valueOf(args[1]) : false);
-            source.sendMessage(Utils.get("Greport.sucess", target));
+            source.sendMessage(Utils.get("greport.sucess", target));
             Text text = Utils.get("Greport.notification", player, target);
             Constance.server.getOnlinePlayers().parallelStream().filter(p -> p.hasPermission("iReport.seereport") && p != source).forEach(p -> p.sendMessage(text));
             return CommandResult.success();

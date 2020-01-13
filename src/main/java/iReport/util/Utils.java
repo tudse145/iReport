@@ -22,6 +22,7 @@ import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.filter.cause.First;
+import org.spongepowered.api.event.item.inventory.ClickInventoryEvent;
 import org.spongepowered.api.event.network.ClientConnectionEvent;
 import org.spongepowered.api.profile.GameProfile;
 import org.spongepowered.api.text.Text;
@@ -52,6 +53,13 @@ public enum Utils {
                 Utils.updateusernameMYSQL(profile.getUniqueId(), name.get());
             }
         }
+    }
+    
+    @Listener
+    public void inventorychange(ClickInventoryEvent event) {
+    	if (event.getTargetInventory().getName().get().equals("reports")) {
+			event.setCancelled(true);
+		}
     }
 
     public static boolean isReported(UUID uniqueId) {
