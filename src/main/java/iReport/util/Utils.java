@@ -13,18 +13,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
 
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.entity.living.player.Player;
-import org.spongepowered.api.event.Listener;
-import org.spongepowered.api.event.filter.cause.First;
-import org.spongepowered.api.event.item.inventory.ClickInventoryEvent;
-import org.spongepowered.api.event.network.ClientConnectionEvent;
-import org.spongepowered.api.profile.GameProfile;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.serializer.TextSerializers;
 import org.spongepowered.api.text.translation.ResourceBundleTranslation;
@@ -34,33 +27,9 @@ import com.flowpowered.math.vector.Vector3d;
 import ninja.leaping.configurate.ConfigurationNode;
 import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
 
-public enum Utils {
-    INSTENCE;
+public class Utils {
 
-    private static final Lock LOCK = new ReentrantLock();
-
-    @Listener
-    public void login(ClientConnectionEvent.Auth event, @First GameProfile profile) {
-        Optional<String> name = profile.getName();
-        if (!name.isPresent()) {
-			return;
-		}
-		if (!Data.init().getPlayermap().containsKey(profile.getUniqueId())) {
-            Data.init().getPlayermap().put(profile.getUniqueId(), name.get());
-        } else if (Data.init().getPlayermap().get(profile.getUniqueId()) != name.get()) {
-            Data.init().getPlayermap().put(profile.getUniqueId(), name.get());
-            if (Utils.isReported(profile.getUniqueId())) {
-                Utils.updateusernameMYSQL(profile.getUniqueId(), name.get());
-            }
-        }
-    }
-    
-    @Listener
-    public void inventorychange(ClickInventoryEvent event) {
-    	if (event.getTargetInventory().getName().get().equals("reports")) {
-			event.setCancelled(true);
-		}
-    }
+	private Utils() {}
 
     public static boolean isReported(UUID uniqueId) {
         return Data.init().getPlayermapr().get(uniqueId) != null;
@@ -90,19 +59,16 @@ public enum Utils {
         } else {
             throw new CommandException(Text.of("player " + target + " is alredy reported with another UUID please look at the reports or add true"));
         }
-        LOCK.lock();
-        try {
-            if (isreported) {
-                String s = data.getPlayermapr().get(playeruuid);
-                data.getPlayermapr().put(playeruuid, s + reporttype + "reporter: " + sender.getName() + " ;");
-            } else {
-                data.getPlayermapr().put(playeruuid, reporttype + "reporter: " + sender.getName() + " ;");
-            }
-            savePlayer(playeruuid);
-        } finally {
-            LOCK.unlock();
-        }
-        updateMYSQL(player, isreported);
+       synchronized (Utils.class) {
+           if (isreported) {
+               String s = data.getPlayermapr().get(playeruuid);
+               data.getPlayermapr().put(playeruuid, s + reporttype + "reporter: " + sender.getName() + " ;");
+           } else {
+               data.getPlayermapr().put(playeruuid, reporttype + "reporter: " + sender.getName() + " ;");
+           }
+           savePlayer(playeruuid);
+       }
+       updateMYSQL(player, isreported);
     }
 
     public static void updateMYSQL(Player player, boolean isReported) throws CommandException {

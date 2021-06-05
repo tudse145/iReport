@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 import javax.inject.Inject;
@@ -19,7 +20,10 @@ import org.spongepowered.api.event.game.GameReloadEvent;
 import org.spongepowered.api.event.game.state.GamePreInitializationEvent;
 import org.spongepowered.api.event.game.state.GameStartingServerEvent;
 import org.spongepowered.api.event.game.state.GameStoppingServerEvent;
+import org.spongepowered.api.event.item.inventory.ClickInventoryEvent;
+import org.spongepowered.api.event.network.ClientConnectionEvent;
 import org.spongepowered.api.plugin.Plugin;
+import org.spongepowered.api.profile.GameProfile;
 
 import ireport.commands.Dreport;
 import ireport.commands.HReport;
@@ -53,7 +57,26 @@ public final class ireport {
         Constance.GAME.getCommandManager().register(this, new Ireportc(), "ireport");
         Constance.GAME.getCommandManager().register(this, new Reports(), "reports");
         Constance.GAME.getCommandManager().register(this, new Sreport(), "sreport");
-        Constance.GAME.getEventManager().registerListeners(this, Utils.INSTENCE);
+        Constance.GAME.getEventManager().registerListener(this, ClientConnectionEvent.Auth.class, e -> {
+        	GameProfile profile = e.getCause().first(GameProfile.class).get();
+        	Optional<String> name = profile.getName();
+            if (!name.isPresent()) {
+    			return;
+    		}
+    		if (!Data.init().getPlayermap().containsKey(profile.getUniqueId())) {
+                Data.init().getPlayermap().put(profile.getUniqueId(), name.get());
+            } else if (Data.init().getPlayermap().get(profile.getUniqueId()) != name.get()) {
+                Data.init().getPlayermap().put(profile.getUniqueId(), name.get());
+                if (Utils.isReported(profile.getUniqueId())) {
+                    Utils.updateusernameMYSQL(profile.getUniqueId(), name.get());
+                }
+            }
+        });
+        Constance.GAME.getEventManager().registerListener(this, ClickInventoryEvent.class, e -> {
+        	if (e.getTargetInventory().getName().get().equals("reports")) {
+    			e.setCancelled(true);
+    		}
+        });
         if (Constance.getMYSQL().isEnabled()) {
             try {
                 loadSql();

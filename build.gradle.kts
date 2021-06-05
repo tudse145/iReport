@@ -19,5 +19,5 @@ repositories {
 }
  
 dependencies {
-    compile("org.spongepowered:spongeapi:6.0.0-SNAPSHOT")
+    implementation ("org.spongepowered:spongeapi:6.0.0-SNAPSHOT")
 }
