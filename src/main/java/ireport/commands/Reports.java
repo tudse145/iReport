@@ -80,10 +80,10 @@ public final class Reports implements CommandCallable {
             return subCommands(args);
         }
         if (args[0].equalsIgnoreCase("uuid")) {
-            return Data.init().getPlayermapo().keySet().parallelStream().map(UUID::toString).filter(s -> s.startsWith(args.length > 1 ? args[1] : "")).collect(toList());
+            return Data.init().getPlayermapo().keySet().stream().map(UUID::toString).filter(s -> s.startsWith(args.length > 1 ? args[1] : "")).collect(toList());
         }
         if (args[0].equalsIgnoreCase("usernameo")) {
-            return Data.init().getPlayermapo().values().parallelStream().filter(s -> s.startsWith(args.length > 1 ? args[1] : "")).collect(toList());
+            return Data.init().getPlayermapo().values().stream().filter(s -> s.startsWith(args.length > 1 ? args[1] : "")).collect(toList());
         }
         return Lists.newArrayList();
     }
@@ -113,7 +113,7 @@ public final class Reports implements CommandCallable {
         Map<UUID, String> map3 = init().getPlayermapr();
         if (source instanceof Player && arguments.equalsIgnoreCase("gui")) {
         	Inventory inv = calculate(init().getPlayermapo().size());
-            map2.keySet().parallelStream().forEach(uuid -> {
+            map2.keySet().stream().forEach(uuid -> {
                 ItemStack stack = Constance.GAME.getRegistry().createBuilder(ItemStack.Builder.class).itemType(ItemTypes.SKULL).quantity(1).build();
                 stack.offer(Keys.SKULL_TYPE, SkullTypes.PLAYER);
                 stack.offer(Keys.REPRESENTED_PLAYER, GameProfile.of(uuid, map1.get(uuid)));

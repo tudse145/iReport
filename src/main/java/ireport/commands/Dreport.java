@@ -32,7 +32,7 @@ public final class Dreport implements CommandCallable {
         if (!testPermission(source)) {
             return Lists.newArrayList();
         }
-        return Data.init().getPlayermapo().keySet().parallelStream().map(UUID::toString).filter(s -> s.startsWith(arguments.split(" ")[0])).collect(Collectors.toList());
+        return Data.init().getPlayermapo().keySet().stream().map(UUID::toString).filter(s -> s.startsWith(arguments.split(" ")[0])).collect(Collectors.toList());
     }
 
     @Override

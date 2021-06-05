@@ -29,7 +29,7 @@ public final class Greport implements CommandCallable {
     public List<String> getSuggestions(CommandSource source, String arguments, @Nullable  Location<World> targetPosition) throws CommandException {
         String[] args = arguments.split(" ");
         if (args[0].equalsIgnoreCase("tp")) {
-            return Data.init().getPlayermapo().keySet().parallelStream().filter(uuid -> {
+            return Data.init().getPlayermapo().keySet().stream().filter(uuid -> {
                 String s = Data.init().getPlayermapr().get(uuid);
                 return s.contains("gReport: ");
             }).map(UUID::toString).filter(s -> s.startsWith(args.length > 1 ? args[1] : "")).collect(Collectors.toList());
@@ -69,7 +69,7 @@ public final class Greport implements CommandCallable {
             Utils.reportplayer(target, "gReport: " + Utils.getxyz(args[0]) + " ", source, args.length > 1 ? Boolean.valueOf(args[1]) : false);
             source.sendMessage(Utils.get("greport.sucess", target));
             Text text = Utils.get("Greport.notification", player, target);
-            Constance.server.getOnlinePlayers().parallelStream().filter(p -> p.hasPermission("iReport.seereport") && p != source).forEach(p -> p.sendMessage(text));
+            Constance.server.getOnlinePlayers().stream().filter(p -> p.hasPermission("iReport.seereport") && p != source).forEach(p -> p.sendMessage(text));
             return CommandResult.success();
         }
         throw new CommandException(Utils.get("not.enough.args"));

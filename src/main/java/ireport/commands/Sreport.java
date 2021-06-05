@@ -35,7 +35,7 @@ public final class Sreport implements CommandCallable {
             Utils.reportplayer(target, "sReport: ", source, args.length > 1 ? Boolean.valueOf(args[1]) : false);
             source.sendMessage(Utils.get("Greport.sucess", target));
             Text text = Utils.get("sreport.notification", player, target);
-            Constance.server.getOnlinePlayers().parallelStream().filter(p -> p.hasPermission("iReport.seereport") && p != source).forEach(p -> p.sendMessage(text));
+            Constance.server.getOnlinePlayers().stream().filter(p -> p.hasPermission("iReport.seereport") && p != source).forEach(p -> p.sendMessage(text));
             return CommandResult.success();
         }
         throw new CommandException(Utils.get("not.enough.args"));
